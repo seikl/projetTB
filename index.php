@@ -11,7 +11,7 @@ and open the template in the editor.
     </head>
     <body>
         <?php
-        //pour test
+        //pour test. depuis PC Ok
         echo 'Hello world!';
         ?>
     </body>
