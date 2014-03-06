@@ -1,18 +1,34 @@
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <html>
     <head>
         <meta charset="UTF-8">
-        <title></title>
+        <title>AP Manager - Accueil</title>
     </head>
     <body>
         <?php
-        //pour test. depuis PC Ok
-        echo 'Hello world!';
+        //Exemple d'interragation d'une borne avec la commande show system
+        $fp = fsockopen("172.16.1.29", 23, $errno, $errstr, 30);
+
+        if (!$fp) {
+            echo "$errstr ($errno)<br />\n";
+        } else {
+            $out = "repuis\r\n";
+            $out .= "show system\r\n";
+            $out .= "quit\r\n";
+            fwrite($fp, $out);
+
+            $output = '';
+            while (!feof($fp)) {
+                $output .= fgets($fp, 128);
+            }
+
+            fclose($fp);
+
+            //file_put_contents( 'c:\temp\outputAVAYA.txt', $output );
+
+            echo utf8_decode($output);
+        }
+
         ?>
     </body>
 </html>
