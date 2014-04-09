@@ -5,6 +5,10 @@
         <title>AP Manager - recherche materiel</title>
     </head>
     <body>
+<div id="loading-image">
+	<img src="<?php bloginfo('template_url'); ?>/images/ajax-loader.gif" alt="Loading..." />
+</div>
+        
         <?php
             /*
             This if primary for MS Windows (may work at other system, depending on 3rd side programs' output)
@@ -27,16 +31,23 @@
               shell_exec($GLOBALS["ping"]." ".$ip);
               $arp = shell_exec($GLOBALS["arp"]);
               $arp = explode("\n", $arp);
+              
               foreach($arp as $line) {
                 if(ereg(": $ip ---", $line)) { return("This is your adapter, to find MAC try \"ipconfig /all\""); }
                 if(ereg("  $ip ", $line)) {
-                  //echo($line."\n"); //Debug
+                  //echo($line."\n <br>"); //Debug
                   $line = explode($ip, $line);
                   $line = trim($line[1]);
-                  $line = explode("dynamic", $line);
+                  $line = explode("dynamique", $line);
                   $line = trim($line[0]);
-                  //echo($line."\n"); //Debug
-                  return($line);
+                  //echo($line."\n <br>"); //Debug
+                  $macAVAYA="00-20-A6";
+                if (strcasecmp($line,$macAVAYA) == 0)
+                    $line = $line." <b>Avaya AP spotted! </b><br>";
+                /* DEBUG else
+                    $resultatMAC = $resultatMAC. "not an Avaya AP. <br>"; */
+                
+                return($line);
                 }
               }
               return("Not found. Couldn't broadcast to IP.");
@@ -65,7 +76,7 @@
                     $i++;
 
                     //You hav $ip, you can do anything, that you want:
-                    echo($ip." = ".get_mac($ip)."\n"); //Get it's MAC and print it
+                    echo($ip." = ".get_mac($ip)."\n <br>"); //Get it's MAC and print it
 
                   }
                 }
@@ -73,15 +84,31 @@
             }
 
             //Quick active scan for MACs and IPS
-            function quick_ipmac_scan($subnet = "192.168.1") {
+            function quick_ipmac_scan($subnet = "172.16.1") {
               for($i=1;$i<256;$i++) {
                 //Mega threaded ( This will open 255 processes ;))
-                $fp[$i] = popen($GLOBALS["ping"]." ".$subnet.".".$i, "r");
+                $ipAPinger=$subnet.".".$i;
+                $fp[$i] = popen($GLOBALS["ping"]." ".$ipAPinger, "r");
               }
               for($i=1;$i<256;$i++) {
                 while( $fp[$i] && !feof($fp[$i]) ) { fgets($fp[$i]); }
-              }
-              system($GLOBALS["arp"]);
+              } 
+
+              
+              $arp = shell_exec($GLOBALS["arp"]);
+              $tableARP= explode("\n", $arp);
+              
+              echo "<h1> Table ARP:</H1>";
+              //print_r($tableARP); //DEBUG
+              
+              foreach($tableARP as $line) {  
+         
+                if(preg_match('/00-20-a6/i', $line)) {
+                  $line = $line."<b><== Borne AVAYA!</b>";
+                }
+                echo($line."\n <br>");    
+              }              
+              
             }
 
             ///Examples of usage://///////////////////////////////////////////////////////
@@ -89,10 +116,10 @@
 
 
             //Sniff for IPs:
-            echo("Sniffing for IP/MAC addresses\nC-c for stop\n\n");
+            /*echo("Sniffing for IP/MAC addresses\nC-c for stop\n\n");*/
             //This will sniff on 3rd device ("ngrep -L" for device listing)
             //And only IPs that starts with "192.168" will be accepted
-            sniff_ips(3, "192.168"); //ngrep -d 3 | grep 192.168.*:.* -> .*:.*
+            /*sniff_ips(3, "172.16"); //ngrep -d 3 | grep 192.168.*:.* -> .*:.*  */
 
             /*
             Example output:
@@ -110,8 +137,8 @@
 
 
             //Quick active scan for MACs/IPs:
-            echo("Scanning for IP/MAC addresses\nC-c for stop\n");
-            quick_ipmac_scan("192.168.1");
+            print("Scanning for IP/MAC addresses\nC-c for stop\n <br>");
+            quick_ipmac_scan("172.16.1");
 
             /*
             Example output:
@@ -126,11 +153,11 @@
 
             //--------------------------------------------------------------------------
 
-            //Get MAC:
-            $ip = "192.168.15.82"; //This is your adapter, to find MAC try "ipconfig /all"
-            $ip = "404.168.15.82"; //Not found. Couldn't broadcast to IP.
-            $ip = "192.168.15.65";
-            echo("IP: $ip\nMAC: ".get_mac($ip)."\n");
+            //*Get MAC:
+            //$ip = "192.168.15.82"; //This is your adapter, to find MAC try "ipconfig /all"
+            //$ip = "404.168.15.82"; //Not found. Couldn't broadcast to IP.
+            //$ip = "192.168.15.65";
+            //echo("IP: $ip\nMAC: ".get_mac($ip)."\n");*/
 
             /*
             Example output:
