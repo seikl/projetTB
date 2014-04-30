@@ -1,14 +1,17 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
     <head>
         <meta charset="ISO-8859-1">
         <title>AP Manager - recherche materiel</title>
     </head>
     <body>
+<!-- POUR TEST IMAGE CHARGEMENT 
+
 <div id="loading-image">
-	<img src="<?php bloginfo('template_url'); ?>/images/ajax-loader.gif" alt="Loading..." />
+	<img src="<?//php bloginfo('template_url'); ?>/images/ajax-loader.gif" alt="Loading..." />
 </div>
-        
+-->
+        Chargement....
         <?php
             /*
             This if primary for MS Windows (may work at other system, depending on 3rd side programs' output)
@@ -84,7 +87,7 @@
             }
 
             //Quick active scan for MACs and IPS
-            function quick_ipmac_scan($subnet = "172.16.1") {
+            function quick_ipmac_scan($subnet) {
               for($i=1;$i<256;$i++) {
                 //Mega threaded ( This will open 255 processes ;))
                 $ipAPinger=$subnet.".".$i;
