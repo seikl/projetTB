@@ -6,7 +6,7 @@
     </head>
     <body>
         <?php
-        //Exemple d'interragation d'une borne avec la commande show system
+        //Ouverture d'un socket sur le port 23 (Telnet)
         $fp = fsockopen("192.168.98.36", 23, $errno, $errstr, 30);
 
         if (!$fp) {

@@ -1,4 +1,3 @@
-
 /* 
  * Script de suppression/création automatique de la BDD pour APmanageer
  */
