@@ -40,7 +40,7 @@
                     </ul>                    
                  </td>
                  <td>
-                    <div class="jumbotron">
+                    <div class="panel">
                          Informations
                          <br>
                          <br>
