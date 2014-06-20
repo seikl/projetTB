@@ -183,7 +183,28 @@ table {
 .borderless td {
     border: none;
 }
-td,
+.leftmenu { 
+ border-width:1px;
+ border-style:solid; 
+ border-right-width: 2px;
+ border-color:#ccc;
+ border-right-color: #fff;
+ padding: 10px;
+ vertical-align:top;
+ }
+.informations { 
+ border-width:0px;
+ border-style:none;
+ background-color: #222;
+ padding: 10px;
+ vertical-align:top;
+ color: #fff;
+ }
+td
+{
+    border-radius:8px;        
+}
+
 th {
   padding: 0;
 }
@@ -3525,6 +3546,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 .nav-tabs.nav-justified > li {
   float: none;
+  white-space: nowrap;
 }
 .nav-tabs.nav-justified > li > a {
   margin-bottom: 5px;
