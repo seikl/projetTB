@@ -12,7 +12,7 @@
       <br><br>
     <div class="container-fluid">        
 
-        <table border="0" width="80%">
+        <table border="0" width="80%" align="center">
            <tbody>
               <tr>
                  <td width="30%">                       

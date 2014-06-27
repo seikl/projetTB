@@ -12,7 +12,7 @@
       <br><br>
     <div class="container-fluid">        
 
-        <table border="0" width="80%">
+        <table border="0" width="80%" align="center">
            <tbody>
               <tr>
                  <td width="30%">                       
@@ -51,10 +51,39 @@
                         <li><a href="#">Gestion des AP</a></li>
                         <li class="active">Accueil</li>
                     </ol>
-                     
-                     
-                     
-                     INFOS
+                    <?php   
+                        include '../includes/connexionBDD.php';
+                        echo '
+                            <table class="table">
+                            <caption>Striped Table Layout</caption>
+                            <thead>
+                               <tr>
+                                  <th>Name</th>
+                                  <th>City</th>
+                                  <th>Pincode</th>
+                               </tr>
+                            </thead>
+                            <tbody>
+                               <tr>
+                                  <td>Tanmay</td>
+                                  <td>Bangalore</td>
+                                  <td>560001</td>
+                               </tr>
+                               <tr>
+                                  <td>Sachin</td>
+                                  <td>Mumbai</td>
+                                  <td>400003</td>
+                               </tr>
+                               <tr>
+                                  <td>Uma</td>
+                                  <td>Pune</td>
+                                  <td>411027</td>
+                               </tr>
+                            </tbody>
+                         </table>  
+                        ';
+                            
+                    ?>
                  </td>
               </tr>
            </tbody>
