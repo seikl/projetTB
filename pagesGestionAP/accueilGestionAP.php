@@ -53,6 +53,26 @@
                     </ol>
                     <?php   
                         include '../includes/connexionBDD.php';
+                        
+                        try
+                        {
+                                $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
+
+                                $resultats=$connexion->query("SELECT * FROM modeles"); // on va chercher tous les membres de la table qu'on trie par ordre croissant
+                                $resultats->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet
+                                while( $ligne = $resultats->fetch() ) // on récupère la liste des membres
+                                {
+                                        echo 'Mod&egrave;les : '.(string)$ligne->nomModele.'<br />'; // on affiche les membres
+                                }
+                                $resultats->closeCursor(); // on ferme le curseur des résultats
+                                }
+
+                        catch(Exception $e)
+                        {
+                                echo 'Erreur : '.$e->getMessage().'<br />';
+                                echo 'N° : '.$e->getCode();
+                        }
+                        
                         echo '
                             <table class="table">
                             <caption>Striped Table Layout</caption>

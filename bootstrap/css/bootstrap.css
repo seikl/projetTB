@@ -3533,15 +3533,15 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   border-radius: 4px 4px 0 0;
 }
 .nav-tabs > li > a:hover {
-  border-color: #eee #eee #ddd;
-  background-color: #222;
+  border-color: #fff #fff #fff;
+  background-color: transparent;
 }
 .nav-tabs > li.active > a,
 .nav-tabs > li.active > a:hover,
 .nav-tabs > li.active > a:focus {
-  color: #888;
+  color: #777;
   cursor: default;
-  background-color: #222;
+  background-color: #fff;
   border: 1px solid #ddd;
   border-bottom-color: transparent;
 }
@@ -3594,7 +3594,14 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   float: left;
 }
 .nav-pills > li > a {
+  margin-right: 2px;
+  line-height: 1.42857143;
+  border: 1px solid transparent;
   border-radius: 4px;
+}
+.nav-pills > li > a:hover {
+  border-color: #fff #fff #fff;
+  background-color: transparent;
 }
 .nav-pills > li + li {
   margin-left: 2px;
@@ -3603,7 +3610,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav-pills > li.active > a:hover,
 .nav-pills > li.active > a:focus {
   color: #fff;
-  background-color: #428bca;
+  background-color: #fff;
+  border: 1px solid #ddd;
 }
 .nav-stacked > li {
   float: none;
