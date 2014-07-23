@@ -197,7 +197,7 @@ table {
 .informations { 
  border-width:0px;
  border-style:none;
- background-color: #ddd;
+ background-color: #08f;
  padding: 10px;
  vertical-align:top;
  color: #fff;
@@ -3521,6 +3521,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 .nav-tabs {
   border-bottom: 1px solid #222;
+  white-space: nowrap;
 }
 .nav-tabs > li {
   float: left;
@@ -3548,7 +3549,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav-tabs.nav-justified {
   width: 100%;
   border-bottom: 0;
-}
+}y
 .nav-tabs.nav-justified > li {
   float: none;
   white-space: nowrap;
