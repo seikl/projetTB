@@ -193,14 +193,16 @@ table {
  border-right-style: none;
  padding: 10px;
  vertical-align:top;
+ border-radius:4px 4px 0 0; 
  }
 .informations { 
  border-width:0px;
- border-style:none;
- background-color: #08f;
+ border-style: none;
+ border-radius:8px; 
+ background-color: #eee;
  padding: 10px;
  vertical-align:top;
- color: #fff;
+ color: #222;
  }
 td
 {
@@ -316,12 +318,12 @@ textarea {
   line-height: inherit;
 }
 a {
-  color: #428bca;
+  color: #42abff;
   text-decoration: none;
 }
 a:hover,
 a:focus {
-  color: #2a6496;
+  /*! color: #2a77af; */
   text-decoration: underline;
 }
 a:focus {
@@ -4152,7 +4154,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   padding: 8px 15px;
   margin-bottom: 20px;
   list-style: none;
-  background-color: #0b0b0b;
+  background-color: #ddd;
   border-radius: 4px;
 }
 .breadcrumb > li {

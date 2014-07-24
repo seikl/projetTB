@@ -48,21 +48,37 @@
                  <td class="informations">
                      
                      <ol class="breadcrumb">
-                        <li><a href="#">Gestion des AP</a></li>
+                        <li><a href="../pagesGestionAP/accueilGestionAP.php">Gestion des AP</a></li>
                         <li class="active">Accueil</li>
                     </ol>
                     <?php   
-                        include '../includes/connexionBDD.php';
                         
+                    
+                        echo "
+                            <table class='table table-striped' width='60%'>                            
+                            <thead>
+                               <tr>
+                                  <th>Nombre d'AP en fonction de leur mod&egrave;le respectif</th>
+                               </tr>
+                            </thead>
+                            <tbody>";                   
+                    
+                        //connexion a la BDD et récupération de la liste des modèles
+                        include '../includes/connexionBDD.php';
+
                         try
                         {
+                            
+                                $i =0;
                                 $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
-                                $resultats=$connexion->query("SELECT * FROM modeles"); // on va chercher tous les membres de la table qu'on trie par ordre croissant
-                                $resultats->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet
-                                while( $ligne = $resultats->fetch() ) // on récupère la liste des membres
-                                {
-                                        echo 'Mod&egrave;les : '.(string)$ligne->nomModele.'<br />'; // on affiche les membres
+                                $resultatsModeles=$connexion->query("SELECT nomModele, nomFabricant, COUNT(a.noModeleAP)  as nombreAP, versionFirmware FROM modeles, accessPoints a GROUP BY a.noModeleAP;"); // on va chercher tous les membres de la table qu'on trie par ordre croissant
+                                $resultatsModeles->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet
+                                
+                                
+                                while( $ligne = $resultatsModeles->fetch() ) // on récupère la liste des membres
+                                {                                      
+                                        echo '<tr><td>'.(string)$ligne->nombreAP.'x '.(string)$ligne->nomFabricant.' '.(string)$ligne->nomModele.' (firmware '. (string)$ligne->versionFirmware.')</td></tr>'; // on affiche les membres
                                 }
                                 $resultats->closeCursor(); // on ferme le curseur des résultats
                                 }
@@ -72,34 +88,10 @@
                                 echo 'Erreur : '.$e->getMessage().'<br />';
                                 echo 'N° : '.$e->getCode();
                         }
+
+
                         
-                        echo '
-                            <table class="table">
-                            <caption>Striped Table Layout</caption>
-                            <thead>
-                               <tr>
-                                  <th>Name</th>
-                                  <th>City</th>
-                                  <th>Pincode</th>
-                               </tr>
-                            </thead>
-                            <tbody>
-                               <tr>
-                                  <td>Tanmay</td>
-                                  <td>Bangalore</td>
-                                  <td>560001</td>
-                               </tr>
-                               <tr>
-                                  <td>Sachin</td>
-                                  <td>Mumbai</td>
-                                  <td>400003</td>
-                               </tr>
-                               <tr>
-                                  <td>Uma</td>
-                                  <td>Pune</td>
-                                  <td>411027</td>
-                               </tr>
-                            </tbody>
+                        echo '</tbody>
                          </table>  
                         ';
                             
