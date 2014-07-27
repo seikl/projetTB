@@ -57,7 +57,7 @@ REFERENCES typesCommandes (noTypesCommande);
 
 --Insertion de données pour les tests
 insert into modeles (nomModele,versionFirmware,nomFabricant,adrMACFabricant) values('AP-6','2.4.11','Avaya','00:20:a6');
-insert into accessPoints (nomAP,adresseIPv4,password,noModeleAP) values('APADSSOL01','172.16.0.29','repuis',1);
+insert into accessPoints (nomAP,adresseIPv4,password,noModeleAP) values('APADSSOL01','10.0.0.10','repuis',1);
 insert into accessPoints (nomAP,adresseIPv4,password,noModeleAP) values('APADSSOL02','172.16.0.30','repuis',1);
 insert into typesCommandes (typesCommande,description) values('Afficher infos système','Sert à afficher les informations systèmes de base');
 insert into lignesCommande (ligneCommande,portProtocole,noModeleAP,noTypesCommande) values('show system\r\nquit\r\n',23,1,1);

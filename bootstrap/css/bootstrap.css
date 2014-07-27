@@ -188,12 +188,11 @@ table {
 .leftmenu { 
  border-width:1px;
  border-style:solid; 
- border-right-width: 1px;
- border-color:#ccc;
  border-right-style: none;
- padding: 10px;
+ border-color:#ccc;
+ padding: 8 px;
  vertical-align:top;
- border-radius:4px 4px 0 0; 
+ border-radius:8px; 
  }
 .informations { 
  border-width:0px;

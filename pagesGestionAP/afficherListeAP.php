@@ -32,7 +32,7 @@
                  <td width="30%" class="leftmenu">
                         <p><b>Informations sur les AP</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
-                            <li><a href="afficherListeAP.php">Afficher la liste  de tous les AP inscrits</a></li>
+                           <li><a href="#" class="active">Afficher la liste  de tous les AP inscrits</a></li>
                            <li><a href="#">Interroger un AP</a></li>                       
                         </ul>
                         <p><b>Configurer les AP</b></p>
@@ -44,23 +44,28 @@
                  <td class="informations">
                      
                      <ol class="breadcrumb">
-                        <li><a href="../pagesGestionAP/accueilGestionAP.php">Gestion des AP</a></li>
-                        <li>Accueil</li>
+                        <li><a href="../pagesGestionAP/accueilGestionAP.php">Gestion des AP</a></li>                     
+                        <li><a href="../pagesGestionAP/accueilGestionAP.php">Accueil</a></li>
+                        <li>Afficher la liste  de tous les AP</li>
                     </ol>
                     <?php   
                         
                     
                         echo "
                             <table class='table table-striped' width='60%'>                            
-                            <thead>
+                            <caption> Liste des acces points enregistr&eacute;s</caption>
+                            <thead>                            
                                <tr>
-                                  <th>Nombre d'AP en fonction de leur mod&egrave;le respectif</th>
+                                  <th>Mod&egrave; d'AP</th>
+                                  <th>Nom de l'AP</th>
+                                  <th>Ping OK?</th>
                                </tr>
                             </thead>
                             <tbody>";                   
                     
                         //connexion a la BDD et récupération de la liste des modèles
                         include '../includes/connexionBDD.php';
+                        require_once '../Fonctions/hostPing.php';
 
                         try
                         {
@@ -68,15 +73,27 @@
                                 $i =0;
                                 $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
-                                $resultatsModeles=$connexion->query("SELECT nomModele, nomFabricant, COUNT(a.noModeleAP)  as nombreAP, versionFirmware FROM modeles, accessPoints a GROUP BY a.noModeleAP;"); // on va chercher tous les membres de la table qu'on trie par ordre croissant
-                                $resultatsModeles->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet
+                                $resultatsAP=$connexion->query("SELECT m.nomModele, m.nomFabricant, m.versionFirmware, a.nomAP, a.adresseIPv4 FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP;"); 
+                                $resultatsAP->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet
                                 
                                 
-                                while( $ligne = $resultatsModeles->fetch() ) // on récupère la liste des membres
+                                while( $ligne = $resultatsAP->fetch() ) // on récupère la liste des membres
                                 {                                      
-                                        echo '<tr><td>'.(string)$ligne->nombreAP.'x '.(string)$ligne->nomFabricant.' '.(string)$ligne->nomModele.' (firmware '. (string)$ligne->versionFirmware.')</td></tr>'; // on affiche les membres
+                                        echo '<tr>';
+                                        echo '<td>'.(string)$ligne->nomFabricant.' '.(string)$ligne->nomModele.' (firmware '. (string)$ligne->versionFirmware.')</td>';
+                                        echo '<td>'.(string)$ligne->nomAP.' ('.(string)$ligne->adresseIPv4.')</td>'; //TODO Créer lien pour inmterroger AP
+                                        
+                                        $serverPing=new hostPing();                                       
+                                        $serverPing->send("10.0.0.60", 1);
+                                        if ($serverPing->isAlive()) {
+                                            echo '<td> OK </td>';
+                                        } else {
+                                            echo '<td> Not OK </td>';
+                                        }
+
+                                        echo '</tr>';
                                 }
-                                $resultatsModeles->closeCursor(); // on ferme le curseur des résultats
+                                $resultatsAP->closeCursor(); // on ferme le curseur des résultats
                                 }
 
                         catch(Exception $e)
