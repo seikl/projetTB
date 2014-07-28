@@ -51,12 +51,12 @@
                     <?php   
                         
                     
-                        echo "
-                            <table class='table table-striped' width='60%'>                            
+                        echo '
+                            <table class="table table-condensed" align="center">                            
                             <caption> Liste des acces points enregistr&eacute;s</caption>
                             <thead>                            
-                               <tr>
-                                  <th>Mod&egrave; d'AP</th>
+                               <tr>';
+                        echo "<th>Mod&egrave; d'AP</th>
                                   <th>Nom de l'AP</th>
                                   <th>Ping OK?</th>
                                </tr>
@@ -65,7 +65,7 @@
                     
                         //connexion a la BDD et récupération de la liste des modèles
                         include '../includes/connexionBDD.php';
-                        require_once '../Fonctions/hostPing.php';
+                        require_once '../pourTests/hostPing.php';
 
                         try
                         {
@@ -78,20 +78,24 @@
                                 
                                 
                                 while( $ligne = $resultatsAP->fetch() ) // on récupère la liste des membres
-                                {                                      
-                                        echo '<tr>';
-                                        echo '<td>'.(string)$ligne->nomFabricant.' '.(string)$ligne->nomModele.' (firmware '. (string)$ligne->versionFirmware.')</td>';
-                                        echo '<td>'.(string)$ligne->nomAP.' ('.(string)$ligne->adresseIPv4.')</td>'; //TODO Créer lien pour inmterroger AP
-                                        
-                                        $serverPing=new hostPing();                                       
-                                        $serverPing->send("10.0.0.60", 1);
-                                        if ($serverPing->isAlive()) {
-                                            echo '<td> OK </td>';
-                                        } else {
-                                            echo '<td> Not OK </td>';
-                                        }
+                                {         
+                                    $resultatPing = "inconnu";    
+                                    $ip=(string)$ligne->adresseIPv4;
+                                    exec("ping -n 2 -w 1 ".$ip,$reponse,$statut);
 
-                                        echo '</tr>';
+
+                                    if ($statut==0) {
+                                        echo '<tr class="success">';
+                                        $resultatPing = "OK";
+                                    } else {
+                                        echo '<tr class="danger">';
+                                        $resultatPing = "Not OK";
+                                    }
+                                    echo '<td>'.(string)$ligne->nomFabricant.' '.(string)$ligne->nomModele.' (firmware '. (string)$ligne->versionFirmware.')</td>';
+                                    echo '<td>'.(string)$ligne->nomAP.' ('.(string)$ligne->adresseIPv4.')</td>'; //TODO Créer lien pour inmterroger AP
+                                    echo '<td> '.$resultatPing.' </td>';
+
+                                    echo '</tr>';
                                 }
                                 $resultatsAP->closeCursor(); // on ferme le curseur des résultats
                                 }

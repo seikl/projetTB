@@ -17,10 +17,7 @@
               <tr>
                  <td width="30%">                       
                       &nbsp;
-                 </td>
-                 <td width="2px">                       
-                      &nbsp;
-                 </td>                 
+                 </td>               
                  <td>                           
                     <ul class="nav nav-tabs nav-justified">
                      <li><a href="../pagesGestionAP/accueilGestionAP.php">Gestion des AP</a></li>
@@ -50,9 +47,6 @@
                            <li><a href="#">Modifier</a></li>                       
                            <li><a href="#">Supprimer</a></li>
                         </ul>                      
-                 </td>  
-                 <td width="2px">                       
-                      &nbsp;
                  </td>                 
                  <td class="informations">
                      
