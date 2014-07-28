@@ -2,7 +2,8 @@
  * Script de suppression/création automatique de la BDD pour APmanageer
  */
 
-drop user 'apmanager'@'localhost';
+drop user if exists 'apmanager'@'localhost';
+flush privileges;
 create user 'apmanager'@'localhost' identified by 'apmanager01';
 
 drop database if exists apmanagerdb;
@@ -13,7 +14,7 @@ grant all privileges on apmanagerdb.* to apmanager@localhost ;
 
 use apmanagerdb;
 
--- Création des tables
+/*Création des tables*/
 CREATE TABLE IF NOT EXISTS  modeles (
         noModeleAP INT NOT NULL AUTO_INCREMENT,
         nomModele VARCHAR(20) NOT NULL,
@@ -55,7 +56,7 @@ ALTER TABLE lignesCommande ADD FOREIGN KEY (noTypesCommande)
 REFERENCES typesCommandes (noTypesCommande);
 
 
---Insertion de données pour les tests
+/*Insertion de données pour les tests*/
 insert into modeles (nomModele,versionFirmware,nomFabricant,adrMACFabricant) values('AP-6','2.4.11','Avaya','00:20:a6');
 insert into accessPoints (nomAP,adresseIPv4,password,noModeleAP) values('APADSSOL01','172.16.1.29','repuis',1);
 insert into accessPoints (nomAP,adresseIPv4,password,noModeleAP) values('APADSSOL02','10.0.0.10','repuis',1);
