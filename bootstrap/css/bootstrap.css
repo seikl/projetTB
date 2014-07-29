@@ -180,17 +180,18 @@ optgroup {
 }
 table {
   border-spacing: 0;
-  border-collapse: collapse;
+  border-collapse:separate;
+  border-radius: 4px;
 }
 .borderless td {
     border: none;
 }
 .leftmenu { 
- border-width:1px;
- border-style:solid; 
+ border: groove #ccc;
+ border-width:1px; 
  border-right-style: none;
- border-color:#ccc;
- padding: 8 px;
+ border-right-width: 0px;
+ padding: 8px;
  vertical-align:top;
  border-radius:8px; 
  }
@@ -3546,9 +3547,9 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav-tabs > li.active > a,
 .nav-tabs > li.active > a:hover,
 .nav-tabs > li.active > a:focus {
-  color: #777;
+  color: #aaa;
   cursor: default;
-  background-color: #fff;
+  background-color: #222;
   border: 1px solid #ddd;
   border-bottom-color: transparent;
 }
@@ -3616,8 +3617,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav-pills > li.active > a,
 .nav-pills > li.active > a:hover,
 .nav-pills > li.active > a:focus {
-  color: #fff;
-  background-color: #fff;
+  color: #aaa;
+  background-color: #222;
   border: 1px solid #ddd;
 }
 .nav-stacked > li {
@@ -4158,7 +4159,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   padding: 8px 15px;
   margin-bottom: 20px;
   list-style: none;
-  background-color: #ddd;
+  background-color: #eee;
   border-radius: 4px;
 }
 .breadcrumb > li {
@@ -4170,7 +4171,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   content: "/\00a0";
 }
 .breadcrumb > .active {
-  color: #aaa;
+  color: #222;
 }
 .pagination {
   display: inline-block;

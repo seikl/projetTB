@@ -33,7 +33,7 @@
                         <p><b>Informations sur les AP</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
                             <li><a href="afficherListeAP.php">Afficher la liste  de tous les AP inscrits</a></li>
-                           <li><a href="interrogerAP.php">Interroger un AP (SNMP)</a></li>                       
+                           <li class="active"><a href="#">Interroger un AP (SNMP)</a></li>                       
                         </ul>
                         <p><b>Configurer les AP</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
@@ -44,40 +44,39 @@
                  <td class="informations">
                      
                      <ol class="breadcrumb">
-                        <li><a href="../pagesGestionAP/accueilGestionAP.php">Gestion des AP</a></li>
-                        <li>Accueil</li>
+                        <li><a href="accueilGestionAP.php">Accueil gestion des AP</a></li>                     
+                        <li>Interroger un AP (SNMP)</li>
                     </ol>
                     <?php   
                         
                     
-                        echo "
-                            <table class='table table-striped' width='60%'>                            
-                            <thead>
-                               <tr>
-                                  <th>Nombre d'AP en fonction de leur mod&egrave;le respectif</th>
-                               </tr>
-                            </thead>
-                            <tbody>";                   
-                    
+                        echo "<table>
+                            <tbody>
+                            <tr><td>
+                            <form role='selectionAP'>                            
+                            <div class='form-group'>
+                            <label for='name'>Veuillez s&eacute;lecitonner l'access point &agrave; interroger:</label>
+                            <select class='form-control'>
+                            <option>S&eacute;lection...</option>";
+                        
                         //connexion a la BDD et récupération de la liste des modèles
                         include '../includes/connexionBDD.php';
-
+                        
                         try
                         {
                             
                                 $i =0;
                                 $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
-                                $resultatsModeles=$connexion->query("SELECT nomModele, nomFabricant, COUNT(a.noModeleAP)  as nombreAP, versionFirmware FROM modeles, accessPoints a GROUP BY a.noModeleAP;"); // on va chercher tous les membres de la table qu'on trie par ordre croissant
-                                $resultatsModeles->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet
+                                $resultatsAP=$connexion->query("SELECT m.nomModele, m.nomFabricant, m.versionFirmware, a.nomAP, a.adresseIPv4 FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP;");                                 
+                                $resultatsAP->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet                                
                                 
-                                
-                                while( $ligne = $resultatsModeles->fetch() ) // on récupère la liste des membres
-                                {                                      
-                                        echo '<tr><td>'.(string)$ligne->nombreAP.'x '.(string)$ligne->nomFabricant.' '.(string)$ligne->nomModele.' (firmware '. (string)$ligne->versionFirmware.')</td></tr>'; // on affiche les membres
+                                while( $ligne = $resultatsAP->fetch() ) // on récupère la liste des membres
+                                {         
+                                    echo "<option>".(string)$ligne->nomAP.' ( IP: '.(string)$ligne->adresseIPv4.', Mod&egrave;le: '.(string)$ligne->nomFabricant.' '.(string)$ligne->nomModele.' v.'. (string)$ligne->versionFirmware.') </option>';
                                 }
-                                $resultatsModeles->closeCursor(); // on ferme le curseur des résultats
-                                }
+                        $resultatsAP->closeCursor(); // on ferme le curseur des résultats
+                        }
 
                         catch(Exception $e)
                         {
@@ -87,10 +86,17 @@
 
 
                         
-                        echo '</tbody>
-                         </table>  
-                        ';
-                            
+                        echo '
+                            </select> &nbsp;
+                            </td><td align="top">
+                            <button type="button" class="btn btn-primary ">
+                                Valider
+                             </button>
+                                </div>
+                             </form>  
+                             </td>
+                            </tr>
+                         </tbody>';                              
                     ?>
                  </td>
               </tr>

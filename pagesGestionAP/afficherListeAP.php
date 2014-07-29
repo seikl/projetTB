@@ -32,8 +32,8 @@
                  <td width="30%" class="leftmenu">
                         <p><b>Informations sur les AP</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
-                           <li><a href="#" class="active">Afficher la liste  de tous les AP inscrits</a></li>
-                           <li><a href="#">Interroger un AP</a></li>                       
+                           <li  class="active"><a href="#">Afficher la liste  de tous les AP inscrits</a></li>
+                           <li><a href="interrogerAP.php">Interroger un AP (SNMP)</a></li>                       
                         </ul>
                         <p><b>Configurer les AP</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
@@ -44,9 +44,8 @@
                  <td class="informations">
                      
                      <ol class="breadcrumb">
-                        <li><a href="../pagesGestionAP/accueilGestionAP.php">Gestion des AP</a></li>                     
-                        <li><a href="../pagesGestionAP/accueilGestionAP.php">Accueil</a></li>
-                        <li>Afficher la liste  de tous les AP</li>
+                        <li><a href="../pagesGestionAP/accueilGestionAP.php">Accueil gestion des AP</a></li>                     
+                        <li>Afficher la liste  de tous les AP inscrits</li>
                     </ol>
                     <?php   
                         
@@ -65,7 +64,6 @@
                     
                         //connexion a la BDD et récupération de la liste des modèles
                         include '../includes/connexionBDD.php';
-                        require_once '../pourTests/hostPing.php';
 
                         try
                         {
@@ -73,33 +71,35 @@
                                 $i =0;
                                 $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
-                                $resultatsAP=$connexion->query("SELECT m.nomModele, m.nomFabricant, m.versionFirmware, a.nomAP, a.adresseIPv4 FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP;"); 
-                                $resultatsAP->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet
-                                
+                                $resultatsAP=$connexion->query("SELECT m.nomModele, m.nomFabricant, m.versionFirmware, a.nomAP, a.adresseIPv4 FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP;");                                 
+                                $resultatsAP->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet                                
                                 
                                 while( $ligne = $resultatsAP->fetch() ) // on récupère la liste des membres
                                 {         
                                     $resultatPing = "inconnu";    
+                                    $statut=0;
                                     $ip=(string)$ligne->adresseIPv4;
-                                    exec("ping -n 2 -w 1 ".$ip,$reponse,$statut);
-                                    //exec("ping -c2 ".$ip,$reponse,$statut);
+                                    exec("ping -n 1 -w 1 ".$ip,$reponse,$statut);
+                                    //exec("ping -c1 -w1".$ip,$reponse,$statut);
 
 
                                     if ($statut==0) {
                                         echo '<tr class="success">';
                                         $resultatPing = "OK";
+                                        $ip = '<a href="http://'.$ip.'">'.$ip.'</a>';
                                     } else {
                                         echo '<tr class="danger">';
                                         $resultatPing = "Not OK";
+                                        $ip = '<a class="active" href="#">'.$ip.'</a>';
                                     }
                                     echo '<td>'.(string)$ligne->nomFabricant.' '.(string)$ligne->nomModele.' (firmware '. (string)$ligne->versionFirmware.')</td>';
-                                    echo '<td>'.(string)$ligne->nomAP.' ('.(string)$ligne->adresseIPv4.')</td>'; //TODO Créer lien pour inmterroger AP
+                                    echo '<td>'.(string)$ligne->nomAP.' ('.$ip.')</td>'; //TODO Créer lien pour inmterroger AP
                                     echo '<td> '.$resultatPing.' </td>';
 
                                     echo '</tr>';
                                 }
-                                $resultatsAP->closeCursor(); // on ferme le curseur des résultats
-                                }
+                        $resultatsAP->closeCursor(); // on ferme le curseur des résultats
+                        }
 
                         catch(Exception $e)
                         {

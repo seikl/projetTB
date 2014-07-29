@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
     <head>
         <meta charset="ISO-8859-1">
@@ -23,16 +23,16 @@
 
             ///SETTINGS/////////////////////////////////////
             $ngrep = "ngrep"; //NGREP binary
-            $ping = "ping -n 1"; //PING with arguments
-            $arp = "arp -a"; //ARP with arguments to show all ARP records
+            $ping = "ping -c1"; //PING with arguments
+            $arp = "arp"; //ARP with arguments to show all ARP records
 
             ///FUNCTIONS////////////////////////////////////
 
             //Get HW (MAC) address from IP address
             function get_mac($ip) {
               $ip = trim($ip);
-              shell_exec($GLOBALS["ping"]." ".$ip);
-              $arp = shell_exec($GLOBALS["arp"]);
+              shell_exec("ping -c1"." ".$ip);
+              $arp = shell_exec("arp");
               $arp = explode("\n", $arp);
               
               foreach($arp as $line) {
@@ -91,14 +91,16 @@
               for($i=1;$i<256;$i++) {
                 //Mega threaded ( This will open 255 processes ;))
                 $ipAPinger=$subnet.".".$i;
-                $fp[$i] = popen($GLOBALS["ping"]." ".$ipAPinger, "r");
+                $fp[$i] = popen("ping -n1 -w1"." ".$ipAPinger, "r");
+								//echo("IP: $ip\nMAC: ".get_mac($ip)."\n");
               }
               for($i=1;$i<256;$i++) {
                 while( $fp[$i] && !feof($fp[$i]) ) { fgets($fp[$i]); }
               } 
 
               
-              $arp = shell_exec($GLOBALS["arp"]);
+              //$arp = shell_exec("arp -vn"); //pour Linux
+              $arp = shell_exec("arp -a"); //pour Windows
               $tableARP= explode("\n", $arp);
               
               echo "<h1> Table ARP:</H1>";
@@ -106,11 +108,12 @@
               
               foreach($tableARP as $line) {  
          
-                if(preg_match('/00-20-a6/i', $line)) {
+                if(preg_match("/00:20:a6/i", $line)) {
                   $line = $line."<b><== Borne AVAYA!</b>";
                 }
                 echo($line."\n <br>");    
-              }              
+              } 
+							            
               
             }
 
@@ -142,7 +145,8 @@
             //Quick active scan for MACs/IPs:
             print("Scanning for IP/MAC addresses\nC-c for stop\n <br>");
             quick_ipmac_scan("172.16.1");
-
+						$ip="172.16.1.29";
+						//echo("IP: $ip\nMAC: ".get_mac($ip)."\n");
             /*
             Example output:
             Scanning for IP/MAC addresses
