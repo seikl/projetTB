@@ -82,6 +82,7 @@
                                     $resultatPing = "inconnu";    
                                     $ip=(string)$ligne->adresseIPv4;
                                     exec("ping -n 2 -w 1 ".$ip,$reponse,$statut);
+                                    //exec("ping -c2 ".$ip,$reponse,$statut);
 
 
                                     if ($statut==0) {
