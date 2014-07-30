@@ -33,7 +33,7 @@
                         <p><b>Informations sur les AP</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
                            <li  class="active"><a href="#">Afficher la liste  de tous les AP inscrits</a></li>
-                           <li><a href="interrogerAP.php">Interroger un AP (SNMP)</a></li>                       
+                           <li><a href="rechercherAP.php">Rechercher des AP sur le r&eacute;seau</a></li>                       
                         </ul>
                         <p><b>Configurer les AP</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
@@ -71,7 +71,7 @@
                                 $i =0;
                                 $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
-                                $resultatsAP=$connexion->query("SELECT m.nomModele, m.nomFabricant, m.versionFirmware, a.nomAP, a.adresseIPv4 FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP;");                                 
+                                $resultatsAP=$connexion->query("SELECT a.noAP, m.nomModele, m.nomFabricant, m.versionFirmware, a.nomAP, a.adresseIPv4 FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP;");                                 
                                 $resultatsAP->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet                                
                                 
                                 while( $ligne = $resultatsAP->fetch() ) // on récupère la liste des membres
@@ -79,32 +79,36 @@
                                     $resultatPing = "inconnu";    
                                     $statut=0;
                                     $ip=(string)$ligne->adresseIPv4;
-                                    exec("ping -n 1 -w 1 ".$ip,$reponse,$statut);
-                                    //exec("ping -c1 -w1".$ip,$reponse,$statut);
+                                    exec("ping -n 1 -w 1 ".$ip,$reponse,$statut);//pour windows
+                                    //exec("ping -c1 -w1 ".$ip,$reponse,$statut);//pour linux
 
 
                                     if ($statut==0) {
                                         echo '<tr class="success">';
                                         $resultatPing = "OK";
-                                        $ip = '<a href="http://'.$ip.'">'.$ip.'</a>';
+                                        
                                     } else {
                                         echo '<tr class="danger">';
                                         $resultatPing = "Not OK";
-                                        $ip = '<a class="active" href="#">'.$ip.'</a>';
                                     }
+                                    
                                     echo '<td>'.(string)$ligne->nomFabricant.' '.(string)$ligne->nomModele.' (firmware '. (string)$ligne->versionFirmware.')</td>';
-                                    echo '<td>'.(string)$ligne->nomAP.' ('.$ip.')</td>'; //TODO Créer lien pour inmterroger AP
+                                    echo '<td><a href="interrogerAP.php?noAP='.(string)$ligne->noAP.'">'.(string)$ligne->nomAP.' ('.$ip.')</a></td>'; //TODO Créer lien pour inmterroger AP
                                     echo '<td> '.$resultatPing.' </td>';
 
                                     echo '</tr>';
                                 }
                         $resultatsAP->closeCursor(); // on ferme le curseur des résultats
+                        
+                        
                         }
 
                         catch(Exception $e)
                         {
+                                echo '<tr><td colspan="3">';
                                 echo 'Erreur : '.$e->getMessage().'<br />';
                                 echo 'N° : '.$e->getCode();
+                                echo '</td></tr>';
                         }
 
 

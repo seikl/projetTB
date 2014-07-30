@@ -1431,15 +1431,15 @@ pre code {
   }
 }
 table {
-  max-width: 100%;
   background-color: transparent;
 }
 th {
   text-align: left;
 }
 .table {
-  width: 100%;
+  width: 75%;
   margin-bottom: 20px;
+  border: 1px solid #fff;
 }
 
 .table > thead > tr > th,
@@ -1451,11 +1451,12 @@ th {
   padding: 8px;
   line-height: 1.42857143;
   vertical-align: top;
-  border-top: 1px solid #ddd;
+  border-top: 0px solid #ddd;
 }
 .table > thead > tr > th {
   vertical-align: bottom;
   border-bottom: 2px solid #ddd;
+  white-space: nowrap;
 }
 .table > caption + thead > tr:first-child > th,
 .table > colgroup + thead > tr:first-child > th,
@@ -1498,6 +1499,7 @@ th {
 .table-bordered > thead > tr > td {
   border-bottom-width: 2px;
 }
+  
 .table-striped > tbody > tr:nth-child(odd) > td,
 .table-striped > tbody > tr:nth-child(odd) > th {
   background-color: #f9f9f9;

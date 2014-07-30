@@ -33,7 +33,7 @@
                         <p><b>Informations sur les AP</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
                             <li><a href="afficherListeAP.php">Afficher la liste  de tous les AP inscrits</a></li>
-                           <li><a href="interrogerAP.php">Interroger un AP (SNMP)</a></li>                       
+                           <li><a href="rechercherAP.php">Rechercher des AP sur le r&eacute;seau</a></li>                      
                         </ul>
                         <p><b>Configurer les AP</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
@@ -44,14 +44,13 @@
                  <td class="informations">
                      
                      <ol class="breadcrumb">
-                        <li><a href="../pagesGestionAP/accueilGestionAP.php">Gestion des AP</a></li>
-                        <li>Accueil</li>
+                        <li><a href="#" class="active">Accueil gestion des AP</a></li>                         
                     </ol>
                     <?php   
                         
                     
                         echo "
-                            <table class='table table-striped' width='60%'>                            
+                            <table class='table table-striped' width='60%' align='center'>                            
                             <thead>
                                <tr>
                                   <th>Nombre d'AP en fonction de leur mod&egrave;le respectif</th>

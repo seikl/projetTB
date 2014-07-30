@@ -51,8 +51,7 @@
                  <td class="informations">
                      
                      <ol class="breadcrumb">
-                        <li><a href="#">Gestion de la BDD</a></li>
-                        <li class="active">Accueil</li>
+                        <li><a href="#">Accueil gestion de la BDD</a></li> 
                     </ol>
                      INFOS
                  </td>

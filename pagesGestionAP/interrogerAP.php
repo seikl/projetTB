@@ -32,8 +32,8 @@
                  <td width="30%" class="leftmenu">
                         <p><b>Informations sur les AP</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
-                            <li><a href="afficherListeAP.php">Afficher la liste  de tous les AP inscrits</a></li>
-                           <li class="active"><a href="#">Interroger un AP (SNMP)</a></li>                       
+                            <li  class="active"><a href="afficherListeAP.php">Afficher la liste  de tous les AP inscrits</a></li>
+                           <li><a href="rechercherAP.php">Rechercher des AP sur le r&eacute;seau</a></li>                       
                         </ul>
                         <p><b>Configurer les AP</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
@@ -42,61 +42,112 @@
                  </td>  
             
                  <td class="informations">
-                     
-                     <ol class="breadcrumb">
-                        <li><a href="accueilGestionAP.php">Accueil gestion des AP</a></li>                     
-                        <li>Interroger un AP (SNMP)</li>
-                    </ol>
+                                          <ol class="breadcrumb">
+                        <li><a href="accueilGestionAP.php">Accueil gestion des AP</a></li>    
+                        <li  class="active"><a href="afficherListeAP.php">Afficher la liste  de tous les AP inscrits</a></li>
+
                     <?php   
-                        
                     
-                        echo "<table>
-                            <tbody>
-                            <tr><td>
-                            <form role='selectionAP'>                            
-                            <div class='form-group'>
-                            <label for='name'>Veuillez s&eacute;lecitonner l'access point &agrave; interroger:</label>
-                            <select class='form-control'>
-                            <option>S&eacute;lection...</option>";
+                        
+                        $noAP = $_GET['noAP'];
                         
                         //connexion a la BDD et récupération de la liste des modèles
-                        include '../includes/connexionBDD.php';
+                        include '../includes/connexionBDD.php';                    
+                        include '../includes/fonctionsUtiles.php';
                         
+                        //récupération des infos enregistrées dans la BDD
                         try
                         {
                             
                                 $i =0;
                                 $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
-                                $resultatsAP=$connexion->query("SELECT m.nomModele, m.nomFabricant, m.versionFirmware, a.nomAP, a.adresseIPv4 FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP;");                                 
+                                $resultatsAP=$connexion->query("SELECT m.nomModele, m.nomFabricant, m.versionFirmware, a.nomAP, a.adresseIPv4 FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP AND a.noAP=".$noAP.";");                                 
                                 $resultatsAP->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet                                
                                 
                                 while( $ligne = $resultatsAP->fetch() ) // on récupère la liste des membres
-                                {         
-                                    echo "<option>".(string)$ligne->nomAP.' ( IP: '.(string)$ligne->adresseIPv4.', Mod&egrave;le: '.(string)$ligne->nomFabricant.' '.(string)$ligne->nomModele.' v.'. (string)$ligne->versionFirmware.') </option>';
+                                {     
+                                    $nomAP=(string)$ligne->nomAP;
+                                    $ip=(string)$ligne->adresseIPv4;
+                                    $nomFabricant=(string)$ligne->nomFabricant;
+                                    $nomModele=(string)$ligne->nomModele;
+                                    $versionFirmware=(string)$ligne->versionFirmware;                                    
                                 }
-                        $resultatsAP->closeCursor(); // on ferme le curseur des résultats
+                            $resultatsAP->closeCursor(); // on ferme le curseur des résultats
+                                                
                         }
+                                                
 
                         catch(Exception $e)
                         {
+                                echo '<li> Erreur lors du chargement</li></ol>';
                                 echo 'Erreur : '.$e->getMessage().'<br />';
                                 echo 'N° : '.$e->getCode();
+
                         }
-
-
                         
-                        echo '
-                            </select> &nbsp;
-                            </td><td align="top">
-                            <button type="button" class="btn btn-primary ">
-                                Valider
-                             </button>
-                                </div>
-                             </form>  
-                             </td>
-                            </tr>
-                         </tbody>';                              
+                        echo '<li> Informations sur: <strong>'.$nomAP.'</strong> ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.', adresse IP: '.$ip.')</li>
+                            </ol>';
+                        
+                        try {
+                                //récupération infos SNMP (communauté par défaut: public)
+                                $snmpcommunity ="public";
+                                $sysname[0] = snmpget($ip, $snmpcommunity, ".1.3.6.1.2.1.1.5.0");
+                                $sysname[1] = preg_replace("/STRING:/i","",$sysname[0]); 
+
+                                $sysdesc[0] = snmpget($ip, $snmpcommunity, ".1.3.6.1.2.1.1.1.0");
+                                $sysdesc[1] = preg_replace("/STRING:/i","",$sysdesc[0]);
+
+                                $sysloc[0] = snmpget($ip, $snmpcommunity, ".1.3.6.1.2.1.1.6.0");
+                                $sysloc[1] = preg_replace("/STRING:/i","",$sysloc[0]);                        
+
+                                $sysuptime[0] = snmpget($ip, $snmpcommunity, ".1.3.6.1.2.1.1.3.0");
+                                $sysuptime[1] = preg_replace("/Timeticks:/i","",$sysuptime[0]);                            
+                        }
+                        catch(ErrorException $e)
+                        {                            
+                                $sysname[1] = $e->getMessage();
+                                $sysdesc[1] = $e->getMessage();
+                                $sysloc[1] = $e->getMessage();
+                                $sysuptime[1] = $e->getMessage();
+                        }     
+                        
+                        echo '<table class="table" align="center" width="75%">                            
+                            <thead>
+                               <tr>
+                                  <th>&nbsp;</th>
+                                  <th>Informations SNMP</th>
+                                  <th>Informations de la BDD</th>
+                               </tr>
+                            </thead>
+                            <tbody>
+                               <tr>
+                                  <td align="right"><strong>Nom du syst&egrave;me:</strong></td>
+                                  <td>'.$sysname[1].'</td>
+                                  <td>'.$nomAP.'</td>
+                               </tr>
+                               <tr>
+                                  <td align="right"><strong>Description du syst&egrave;me:</strong></td>
+                                  <td>'.$sysdesc[1].'</td>
+                                  <td>N/A</td>
+                               </tr>
+                               <tr>
+                                  <td align="right"><strong>Emplacement du syst&egrave;me:</strong></td>
+                                  <td>'.$sysloc[1].'</td>
+                                  <td>N/A</td>
+                               </tr>
+                               <tr>
+                                  <td align="right"><strong>Uptime:</strong></td>
+                                  <td>'.$sysuptime[1].'</td>
+                                  <td>N/A</td>
+                               </tr>                               
+
+                            </tbody>
+                         </table>';
+                        
+                        
+                        
+                                                    
                     ?>
                  </td>
               </tr>
