@@ -33,7 +33,7 @@
                         <p><b>Informations sur les AP</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
                             <li><a href="afficherListeAP.php">Afficher la liste  de tous les AP inscrits</a></li>
-                           <li class="active"><a href="#">Rechercher des AP sur le r&eacute;seau</a></li>                       
+                           <li class="active"><a href="rechercherAP.php">Rechercher des AP sur le r&eacute;seau</a></li>                       
                         </ul>
                         <p><b>Configurer les AP</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
@@ -43,35 +43,36 @@
             
                  <td class="informations">
                     <ol class="breadcrumb">
-                        <li><a href="accueilGestionAP.php">Accueil gestion des AP</a></li>    
-                        <li>Rechercher des AP sur le r&eacute;seau</li>
+                        <li><a href="accueilGestionAP.php">Accueil gestion des AP</a></li>  
+                        <li><a href="rechercherAP.php">Rechercher des AP sur le r&eacute;seau</a></li>
+                        <li>R&eacute;sutlat de la recherche</li>
                     </ol>  
                      
-                     <?php
-                        //connexion a la BDD et récupération de la liste des modèles
-                        include '../includes/connexionBDD.php';                    
-                        include '../includes/fonctionsUtiles.php';
-                        
-                     ?>
-                     
                      <ol>
-                     <p>Veuillez saisir la plage d'adresses &agrave; scanner</p>
-                    <form class="form-inline" role="form" action="rechercherAPResultat.php" method="POST">
-                        <div class="form-group">
-                           
-                           <input type="text" class="form-control" name="groupeA" size="3" maxlength="3" value="192"/>
-                           <strong>.</strong>
-                            <input type="text" class="form-control" name="groupeB" size="3" maxlength="3" value="168"/>
-                            <strong>.</strong>
-                           <input type="text" class="form-control" name="groupeC" size="3" maxlength="3" value="1"/>
-                           <strong>.</strong>
-                           <input type="text" class="form-control" name="groupeD" size="3" maxlength="3" value="0"/>
-                           <strong>/</strong>
-                           <input type="text" class="form-control" name="masque" size="2" maxlength="2" value="24"/>                               
-                           
-                        </div>
-                        &nbsp;&nbsp;<button type="submit" class="btn btn-primary">Rechercher</button>
-                    </form>  
+                        <?php
+                            include '../includes/fonctionsUtiles.php';   
+                            include '../includes/scanIP.php';
+                            
+                            $ip = $_POST['groupeA'].".".$_POST['groupeB'].".".$_POST['groupeC'].".".$_POST['groupeD'];
+                            $cidr = (int)$_POST['masque'];      
+                            
+                            $adrReseau = netmask($ip, $cidr);
+                            $adrBroadcast =cidr2broadcast($adrReseau, $cidr);
+                            
+                            echo "<br><br>=>>>> adresse reseau: ".$adrReseau."    --- Masque: ".$cidr."    --- Broadcast: ".$adrBroadcast;
+  
+                            $adresseDebut = long2ip(ip2long($adrReseau)+1);
+                            $adresseFin = long2ip(ip2long($adrBroadcast)-1);
+                            
+                            echo "<br><br>=>>>> début: ".$adresseDebut."    --- Fin: ".$adresseFin;
+                            
+                            $nbiter = ip2long($adresseFin) - ip2long($adresseDebut) +1;
+                            echo "<br><br>=>>>> nb d'iterrations: ".$nbiter;
+                            
+                            quick_ipmac_scan(ip2long($adresseDebut),ip2long($adresseFin), "00-20-a6");
+
+                        ?>
+  
                      </ol>
                  </td>
               </tr>
