@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
     <title>AP Manager</title>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <script type="text/javascript" src="../js/jquery-1.11.1.js"></script>
+<script type="text/javascript" src="../js/jquery-1.11.1.js"></script>
     <!-- Bootstrap core CSS -->
     <link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
   </head>
-
   <body>
       <br><br>
     <div class="container-fluid">        
@@ -51,15 +49,16 @@
                      <ol>
                         <?php
                             include '../includes/fonctionsUtiles.php';   
-                            include '../includes/scanIP.php';
+                            include '../includes/scanIP.php';                            
                             
-                            $ip = $_POST['groupeA'].".".$_POST['groupeB'].".".$_POST['groupeC'].".".$_POST['groupeD'];
-                            $cidr = (int)$_POST['masque'];      
+                            $ip = $_POST['groupeA'].".".$_POST['groupeB'].".".$_POST['groupeC'].".".$_POST['groupeD'];                            
+                            $masque = (int)$_POST['masque'];
+                            $vendorMAC = $_POST['vendorMAC'];
                             
-                            $adrReseau = netmask($ip, $cidr);
-                            $adrBroadcast =cidr2broadcast($adrReseau, $cidr);
+                            $adrReseau = netmask($ip, $masque);
+                            $adrBroadcast =cidr2broadcast($adrReseau, $masque);  
                             
-                            echo "<br><br>=>>>> adresse reseau: ".$adrReseau."    --- Masque: ".$cidr."    --- Broadcast: ".$adrBroadcast;
+                            echo "<br><br>=>>>> adresse reseau: ".$adrReseau."    --- Masque: ".$masque."    --- Broadcast: ".$adrBroadcast;
   
                             $adresseDebut = long2ip(ip2long($adrReseau)+1);
                             $adresseFin = long2ip(ip2long($adrBroadcast)-1);
@@ -67,9 +66,19 @@
                             echo "<br><br>=>>>> début: ".$adresseDebut."    --- Fin: ".$adresseFin;
                             
                             $nbiter = ip2long($adresseFin) - ip2long($adresseDebut) +1;
-                            echo "<br><br>=>>>> nb d'iterrations: ".$nbiter;
+                            echo "<br><br>=>>>> nb d'iterrations: ".$nbiter."--- adr MAC du vendeur: ".$vendorMAC;
                             
-                            quick_ipmac_scan(ip2long($adresseDebut),ip2long($adresseFin), "00-20-a6");
+                            $tabARP = quick_ipmac_scan(ip2long($adresseDebut),ip2long($adresseFin));
+
+                            $vendorMAC = preg_replace("/:/", "-", $vendorMAC); //pour Windows
+                            //$vendorMAC = preg_replace("/-/", ":", $vendorMAC); //pour Linux 
+                            
+                            foreach($tabARP as $ligne) {  
+                                if(preg_match("/".$vendorMAC."/i", $ligne)) {
+                                    $ligne = $ligne."<strong><== Gefundet!</strong>";
+                                  }        
+                                echo $ligne."<br>";
+                            } 
 
                         ?>
   
