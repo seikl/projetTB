@@ -3,13 +3,7 @@
   <head>
     <title>AP Manager</title>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <script type="text/javascript" src="../js/jquery-1.11.1.js"></script>
-    <script>
-        function load()
-        {
-            alert("Chargement en cours");
-        }
-    </script>
+    <script type="text/javascript" src="../js/jquery-1.11.1.js"></script>                
     <!-- Bootstrap core CSS -->
     <link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
   </head>
@@ -54,7 +48,7 @@
                     </ol>  
                      <ol>
                          
-                    <form class="form-inline" role="form" action="rechercherAPResultat.php" method="POST">
+                    <form id="form" class="form-inline" role="form" action="rechercherAPResultat.php" method="POST">
                         <div class="form-group">       
                             
                             <label for="name">Veuillez s&eacute;lectionner le type de mat&eacute;riel &agrave; rechercher et saisir la plage d'adresses &agrave; scanner</label><br>
@@ -99,21 +93,35 @@
                      ?>    
                             </select>
                             </br></br>
-                           
-                           <input type="text" class="form-control" name="groupeA" size="3" maxlength="3" value="192"/>
-                           <strong>.</strong>
-                            <input type="text" class="form-control" name="groupeB" size="3" maxlength="3" value="168"/>
-                            <strong>.</strong>
-                           <input type="text" class="form-control" name="groupeC" size="3" maxlength="3" value="1"/>
-                           <strong>.</strong>
-                           <input type="text" class="form-control" name="groupeD" size="3" maxlength="3" value="0"/>
-                           <strong>/</strong>
-                           <input type="text" class="form-control" name="masque" size="2" maxlength="2" value="24"/>                               
-                        
-                        &nbsp;&nbsp;<button type="submit" class="btn btn-primary" onclick="load()">Rechercher</button>
-                        </div>     
-                    </form>                                        
-                     </ol>                                          
+                            <table border="0">
+                                <tr><td>
+                                    <input type="text" class="form-control" name="groupeA" size="3" maxlength="3" value="192"/>
+                                    <strong>.</strong>
+                                     <input type="text" class="form-control" name="groupeB" size="3" maxlength="3" value="168"/>
+                                     <strong>.</strong>
+                                    <input type="text" class="form-control" name="groupeC" size="3" maxlength="3" value="1"/>
+                                    <strong>.</strong>
+                                    <input type="text" class="form-control" name="groupeD" size="3" maxlength="3" value="0"/>
+                                    <strong>/</strong>
+                                    <input type="text" class="form-control" name="masque" size="2" maxlength="2" value="24"/>                               
+
+                                    </td><td>
+                                    &nbsp;&nbsp;<input type="submit" id="submit" class="btn btn-primary" value="Rechercher" onclick="$('#loading2').show();"/>                           
+                                    </td><td>
+                                        <div id="loading2" style="display:none;" ><img class="img" src="../images/search-loader-circle2.gif" height="34" width="34" alt=""/>&nbsp;Recherche en cours...</div>
+                                    </td></tr>
+                            </table>
+                                    
+                    </form>   
+                         <script type="text/javascript">
+                            (function (d) {
+                              d.getElementById('form').onsubmit = function () {
+                                d.getElementById('submit').style.display = 'none';
+                                d.getElementById('loading2').style.display = 'show';
+                              };
+                            }(document));
+                        </script>
+                     </ol> 
                  </td>
               </tr>
            </tbody>
@@ -121,7 +129,7 @@
         
         
 
-      </div><!-- /container -->
+      </div><!-- /container -->     
 
 
     <!-- Bootstrap core JavaScript
