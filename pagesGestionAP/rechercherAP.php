@@ -55,7 +55,7 @@
                             <select class="form-control" name="vendorMAC">
                             <option value="null">S&eacute;lection...&nbsp;&nbsp;&nbsp;</option>
                      
-                     <?php
+                     <?php                                          
                         //connexion a la BDD et récupération de la liste des modèles
                         include '../includes/connexionBDD.php';                    
                         include '../includes/fonctionsUtiles.php';
@@ -102,7 +102,7 @@
                                     <input type="text" class="form-control" name="groupeC" size="3" maxlength="3" value="1"/>
                                     <strong>.</strong>
                                     <input type="text" class="form-control" name="groupeD" size="3" maxlength="3" value="0"/>
-                                    <strong>/</strong>
+                                    &nbsp;<strong class="indication">/</strong>&nbsp;
                                     <input type="text" class="form-control" name="masque" size="2" maxlength="2" value="24"/>                               
 
                                     </td><td>

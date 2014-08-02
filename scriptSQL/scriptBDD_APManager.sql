@@ -2,7 +2,7 @@
  * Script de suppression/création automatique de la BDD pour APmanageer
  */
 
-drop user if exists 'apmanager'@'localhost';
+drop user 'apmanager'@'localhost';
 flush privileges;
 create user 'apmanager'@'localhost' identified by 'apmanager01';
 
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS accessPoints(
         nomAP VARCHAR(20) NOT NULL,
         adresseIPv4 VARCHAR(15) NOT NULL,
         username VARCHAR(20),
-        password VARCHAR(20) NOT NULL,
+        password VARCHAR(20),
         noModeleAP INT NOT NULL REFERENCES modeles(noModeleAP),
      PRIMARY KEY (noAP)
 );
@@ -58,7 +58,9 @@ REFERENCES typesCommandes (noTypesCommande);
 
 /*Insertion de données pour les tests*/
 insert into modeles (nomModele,versionFirmware,nomFabricant,adrMACFabricant) values('AP-6','2.4.11','Avaya','00:20:a6');
+insert into modeles (nomModele,versionFirmware,nomFabricant,adrMACFabricant) values('SS-439','4.1.0','Qnap','00:08:9b');
 insert into accessPoints (nomAP,adresseIPv4,password,noModeleAP) values('APADSSOL01','172.16.1.29','repuis',1);
-insert into accessPoints (nomAP,adresseIPv4,password,noModeleAP) values('APADSSOL02','10.0.0.10','repuis',1);
-insert into typesCommandes (typesCommande,description) values('Afficher infos système','Sert à afficher les informations systèmes de base');
+insert into accessPoints (nomAP,adresseIPv4,password,noModeleAP) values('APADSSOL02','172.16.1.30','repuis',1);
+insert into accessPoints (nomAP,adresseIPv4,noModeleAP) values('NASMaison','10.0.0.60',2);
+insert into typesCommandes (typesCommande,description) values('Afficher infos système','Sert à afficher les informations systèmes sur les modèles AVAYA AP-6');
 insert into lignesCommande (ligneCommande,portProtocole,noModeleAP,noTypesCommande) values('show system\r\nquit\r\n',23,1,1);

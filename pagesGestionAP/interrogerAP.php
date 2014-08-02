@@ -62,7 +62,7 @@
                                 $i =0;
                                 $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
-                                $resultatsAP=$connexion->query("SELECT m.nomModele, m.nomFabricant, m.versionFirmware, a.nomAP, a.adresseIPv4 FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP AND a.noAP=".$noAP.";");                                 
+                                $resultatsAP=$connexion->query("SELECT m.nomModele, m.nomFabricant, m.versionFirmware, a.nomAP, a.adresseIPv4, m.adrMACFabricant FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP AND a.noAP=".$noAP.";");                                 
                                 $resultatsAP->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet                                
                                 
                                 while( $ligne = $resultatsAP->fetch() ) // on récupère la liste des membres
@@ -71,7 +71,8 @@
                                     $ip=(string)$ligne->adresseIPv4;
                                     $nomFabricant=(string)$ligne->nomFabricant;
                                     $nomModele=(string)$ligne->nomModele;
-                                    $versionFirmware=(string)$ligne->versionFirmware;                                    
+                                    $versionFirmware=(string)$ligne->versionFirmware;   
+                                    $adrMACFabricant =(string)$ligne->adrMACFabricant;   
                                 }
                             $resultatsAP->closeCursor(); // on ferme le curseur des résultats
                                                 
@@ -97,17 +98,21 @@
 
                                 $sysdesc[0] = snmpget($ip, $snmpcommunity, ".1.3.6.1.2.1.1.1.0");
                                 $sysdesc[1] = preg_replace("/STRING:/i","",$sysdesc[0]);
+                                
+                                $adrMAC[0] = snmpget($ip, $snmpcommunity, ".1.3.6.1.2.1.2.2.1.6.2");
+                                $adrMAC[1] = preg_replace("/STRING:/i","",$adrMAC[0]);                                 
 
                                 $sysloc[0] = snmpget($ip, $snmpcommunity, ".1.3.6.1.2.1.1.6.0");
-                                $sysloc[1] = preg_replace("/STRING:/i","",$sysloc[0]);                        
+                                $sysloc[1] = preg_replace("/STRING:/i","",$sysloc[0]);                                     
 
                                 $sysuptime[0] = snmpget($ip, $snmpcommunity, ".1.3.6.1.2.1.1.3.0");
-                                $sysuptime[1] = preg_replace("/Timeticks:/i","",$sysuptime[0]);                            
+                                $sysuptime[1] = preg_replace("/Timeticks:/i","",$sysuptime[0]);                                                              
                         }
                         catch(ErrorException $e)
                         {                            
                                 $sysname[1] = $e->getMessage();
                                 $sysdesc[1] = $e->getMessage();
+                                $adrMAC[1] = $e->getMessage();
                                 $sysloc[1] = $e->getMessage();
                                 $sysuptime[1] = $e->getMessage();
                         }     
@@ -129,7 +134,12 @@
                                <tr>
                                   <td align="right"><strong>Description du syst&egrave;me:</strong></td>
                                   <td>'.$sysdesc[1].'</td>
-                                  <td>N/A</td>
+                                  <td>'.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.'</td>
+                               </tr>
+                                <tr>
+                                  <td align="right"><strong>Adresse MAC du fabricant:</strong></td>
+                                  <td>'.$adrMAC[1].'</td>
+                                  <td>'.$adrMACFabricant.'</td>
                                </tr>
                                <tr>
                                   <td align="right"><strong>Emplacement du syst&egrave;me:</strong></td>

@@ -1,4 +1,7 @@
 <?php
+    //pour autoriser le script à s'exécuter au-delà de 30 secondes
+    set_time_limit(300);
+    
     //scan du réseau avec l'adresse de début, de fin et la MAC à rechercher (source originale: https://github.com/Harvie/Programs/blob/master/php/mac_hack.phps, le 10.09.2014
     function quick_ipmac_scan($adrDebutLong, $adrFinLong) {       
         
