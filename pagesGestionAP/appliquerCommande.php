@@ -126,7 +126,7 @@
                         echo "infos recues: ".$infosRecues." --- modele en cours: ".$noModele." --- AP choisis: ".htmlspecialchars(print_r($APChoisis, true));;
                         echo '                  
                                         <label for="name">Mutiple Select list</label><br>
-                                        <select multiple name="APAchoisir[]">';                    
+                                        <select multiple class="form-control" name="APAchoisir[]">';                    
                     
                             //Pour afifcher la liste des AP à sélectionner
                             try
@@ -175,7 +175,7 @@
                                
                                     
                                         &nbsp;&nbsp;<button class="btn btn-primary" onclick="submit()">Ajouter --></button><br><br> 
-                                        
+                                        &nbsp;&nbsp;<button class="btn btn-primary" onclick="submit()"><-- Retirer</button><br><br> 
                                        
                                     ';
 
