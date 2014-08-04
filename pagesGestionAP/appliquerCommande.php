@@ -48,26 +48,43 @@
                     </ol>  
                      <ol>
                          
-                    <form id="form" class="form-inline" role="form" action="appliquerCommande.php" method="POST">
+                    <form id="selectionModeles" class="form-inline" role="form" action="appliquerCommande.php" method="POST">
                         <div class="form-group">       
                             
                             <label for="name">Veuillez s&eacute;lectionner les AP concern&eacute;s et/ou trier selon le type de mat&eacute;riel, puis choisir la commande &agrave; leur appliquer:</label><br>
-                            <select class="form-control" id="noModele" name="noModele" onChange="document.getElementById('noModele').submit()">
+                            <select class="form-control" id="selectNoModele" name="noModele" onChange="submit()">
                             
                      
                      <?php                                          
                         //connexion a la BDD et récupération de la liste des modèles
                         include '../includes/connexionBDD.php';                    
-                        include '../includes/fonctionsUtiles.php';
-                                                
+                        include '../includes/fonctionsUtiles.php';                          
+                        
+                        $infosRecues ='Le néant';
+                                
+                        //pour vérifier si valeurs déjà existantes dans le formulaire
+                        if ($_POST) {
+                            
+                            $infosRecues= htmlspecialchars(print_r($_POST, true));
+                           
+                        }
                         if (!isset($_POST['noModele'])){                            
                             $noModele='0';
                             echo "<option value='0' selected>Trier par mod&egrave;les...&nbsp;&nbsp;&nbsp;</option>";
                         }
                         else {
-                            $noModele = $_POST['noModele'];   
-                            echo "<option value='0'>Trier par mod&egrave;les...&nbsp;&nbsp;&nbsp;</option>";
+                            $noModele = $_POST['noModele'];                            
+                            echo "<option value='0'>Tous les mod&egrave;les...&nbsp;&nbsp;&nbsp;</option>";
                         }
+                        
+                        //pour récupérer la lsite des AO déjà sélecitonnés
+                        if (!isset($_POST['APAchoisir'])){                                                        
+                            $APChoisis[]=('0');
+                        }
+                        else {
+                            $APChoisis[]=$_POST['APAchoisir'];
+                            $_POST['APAchoisir']=$_POST['APAchoisir'];
+                        }                        
                             
 
                         try
@@ -93,8 +110,7 @@
                                         echo '<option value="'.$noModeleAP.'">'.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.'&nbsp;&nbsp;&nbsp;</option>';  
                                     }
                                 }
-                            $resultatsModelesAP->closeCursor(); // on ferme le curseur des résultats
-                                                
+                            $resultatsModelesAP->closeCursor(); // on ferme le curseur des résultats                                                                            
                         }
 
                         catch(Exception $e)
@@ -103,30 +119,66 @@
                                 echo 'Erreur : '.$e->getMessage().'<br />';
                                 echo 'N° : '.$e->getCode();
                         }                        
-                     ?>    
-                            </select>                                                                                        
-                    </div>
-                    </form>
-                         <br>
-                    <form id="form" class="form-inline" role="form" action="appliquerCommande.php" method="POST">
-                        <div class="form-group">    
-                            <table>
-                                <tr>
-                                    <td>
+                     
+                        echo "</select>";                                      
+                        
+                     
+                        echo "infos recues: ".$infosRecues." --- modele en cours: ".$noModele." --- AP choisis: ".htmlspecialchars(print_r($APChoisis, true));;
+                        echo '                  
                                         <label for="name">Mutiple Select list</label><br>
-                                        <select multiple class="form-control" name="APAchoisir[]">
-                                           <option>1</option>
-                                           <option>2</option>
-                                           <option>3</option>
-                                           <option>4</option>
-                                           <option>5</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        &nbsp;&nbsp;<input type="submit" id="submit" class="btn btn-primary" value="Ajouter -->"/><br><br> 
-                                        &nbsp;&nbsp;<input type="submit" id="submit" class="btn btn-primary" value="<-- Retirer"/> 
-                                    <td>
-<?php
+                                        <select multiple name="APAchoisir[]">';                    
+                    
+                            //Pour afifcher la liste des AP à sélectionner
+                            try
+                            {
+
+                                    $i =0;
+                                    $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
+
+                                    if ($noModele=='0'){
+                                        $resultatsListeAP=$connexion->query("SELECT m.nomModele, m.nomFabricant, m.versionFirmware, a.noAP, a.nomAP, a.adresseIPv4, m.adrMACFabricant FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP;");                                 
+                                    }
+                                    else{
+                                        $resultatsListeAP=$connexion->query("SELECT m.nomModele, m.nomFabricant, m.versionFirmware, a.noAP, a.nomAP, a.adresseIPv4, m.adrMACFabricant FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP AND a.noModeleAP =".$noModele.";");
+                                    }                                    
+                                     
+                                    $resultatsListeAP->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet                                
+
+                                    while($ligne = $resultatsListeAP->fetch() ) // on récupère la liste des membres
+                                    {     
+                                        $noAP=(string)$ligne->noAP;
+                                        $nomAP=(string)$ligne->nomAP;
+                                        $ip=(string)$ligne->adresseIPv4;
+                                        $nomFabricant=(string)$ligne->nomFabricant;
+                                        $nomModele=(string)$ligne->nomModele;
+                                        $versionFirmware=(string)$ligne->versionFirmware;   
+                                        $adrMACFabricant =(string)$ligne->adrMACFabricant;
+                                        //$noModeleAP =(string)$ligne->noModeleAP;
+                                        
+                                        if (in_array($noAP, $APChoisis)){
+                                            echo '<option value="'.$noAP.'" selected>'.$nomAP.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';
+                                        }
+                                        else {
+                                            echo '<option value="'.$noAP.'">'.$nomAP.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';  
+                                        }
+                                    }
+                                $resultatsListeAP->closeCursor(); // on ferme le curseur des résultats                                                                            
+                            }
+
+                            catch(Exception $e)
+                            {
+                                    echo '<li>Erreur lors du chargement</li></ol>';
+                                    echo 'Erreur : '.$e->getMessage().'<br />';
+                                    echo 'N° : '.$e->getCode();
+                            }                                                
+                            echo '</select>
+                               
+                                    
+                                        &nbsp;&nbsp;<button class="btn btn-primary" onclick="submit()">Ajouter --></button><br><br> 
+                                        
+                                       
+                                    ';
+
                         if (!isset($_POST['APAchoisir'])){                            
                             
                             echo "Pas d'AP choisis";
@@ -139,15 +191,9 @@
                                 echo $ap."<br>";                          
                             }
                         }
-?>
-
-
-                                    </td>
-                                </tr>                                                                        
-                            </table>
+?>                                    
                         </div>
-                    </form>
-
+                        </form>
                      </ol> 
                  </td>
               </tr>
