@@ -37,7 +37,7 @@
                         </ul>
                         <p><b>Configurer les AP</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
-                           <li><a href="#">Appliquer une commande &agrave; un ou plusieurs AP</a></li>    
+                           <li><a href="appliquerCommande.php">Appliquer une commande &agrave; un ou plusieurs AP</a></li>    
                         </ul> 
                  </td>  
             
@@ -85,7 +85,7 @@
 
                         catch(Exception $e)
                         {
-                                echo '<li> Erreur lors du chargement</li></ol>';
+                                echo '</select></form><li> Erreur lors du chargement</li></ol>';
                                 echo 'Erreur : '.$e->getMessage().'<br />';
                                 echo 'N° : '.$e->getCode();
                         }                        
@@ -112,7 +112,7 @@
                                     </td></tr>
                             </table>
                                     
-                    </form>   
+                    
                          <script type="text/javascript">
                             (function (d) {
                               d.getElementById('form').onsubmit = function () {
@@ -121,6 +121,8 @@
                               };
                             }(document));
                         </script>
+                         </div>
+                        </form>   
                      </ol> 
                  </td>
               </tr>

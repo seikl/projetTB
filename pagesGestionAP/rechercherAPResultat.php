@@ -35,7 +35,7 @@
                         </ul>
                         <p><b>Configurer les AP</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
-                           <li><a href="#">Appliquer une commande &agrave; un ou plusieurs AP</a></li>    
+                           <li><a href="appliquerCommande.php">Appliquer une commande &agrave; un ou plusieurs AP</a></li>    
                         </ul> 
                  </td>  
             
@@ -49,7 +49,10 @@
                      <ol>
                         <?php
                             include '../includes/fonctionsUtiles.php';   
-                            include '../includes/scanIP.php';                            
+                            include '../includes/scanIP.php';    
+                            
+                            //pour laisser la recherche s'effectuer sur 5 minutes
+                            set_time_limit(300);
                             
                             $ip = $_POST['groupeA'].".".$_POST['groupeB'].".".$_POST['groupeC'].".".$_POST['groupeD'];                            
                             $masque = (int)$_POST['masque'];
