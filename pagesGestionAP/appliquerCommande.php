@@ -47,11 +47,13 @@
                         <li>Appliquer une commande &agrave; un ou plusieurs AP</li>
                     </ol>  
                      <ol>
-                         
+                       
                     <form id="selectionModeles" class="form-inline" role="form" action="appliquerCommande.php" method="POST">
                         <div class="form-group">       
                             
-                            <label for="name">Veuillez s&eacute;lectionner les AP concern&eacute;s et/ou trier selon le type de mat&eacute;riel, puis choisir la commande &agrave; leur appliquer:</label><br>
+                        <table width="80%">
+                        <tr><td width="75%">                            
+                            <label for="name">Trier par mod&egrave;le</label><br>
                             <select class="form-control" id="selectNoModele" name="noModele" onChange="submit()">
                             
                      
@@ -60,37 +62,41 @@
                         include '../includes/connexionBDD.php';                    
                         include '../includes/fonctionsUtiles.php';                          
                         
-                        $infosRecues ='Le néant';
+                        $infosRecues ='Le n&eacute;ant';
                                 
                         //pour vérifier si valeurs déjà existantes dans le formulaire
-                        if ($_POST) {
-                            
-                            $infosRecues= htmlspecialchars(print_r($_POST, true));
-                           
+                        if ($_POST) {                            
+                            $infosRecues= htmlspecialchars(print_r($_POST, true));                           
                         }
                         if (!isset($_POST['noModele'])){                            
                             $noModele='0';
-                            echo "<option value='0' selected>Trier par mod&egrave;les...&nbsp;&nbsp;&nbsp;</option>";
+                            echo "<option value='0' selected>Tous les mod&egrave;les...&nbsp;&nbsp;&nbsp;</option>";
                         }
                         else {
                             $noModele = $_POST['noModele'];                            
                             echo "<option value='0'>Tous les mod&egrave;les...&nbsp;&nbsp;&nbsp;</option>";
                         }
                         
-                        //pour récupérer la lsite des AO déjà sélecitonnés
+                        //pour récupérer la lsite des AP déjà sélectionnés
                         if (!isset($_POST['APAchoisir'])){                                                        
-                            $APChoisis[]=('0');
+                            $APChoisis[0]=('0');
                         }
                         else {
-                            $APChoisis[]=$_POST['APAchoisir'];
-                            $_POST['APAchoisir']=$_POST['APAchoisir'];
-                        }                        
+                            $APChoisis=$_POST['APAchoisir'];                            
+                        }     
+                        
+                        //pour récupérer la commande choisis
+                        if (!isset($_POST['commande'])){                                                        
+                            $noCommandeChoisie=('0');
+                        }
+                        else {
+                            $noCommandeChoisie=$_POST['commande'];                            
+                        }  
                             
-
+                        //Récupération de la liste des modèles
                         try
-                        {
-                            
-                                $i =0;
+                        {                            
+                                $i =0;                                
                                 $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
                                 $resultatsModelesAP=$connexion->query("SELECT * FROM modeles;");                                 
@@ -115,96 +121,154 @@
 
                         catch(Exception $e)
                         {
-                                echo '</select></form><li>Erreur lors du chargement</li></ol>';
+                                echo '</select></form></td></tr></table><li>Erreur lors du chargement</li></ol>';
                                 echo 'Erreur : '.$e->getMessage().'<br />';
                                 echo 'N° : '.$e->getCode();
                         }                        
                      
-                        echo "</select>";                                      
-                        
-                     
-                        echo "infos recues: ".$infosRecues." --- modele en cours: ".$noModele." --- AP choisis: ".htmlspecialchars(print_r($APChoisis, true));;
-                        echo '                  
-                                        <label for="name">Mutiple Select list</label><br>
-                                        <select multiple class="form-control" name="APAchoisir[]">';                    
+                        echo '</select><br><br></td><td>&nbsp;</td></tr>';                                      
+                        echo '<tr><td width="75%">';
+                        echo '<label for="name">Choix des AP &agrave; contacter:</label><br>
+                            <select multiple class="form-control" name="APAchoisir[]">';                    
                     
-                            //Pour afifcher la liste des AP à sélectionner
-                            try
-                            {
+                        //Pour afifcher la liste des AP à sélectionner
+                        try
+                        {
 
-                                    $i =0;
-                                    $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
+                            $i =0;
+                            $listeAPactuels=null;
+                            $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
-                                    if ($noModele=='0'){
-                                        $resultatsListeAP=$connexion->query("SELECT m.nomModele, m.nomFabricant, m.versionFirmware, a.noAP, a.nomAP, a.adresseIPv4, m.adrMACFabricant FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP;");                                 
-                                    }
-                                    else{
-                                        $resultatsListeAP=$connexion->query("SELECT m.nomModele, m.nomFabricant, m.versionFirmware, a.noAP, a.nomAP, a.adresseIPv4, m.adrMACFabricant FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP AND a.noModeleAP =".$noModele.";");
-                                    }                                    
-                                     
-                                    $resultatsListeAP->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet                                
+                            if ($noModele=='0'){
+                                $resultatsListeAP=$connexion->query("SELECT m.nomModele, m.nomFabricant, m.versionFirmware, a.noAP, a.nomAP, a.adresseIPv4, m.adrMACFabricant FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP;");                                 
+                            }
+                            else{
+                                $resultatsListeAP=$connexion->query("SELECT m.nomModele, m.nomFabricant, m.versionFirmware, a.noAP, a.nomAP, a.adresseIPv4, m.adrMACFabricant FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP AND a.noModeleAP =".$noModele.";");
+                            }                                    
 
-                                    while($ligne = $resultatsListeAP->fetch() ) // on récupère la liste des membres
-                                    {     
-                                        $noAP=(string)$ligne->noAP;
-                                        $nomAP=(string)$ligne->nomAP;
-                                        $ip=(string)$ligne->adresseIPv4;
-                                        $nomFabricant=(string)$ligne->nomFabricant;
-                                        $nomModele=(string)$ligne->nomModele;
-                                        $versionFirmware=(string)$ligne->versionFirmware;   
-                                        $adrMACFabricant =(string)$ligne->adrMACFabricant;
-                                        //$noModeleAP =(string)$ligne->noModeleAP;
-                                        
-                                        if (in_array($noAP, $APChoisis)){
-                                            echo '<option value="'.$noAP.'" selected>'.$nomAP.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';
-                                        }
-                                        else {
-                                            echo '<option value="'.$noAP.'">'.$nomAP.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';  
-                                        }
-                                    }
-                                $resultatsListeAP->closeCursor(); // on ferme le curseur des résultats                                                                            
+                            $resultatsListeAP->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet                                
+
+                            while($ligne = $resultatsListeAP->fetch() ) // on récupère la liste des membres
+                            {     
+                                $noAP=(string)$ligne->noAP;
+                                $nomAP=(string)$ligne->nomAP;
+                                $ip=(string)$ligne->adresseIPv4;
+                                $nomFabricant=(string)$ligne->nomFabricant;
+                                $nomModele=(string)$ligne->nomModele;
+                                $versionFirmware=(string)$ligne->versionFirmware;   
+                                $adrMACFabricant =(string)$ligne->adrMACFabricant;
+                                //$noModeleAP =(string)$ligne->noModeleAP;
+
+                                if (in_array($noAP, $APChoisis)){
+                                    echo '<option value="'.$noAP.'" selected>'.$noAP.'- '.$nomAP.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';
+                                    $listeAPactuels[$i][0]=$noAP;
+                                    $listeAPactuels[$i][1]=$nomAP;
+                                    $listeAPactuels[$i][2]=$ip;
+                                    $i++;
+                                }
+                                else {
+                                    echo '<option value="'.$noAP.'">'.$nomAP.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';  
+                                }
+                            }
+                            $resultatsListeAP->closeCursor(); // on ferme le curseur des résultats                                                                            
+                        }
+
+                        catch(Exception $e)
+                        {
+                                echo '<li>Erreur lors du chargement</li></ol>';
+                                echo 'Erreur : '.$e->getMessage().'<br />';
+                                echo 'N° : '.$e->getCode();
+                        }                                                
+                        echo '</select><br></td>';
+                        echo '</td><td>&nbsp;</td></tr>';
+                        echo '<tr><td width="75%">';
+                        echo '<label for="name">Choix de la commande &agrave; appliquer:</label><br>
+                            <select class="form-control" name="commande">';     
+                        
+                                if ($noCommandeChoisie == '0'){                                
+                                    echo '<option value="0" selected>Liste des commandes disponibles...&nbsp;&nbsp;&nbsp;</option>'; 
+                                }
+                                else {
+                                    echo '<option value="0">Liste des commandes disponibles...&nbsp;&nbsp;&nbsp;</option>';
+                                }                        
+                        //Récupération de la liste des commandess
+                        try
+                        {                            
+                            $i =0;                                
+                            $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
+
+                            if ($noModele=='0'){
+                                $resultatsCLI=$connexion->query("SELECT tc.typesCommande, tc.description, lc.noCli, m.noModeleAP, m.nomModele, m.nomFabricant, m.versionFirmware 
+                                                                FROM modeles m, typesCommandes tc, lignesCommande lc
+                                                                WHERE lc.noTypesCommande = tc.noTypesCommande AND lc.noModeleAP = m.noModeleAP;");                                 
+                            }
+                            else{
+                                $resultatsCLI=$connexion->query("SELECT tc.typesCommande, tc.description, lc.noCli, m.noModeleAP, m.nomModele, m.nomFabricant, m.versionFirmware 
+                                                                FROM modeles m, typesCommandes tc, lignesCommande lc
+                                                                WHERE lc.noTypesCommande = tc.noTypesCommande AND lc.noModeleAP = m.noModeleAP AND lc.noModeleAP =".$noModele.";");
                             }
 
-                            catch(Exception $e)
-                            {
-                                    echo '<li>Erreur lors du chargement</li></ol>';
-                                    echo 'Erreur : '.$e->getMessage().'<br />';
-                                    echo 'N° : '.$e->getCode();
-                            }                                                
-                            echo '</select>
-                               
+                            $resultatsCLI->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet                                
+
+                            while( $ligne = $resultatsCLI->fetch() ) // on récupère la liste des membres
+                            {     
+                                $typesCommande=(string)$ligne->typesCommande;
+                                $description=(string)$ligne->description;
+                                $noCLI=(string)$ligne->noCli;
+                                $noModeleAP=(string)$ligne->noModeleAP;
+                                $nomModele=(string)$ligne->nomModele;
+                                $nomFabricant=(string)$ligne->nomFabricant;
+                                $versionFirmware=(string)$ligne->versionFirmware;
+                                
+                                if ($noCommandeChoisie == $noCLI){                                
+                                    echo '<option value="'.$noCLI.'" selected>'.$typesCommande.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';  
+                                }
+                                else {
+                                    echo '<option value="'.$noCLI.'">'.$typesCommande.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>'; 
+                                }
                                     
-                                        &nbsp;&nbsp;<button class="btn btn-primary" onclick="submit()">Ajouter --></button><br><br> 
-                                        &nbsp;&nbsp;<button class="btn btn-primary" onclick="submit()"><-- Retirer</button><br><br> 
-                                       
-                                    ';
-
-                        if (!isset($_POST['APAchoisir'])){                            
-                            
-                            echo "Pas d'AP choisis";
-                        }
-                        else {
-                            
-                            echo "Liste des AP choisis: <br>";
-                            
-                            foreach ($_POST['APAchoisir'] as $ap){
-                                echo $ap."<br>";                          
                             }
+                            $resultatsCLI->closeCursor(); // on ferme le curseur des résultats                                                                            
                         }
-?>                                    
+
+                        catch(Exception $e)
+                        {
+                                echo '</select></form></td></tr></table><li>Erreur lors du chargement</li></ol>';
+                                echo 'Erreur : '.$e->getMessage().'<br />';
+                                echo 'N° : '.$e->getCode();
+                        }    
+                                                                                               
+                        echo '</td>';
+                        echo '<td align="right" valign="bottom">&nbsp;<button class="btn btn-primary" onclick="this.form.submit()">Valider les choix</button></td></tr>';
+                        
+                        
+                        //FIIIIIIN
+                        echo '<tr><td>';
+
+                        echo "<br>Liste des AP: <br>";
+                        if ($listeAPactuels!=null){
+                            foreach ($listeAPactuels as $ap){
+                            echo $ap[0].'- '.$ap[1].' (IP: '.$ap[2].')<br>'; 
+                            }                                                        
+                        }       
+                        
+                        echo '</td><td>';
+                        
+                        echo 'commande s&eacute;lectionn&eacute;e <br>:'.$noCommandeChoisie;
+                        
+                        echo '</td></tr></table>';
+                        
+                        echo'
                         </div>
                         </form>
-                     </ol> 
-                 </td>
-              </tr>
-           </tbody>
-        </table>
-        
-        
+                        </ol>';
+                     
+                     echo "<br><br>infos recues: ".$infosRecues." --- modele en cours: ".$noModele." --- AP choisis: ".htmlspecialchars(print_r($APChoisis,true));
+                     
+                     echo'</td></tr></tbody></table>';                        
+    ?>                        
 
       </div><!-- /container -->     
-
-
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->

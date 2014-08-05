@@ -99,7 +99,7 @@
                                 $sysdesc[0] = snmpget($ip, $snmpcommunity, ".1.3.6.1.2.1.1.1.0");
                                 $sysdesc[1] = preg_replace("/STRING:/i","",$sysdesc[0]);
                                 
-                                $adrMAC[0] = snmpget($ip, $snmpcommunity, ".1.3.6.1.2.1.2.2.1.6.2");
+                                $adrMAC[0] = snmpget($ip, $snmpcommunity, ".1.3.6.1.2.1.2.2.1.6.1");
                                 $adrMAC[1] = preg_replace("/STRING:/i","",$adrMAC[0]);                                 
 
                                 $sysloc[0] = snmpget($ip, $snmpcommunity, ".1.3.6.1.2.1.1.6.0");
