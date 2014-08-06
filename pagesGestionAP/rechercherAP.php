@@ -3,12 +3,12 @@
   <head>
     <title>AP Manager</title>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <script type="text/javascript" src="../js/jquery-1.11.1.js"></script>                
+    <script type="text/javascript" src="../js/jquery-1.11.1.js"></script>    
     <!-- Bootstrap core CSS -->
     <link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
   </head>
 
-  <body>
+  <body onunload="$('#loading2').hide();">>
       <br><br>
     <div class="container-fluid">        
 
@@ -33,11 +33,11 @@
                         <p><b>Informations sur les AP</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
                             <li><a href="afficherListeAP.php">Afficher la liste  de tous les AP inscrits</a></li>
-                           <li class="active"><a href="#">Rechercher des AP sur le r&eacute;seau</a></li>                       
+                           <li class="active"><a href="#" onclick="location.reload();">Rechercher des AP sur le r&eacute;seau</a></li>                       
                         </ul>
                         <p><b>Configurer les AP</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
-                           <li><a href="appliquerCommande.php">Appliquer une commande &agrave; un ou plusieurs AP</a></li>    
+                           <li><a href="choisirCommande.php">Appliquer une commande &agrave; un ou plusieurs AP</a></li>    
                         </ul> 
                  </td>  
             

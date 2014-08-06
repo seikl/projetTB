@@ -37,7 +37,7 @@
                         </ul>
                         <p><b>Configurer les AP</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
-                           <li><a href="appliquerCommande.php">Appliquer une commande &agrave; un ou plusieurs AP</a></li>    
+                           <li><a href="choisirCommande.php">Appliquer une commande &agrave; un ou plusieurs AP</a></li>    
                         </ul> 
                  </td>  
             

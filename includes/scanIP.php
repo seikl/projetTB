@@ -10,14 +10,22 @@
         $ipAPinger=long2ip($i);
         //$fp[$i] = popen("ping -c1 -w1 ".$ipAPinger, "r");//Pour Linux
         $fp[$i] = popen("ping -n 1 -w 1 ".$ipAPinger, "r");//Pour windows
-        //echo "<br>pour INFO, IP A PINGER: ".$ipAPinger. "  --- etat de 'i': ".$i;
-        pclose($fp[$i]);
+        //echo "<br>pour INFO, IP A PINGER: ".$ipAPinger. "  --- etat de 'i': ".$i;        
+        
+        //pour éviter d'atteindre la limite de processus ouverts
+        if ((($i % 16) == 0) && (($adrFinLong - $adrDebutLong) <= 256)){
+            for ($j=$i;$j>=$i-15;$j--){					
+                    pclose($fp[$j]);
+            }
+        }   
+        //pclose($fp[$i]);
       }
+      
       /*
       for($i=$adrDebutLong;$i<=$adrFinLong;$i++) {
         while( $fp[$i] && !feof($fp[$i]) ) { fgets($fp[$i]); }
       } 
-       */
+      */
       
       //$arp = shell_exec("arp -vn"); //pour Linux
       $arp = shell_exec("arp -a"); //pour Windows            

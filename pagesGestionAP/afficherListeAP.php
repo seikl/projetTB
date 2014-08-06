@@ -37,7 +37,7 @@
                         </ul>
                         <p><b>Configurer les AP</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
-                           <li><a href="appliquerCommande.php">Appliquer une commande &agrave; un ou plusieurs AP</a></li>    
+                           <li><a href="choisirCommande.php">Appliquer une commande &agrave; un ou plusieurs AP</a></li>    
                         </ul> 
                  </td>  
             
@@ -55,10 +55,10 @@
                             <caption> Liste des acces points enregistr&eacute;s</caption>
                             <thead>                            
                                <tr>';
-                        echo "<th>Mod&egrave; d'AP</th>
-                                  <th>Nom de l'AP</th>
-                                  <th>Ping OK?</th>
-                               </tr>
+                        echo "<th>No et nom de l'AP</th>
+                            <th>Mod&egrave; d'AP</th>
+                            <th>Ping OK?</th>
+                            </tr>
                             </thead>
                             <tbody>";                   
                     
@@ -78,10 +78,17 @@
                                 {         
                                     $resultatPing = "inconnu";    
                                     $statut=0;
+                                    
+                                    $noAP=(string)$ligne->noAP;
+                                    $nomAP=(string)$ligne->nomAP;
                                     $ip=(string)$ligne->adresseIPv4;
-                                    exec("ping -n 1 -w 1 ".$ip,$reponse,$statut);//pour windows
-                                    //exec("ping -c1 -w1 ".$ip,$reponse,$statut);//pour linux
+                                    $nomFabricant=(string)$ligne->nomFabricant;
+                                    $nomModele=(string)$ligne->nomModele;
+                                    $versionFirmware=(string)$ligne->versionFirmware;                                     
 
+                                    
+                                    //exec("ping -c1 -w1 ".$ip,$reponse,$statut);//pour linux
+                                    exec("ping -n 1 -w 1 ".$ip,$reponse,$statut);//pour windows
 
                                     if ($statut==0) {
                                         echo '<tr class="success">';
@@ -91,9 +98,8 @@
                                         echo '<tr class="danger">';
                                         $resultatPing = "Not OK";
                                     }
-                                    
-                                    echo '<td>'.(string)$ligne->nomFabricant.' '.(string)$ligne->nomModele.' (firmware '. (string)$ligne->versionFirmware.')</td>';
-                                    echo '<td><a href="interrogerAP.php?noAP='.(string)$ligne->noAP.'">'.(string)$ligne->nomAP.' ('.$ip.')</a></td>'; //TODO Créer lien pour inmterroger AP
+                                    echo '<td><a href="interrogerAP.php?noAP='.$noAP.'">'.$noAP.' - '.$nomAP.' ('.$ip.')</a></td>'; //TODO Créer lien pour inmterroger AP                                    
+                                    echo '<td>'.$nomFabricant.' '.$nomModele.' (firmware '.$versionFirmware.')</td>';
                                     echo '<td> '.$resultatPing.' </td>';
 
                                     echo '</tr>';

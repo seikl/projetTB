@@ -35,7 +35,7 @@
                         </ul>
                         <p><b>Configurer les AP</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
-                           <li><a href="appliquerCommande.php">Appliquer une commande &agrave; un ou plusieurs AP</a></li>    
+                           <li><a href="choisirCommande.php">Appliquer une commande &agrave; un ou plusieurs AP</a></li>    
                         </ul> 
                  </td>  
             
@@ -49,7 +49,9 @@
                      <ol>
                         <?php
                             include '../includes/fonctionsUtiles.php';   
-                            include '../includes/scanIP.php';    
+                            include '../includes/scanIP.php';                                
+                            
+                            $start = microtime(true);//pour calcul temps d'exécution
                             
                             //pour laisser la recherche s'effectuer sur 5 minutes
                             set_time_limit(300);
@@ -71,10 +73,16 @@
                             $nbiter = ip2long($adresseFin) - ip2long($adresseDebut) +1;
                             echo "<br><br>=>>>> nb d'iterrations: ".$nbiter."--- adr MAC du vendeur: ".$vendorMAC;
                             
-                            $tabARP = quick_ipmac_scan(ip2long($adresseDebut),ip2long($adresseFin));
-
-                            $vendorMAC = preg_replace("/:/", "-", $vendorMAC); //pour Windows
+                            $tabARP = quick_ipmac_scan(ip2long($adresseDebut),ip2long($adresseFin)); 
+                            
                             //$vendorMAC = preg_replace("/-/", ":", $vendorMAC); //pour Linux 
+                            $vendorMAC = preg_replace("/:/", "-", $vendorMAC); //pour Windows
+                                                        
+                            echo "<br> Temps d'ex&eacute;cution:<br>";
+                            $end = microtime(true);
+                            $time = number_format(($end - $start), 2);
+                            echo $time, ' secondes<br><br>';
+
                             
                             foreach($tabARP as $ligne) {  
                                 if(preg_match("/".$vendorMAC."/i", $ligne)) {
