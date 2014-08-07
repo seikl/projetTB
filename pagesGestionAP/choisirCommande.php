@@ -37,7 +37,7 @@
                         </ul>
                         <p><b>Configurer les AP</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
-                           <li class="active"><a href="#">Appliquer une commande &agrave; un ou plusieurs AP</a></li>    
+                           <li class="active"><a href="choisirCommande.php">Appliquer une commande &agrave; un ou plusieurs AP</a></li>    
                         </ul> 
                  </td>  
             
@@ -47,8 +47,8 @@
                         <li>Appliquer une commande &agrave; un ou plusieurs AP</li>
                     </ol>  
                      <ol>
-                        <table width="80%">
-                        <tr><td width="75%">                           
+                        <table width="auto">
+                        <tr><td width="auto">                           
                         <form id="selectioncommande" class="form-inline" role="form" action="choisirCommande.php" method="POST">
                             <div class="form-group">                                                           
                             <label for="name">Trier par mod&egrave;le</label><br>
@@ -61,6 +61,8 @@
                            include '../includes/fonctionsUtiles.php';                          
 
                            $infosRecues ='Le n&eacute;ant';
+                           $commandeSelectionnee=FALSE;
+                           $initialisation=true;
 
                            //pour vérifier si valeurs déjà existantes dans le formulaire
                            if ($_POST) {                            
@@ -73,6 +75,7 @@
                            else {
                                $noModele = $_POST['noModele'];                            
                                echo "<option value='0'>Tous les mod&egrave;les...&nbsp;&nbsp;&nbsp;</option>";
+                               $initialisation=FALSE;
                            }
 
                            //pour récupérer la lsite des AP déjà sélectionnés
@@ -80,16 +83,21 @@
                                $APChoisis[0]=('0');
                            }
                            else {
-                               $APChoisis=$_POST['APAchoisir'];                            
+                               $APChoisis=$_POST['APAchoisir'];  
+                               $initialisation=FALSE;
                            }     
 
                            //pour récupérer la commande choisis
                            if (!isset($_POST['commande'])){                                                        
                                $noCommandeChoisie=('0');
+                               $commandeSelectionnee=false;
                            }
                            else {
-                               $noCommandeChoisie=$_POST['commande'];                            
-                           }  
+                               $noCommandeChoisie=$_POST['commande'];
+                               $commandeSelectionnee=true;
+                               $initialisation=FALSE;
+                           }
+                                                        
 
                            //Récupération de la liste des modèles
                            try
@@ -119,13 +127,14 @@
 
                            catch(Exception $e)
                            {
-                                   echo '</select></form></td></tr></table><li>Erreur lors du chargement</li></ol>';
+                                   echo '</select></div></form></td></tr></table><li>Erreur lors du chargement</li></ol>';
                                    echo 'Erreur : '.$e->getMessage().'<br />';
                                    echo 'N° : '.$e->getCode();
+                                   break;
                            }                        
 
-                           echo '</select><br><br></td><td>&nbsp;</td></tr>';                                      
-                           echo '<tr><td width="75%">';
+                           echo '</select><br><br></td></tr>';                                      
+                           echo '<tr><td width="auto">';
                            echo '<label for="name">Choix des AP &agrave; contacter:</label><br>
                                <select multiple class="form-control" name="APAchoisir[]">';                    
 
@@ -173,22 +182,21 @@
 
                            catch(Exception $e)
                            {
-                                   echo '<li>Erreur lors du chargement</li></ol>';
+                                   echo '</select></div></form></td></tr></table><li>Erreur lors du chargement</li></ol>';
                                    echo 'Erreur : '.$e->getMessage().'<br />';
                                    echo 'N° : '.$e->getCode();
                            }                                                
-                           echo '</select><br></td>';
-                           echo '</td><td>&nbsp;</td></tr>';
-                           echo '<tr><td width="75%"><br>';
+                           echo '</select><br></td></tr>';
+                           echo '<tr><td width="auto">';
                            echo '<label for="name">Choix de la commande &agrave; appliquer:</label><br>
-                               <select class="form-control" name="commande" onChange="this.form.submit()">';     
+                               <select class="form-control" name="commande">';     
 
-                                   if ($noCommandeChoisie == '0'){                                
-                                       echo '<option value="0" selected>Liste des commandes disponibles...&nbsp;&nbsp;&nbsp;</option>'; 
-                                   }
-                                   else {
-                                       echo '<option value="0">Liste des commandes disponibles...&nbsp;&nbsp;&nbsp;</option>';
-                                   }                        
+                            if ($noCommandeChoisie == '0'){                                
+                                echo '<option value="0" selected>Liste des commandes disponibles...&nbsp;&nbsp;&nbsp;</option>'; 
+                            }
+                            else {
+                                echo '<option value="0">Liste des commandes disponibles...&nbsp;&nbsp;&nbsp;</option>';
+                            }                        
                            //Récupération de la liste des commandess
                            try
                            {                            
@@ -207,7 +215,8 @@
                                }
 
                                $resultatsCLI->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet                                
-
+                               $commandeTrouvee=false;
+                               
                                while( $ligne = $resultatsCLI->fetch() ) // on récupère la liste des membres
                                {     
                                    $typesCommande=(string)$ligne->typesCommande;
@@ -219,51 +228,74 @@
                                    $versionFirmware=(string)$ligne->versionFirmware;
 
                                    if ($noCommandeChoisie == $noCLI){                                
-                                       echo '<option value="'.$noCLI.'" selected>'.$typesCommande.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';  
+                                       echo '<option value="'.$noCLI.'" selected>'.$typesCommande.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';
+                                       $commandeTrouvee = true;
                                    }
                                    else {
-                                       echo '<option value="'.$noCLI.'">'.$typesCommande.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';                                        
+                                       echo '<option value="'.$noCLI.'">'.$typesCommande.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';                               
                                    }
 
                                }
-                               $resultatsCLI->closeCursor(); // on ferme le curseur des résultats                                                                            
+                               $resultatsCLI->closeCursor(); // on ferme le curseur des résultats    
+                               if ($commandeSelectionnee && !$commandeTrouvee){$noCommandeChoisie=('0');} //pour déterminer si command sélectionnée est cohérente
                            }
 
                            catch(Exception $e)
                            {
-                                   echo '</select></form></td></tr></table><li>Erreur lors du chargement</li></ol>';
-                                   echo 'Erreur : '.$e->getMessage().'<br />';
+                                   echo '</select></div></form></td></tr></table><li>Erreur lors du chargement</li></ol>';
+                                   echo 'Erreur : '.$e->getMessage().'<br/>';
                                    echo 'N° : '.$e->getCode();
                            }                                                                                                   
-                           echo '</td>';
-                           echo '<td valign="bottom">&nbsp;<button class="btn btn-primary" onclick="this.form.submit()">Valider les choix</button></div></form></td></tr>';                                                                                                                                                                                            
-
-                            echo '<tr><td>';
-                            echo '<form id="appliquerCommande" class="form-inline" role="form" action="appliquerCommande.php" method="POST">                                                      
-                           <div class="form-group" id="validation">';
-                            
-                           echo "<br>Liste des AP choisis: <br>";
-                           if ($listeAPactuels!=null){
-                               foreach ($listeAPactuels as $ap){
-                               echo $ap[0].'- '.$ap[1].' (IP: '.$ap[2].')<br>';
-                               }
-                           }
-                           echo '</td><td>';
-
-                           echo 'commande s&eacute;lectionn&eacute;e <br>:'.$noCommandeChoisie.'</td></tr>';//TODO trouver un moyen d'afficher la VRAIE commande actuelle
-                           echo '<tr><td>&nbsp;';                           
-                           echo '</td><td col>';
-                           echo '<button class="btn btn-warning" onclick="this.form.submit()">Appliquer la commande</button>';
+                           echo '</select><br></td></tr></div></form>'; 
                            
-                           echo '</div></form></td></tr></table>';
-                     //echo "<br><br>infos recues: ".$infosRecues." --- modele en cours: ".$noModele." --- AP choisis: ".htmlspecialchars(print_r($APChoisis,true));
-                     
-                     echo'</ol></td></tr></tbody></table>';                        
-    ?>                        
+                           
+                            
+                            echo '<tr><td valign="bottom">';                            
+                            $actionOnClick="$('#selectioncommande').submit();";
+                            $actionReset="location='choisirCommande.php'";
+                            echo '<table width="100%"><tr><td align="left"><button class="btn btn-primary" onclick="'.$actionOnClick.'">Valider les choix</button></td>';
+                            echo '<td align="right"><button class="btn" onclick="'.$actionReset.'">R&eacute;initialiser</button></td></tr></table>';
+                            echo '</td></tr>';
 
+                            $textValidation= "&nbsp;";
+                            
+                            if (!$initialisation){                                
+                                $textValidation=$textValidation.'<br><br>----------------------------------------------------';
+                                //vérification des choix effectués
+                                if ($listeAPactuels==null){
+                                    $textValidation=$textValidation.'<br><strong>Aucun AP s&eacute;lectionn&eacute;.</strong>';
+                                }                            
+                                if ($noCommandeChoisie=='0'){
+                                    $textValidation=$textValidation.'<br><strong>Aucune commande s&eacute;lectionn&eacute;e.</strong>';
+                                }
+                                if ($noCommandeChoisie!='0' && $noModele=='0'){
+                                    $textValidation=$textValidation.'<br><strong>Attention au choix de la commande si les AP choisis sont de mod&egrave;les diff&eacute;rents.</strong>';
+                                }
+                                if ($noCommandeChoisie!='0' && $listeAPactuels!=null){        
+                                $textValidation=$textValidation.'<input type="hidden" value="'.serialize($listeAPactuels).'" name="listeAP"/>';                                
+                                $textValidation=$textValidation.'<input type="hidden" value="'.$noCommandeChoisie.'" name="noCommande"/>';
+                                $textValidation=$textValidation.'<br><br><button class="btn btn-warning" onclick="this.form.submit()">Appliquer la commande</button>';
+                                }
+                            }
+                            
+                            echo '<tr><td align="right">';                                                                                    
+                            echo '<form id="appliquerCommande" class="form-inline" role="form" action="appliquerCommande.php" method="POST">';                                                                                
+                            echo '<div class="form-group" id="validation" >'; 
+                                       
+                            echo $textValidation;
+
+                            echo '</div></form></td></tr></table>';
+                     //echo "<br><br>infos recues: ".$infosRecues." --- modele en cours: ".$noModele." --- AP choisis: ".htmlspecialchars(print_r($APChoisis,true));
+                                            
+    ?>      
+                    </ol>
+                 </td>
+              </tr>
+           </tbody>
+        </table>                                
       </div><!-- /container -->     
     <!-- Bootstrap core JavaScript
     ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- Placed at the end of the document so the pages load faster --> 
   </body>
 </html>

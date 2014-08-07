@@ -110,17 +110,7 @@
                                     </td><td>
                                         <div id="loading2" style="display:none;" ><img class="img" src="../images/search-loader-circle2.gif" height="34" width="34" alt=""/>&nbsp;Recherche en cours...</div>
                                     </td></tr>
-                            </table>
-                                    
-                    
-                         <script type="text/javascript">
-                            (function (d) {
-                              d.getElementById('form').onsubmit = function () {
-                                d.getElementById('submit').style.display = 'none';
-                                d.getElementById('loading2').style.display = 'show';
-                              };
-                            }(document));
-                        </script>
+                            </table>                                    
                          </div>
                         </form>   
                      </ol> 
@@ -128,14 +118,19 @@
               </tr>
            </tbody>
         </table>
-        
-        
+                
 
       </div><!-- /container -->     
-
-
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript">
+         (function (d) {
+           d.getElementById('form').onsubmit = function () {
+             d.getElementById('submit').style.display = 'none';
+             d.getElementById('loading2').style.display = 'show';
+           };
+         }(document));
+     </script>    
   </body>
 </html>
