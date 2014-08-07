@@ -147,10 +147,10 @@
                                $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
                                if ($noModele=='0'){
-                                   $resultatsListeAP=$connexion->query("SELECT m.nomModele, m.nomFabricant, m.versionFirmware, a.noAP, a.nomAP, a.adresseIPv4, m.adrMACFabricant FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP;");                                 
+                                   $resultatsListeAP=$connexion->query("SELECT * FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP;");                                 
                                }
                                else{
-                                   $resultatsListeAP=$connexion->query("SELECT m.nomModele, m.nomFabricant, m.versionFirmware, a.noAP, a.nomAP, a.adresseIPv4, m.adrMACFabricant FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP AND a.noModeleAP =".$noModele.";");
+                                   $resultatsListeAP=$connexion->query("SELECT * FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP AND a.noModeleAP =".$noModele.";");
                                }                                    
 
                                $resultatsListeAP->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet                                
@@ -160,6 +160,8 @@
                                    $noAP=(string)$ligne->noAP;
                                    $nomAP=(string)$ligne->nomAP;
                                    $ip=(string)$ligne->adresseIPv4;
+                                   $username=(string)$ligne->username;
+                                   $password=(string)$ligne->password;
                                    $nomFabricant=(string)$ligne->nomFabricant;
                                    $nomModele=(string)$ligne->nomModele;
                                    $versionFirmware=(string)$ligne->versionFirmware;   
@@ -167,10 +169,8 @@
                                    //$noModeleAP =(string)$ligne->noModeleAP;
 
                                    if (in_array($noAP, $APChoisis)){
-                                       echo '<option value="'.$noAP.'" selected>'.$noAP.' - '.$nomAP.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';
-                                       $listeAPactuels[$i][0]=$noAP;
-                                       $listeAPactuels[$i][1]=$nomAP;
-                                       $listeAPactuels[$i][2]=$ip;
+                                       echo '<option value="'.$noAP.'" selected>'.$noAP.' - '.$nomAP.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';                                       
+                                       $listeAPactuels[$i]=array("noAP" =>$noAP, "nomAP"=>$nomAP, "adresseIPv4"=>$ip, "username"=>$username, "password"=>$password);       
                                        $i++;
                                    }
                                    else {
@@ -204,13 +204,11 @@
                                $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
                                if ($noModele=='0'){
-                                   $resultatsCLI=$connexion->query("SELECT tc.typesCommande, tc.description, lc.noCli, m.noModeleAP, m.nomModele, m.nomFabricant, m.versionFirmware 
-                                                                   FROM modeles m, typesCommandes tc, lignesCommande lc
+                                   $resultatsCLI=$connexion->query("SELECT * FROM modeles m, typesCommandes tc, lignesCommande lc
                                                                    WHERE lc.noTypesCommande = tc.noTypesCommande AND lc.noModeleAP = m.noModeleAP;");                                 
                                }
                                else{
-                                   $resultatsCLI=$connexion->query("SELECT tc.typesCommande, tc.description, lc.noCli, m.noModeleAP, m.nomModele, m.nomFabricant, m.versionFirmware 
-                                                                   FROM modeles m, typesCommandes tc, lignesCommande lc
+                                   $resultatsCLI=$connexion->query("SELECT * FROM modeles m, typesCommandes tc, lignesCommande lc
                                                                    WHERE lc.noTypesCommande = tc.noTypesCommande AND lc.noModeleAP = m.noModeleAP AND lc.noModeleAP =".$noModele.";");
                                }
 
@@ -221,7 +219,9 @@
                                {     
                                    $typesCommande=(string)$ligne->typesCommande;
                                    $description=(string)$ligne->description;
-                                   $noCLI=(string)$ligne->noCli;
+                                   $noCLI=(string)$ligne->noCLI;
+                                   $ligneCommande=(string)$ligne->ligneCommande;
+                                   $portProtocole=(string)$ligne->portProtocole;
                                    $noModeleAP=(string)$ligne->noModeleAP;
                                    $nomModele=(string)$ligne->nomModele;
                                    $nomFabricant=(string)$ligne->nomFabricant;
@@ -230,6 +230,7 @@
                                    if ($noCommandeChoisie == $noCLI){                                
                                        echo '<option value="'.$noCLI.'" selected>'.$typesCommande.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';
                                        $commandeTrouvee = true;
+                                       $commandeChoisie=array("noCLI"=>$noCLI,"ligneCommande"=>$ligneCommande, "portProtocole"=>$portProtocole);
                                    }
                                    else {
                                        echo '<option value="'.$noCLI.'">'.$typesCommande.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';                               
@@ -271,9 +272,11 @@
                                 if ($noCommandeChoisie!='0' && $noModele=='0'){
                                     $textValidation=$textValidation.'<br><strong>Attention au choix de la commande si les AP choisis sont de mod&egrave;les diff&eacute;rents.</strong>';
                                 }
-                                if ($noCommandeChoisie!='0' && $listeAPactuels!=null){        
-                                $textValidation=$textValidation.'<input type="hidden" value="'.serialize($listeAPactuels).'" name="listeAP"/>';                                
-                                $textValidation=$textValidation.'<input type="hidden" value="'.$noCommandeChoisie.'" name="noCommande"/>';
+                                if ($noCommandeChoisie!='0' && $listeAPactuels!=null){ 
+                                $listeAP=base64_encode(serialize($listeAPactuels));
+                                $commandeChoisie=base64_encode(serialize($commandeChoisie));;
+                                $textValidation=$textValidation.'<input type="hidden" value="'.$listeAP.'" name="listeAP"/>';                                
+                                $textValidation=$textValidation.'<input type="hidden" value="'.$commandeChoisie.'" name="commandeChoisie"/>';
                                 $textValidation=$textValidation.'<br><br><button class="btn btn-warning" onclick="this.form.submit()">Appliquer la commande</button>';
                                 }
                             }

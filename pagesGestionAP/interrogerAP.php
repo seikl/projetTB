@@ -46,46 +46,21 @@
                         <li><a href="accueilGestionAP.php">Accueil gestion des AP</a></li>    
                         <li  class="active"><a href="afficherListeAP.php">Afficher la liste  de tous les AP inscrits</a></li>
 
-                    <?php   
-                    
+                    <?php                       
+                        $infosRecues= unserialize(base64_decode($_GET['infosAP']));                                                                       
                         
-                        $noAP = $_GET['noAP'];
-                        
-                        //connexion a la BDD et récupération de la liste des modèles
-                        include '../includes/connexionBDD.php';                    
+                        //pour effectuer les connexons SNMP                 
                         include '../includes/fonctionsUtiles.php';
                         
-                        //récupération des infos enregistrées dans la BDD
-                        try
-                        {
-                            
-                                $i =0;
-                                $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
+                        //récupération des infos
+                        $noAP = $infosRecues["noAP"]; 
+                        $nomAP = $infosRecues["nomAP"];
+                        $ip=$infosRecues["adresseIPv4"];
+                        $nomFabricant= $infosRecues["nomFabricant"];
+                        $nomModele=$infosRecues["nomModele"];
+                        $versionFirmware=$infosRecues["versionFirmware"];
+                        $adrMACFabricant =$infosRecues["adrMACFabricant"];   
 
-                                $resultatsAP=$connexion->query("SELECT m.nomModele, m.nomFabricant, m.versionFirmware, a.nomAP, a.adresseIPv4, m.adrMACFabricant FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP AND a.noAP=".$noAP.";");                                 
-                                $resultatsAP->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet                                
-                                
-                                while( $ligne = $resultatsAP->fetch() ) // on récupère la liste des membres
-                                {     
-                                    $nomAP=(string)$ligne->nomAP;
-                                    $ip=(string)$ligne->adresseIPv4;
-                                    $nomFabricant=(string)$ligne->nomFabricant;
-                                    $nomModele=(string)$ligne->nomModele;
-                                    $versionFirmware=(string)$ligne->versionFirmware;   
-                                    $adrMACFabricant =(string)$ligne->adrMACFabricant;   
-                                }
-                            $resultatsAP->closeCursor(); // on ferme le curseur des résultats
-                                                
-                        }
-                                                
-
-                        catch(Exception $e)
-                        {
-                                echo '<li> Erreur lors du chargement</li></ol>';
-                                echo 'Erreur : '.$e->getMessage().'<br />';
-                                echo 'N° : '.$e->getCode();
-
-                        }
                         
                         echo '<li> Informations sur: <strong>'.$nomAP.'</strong> ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.', adresse IP: '.$ip.')</li>
                             </ol>';
@@ -121,7 +96,7 @@
                             <thead>
                                <tr>
                                   <th>&nbsp;</th>
-                                  <th>Informations SNMP</th>
+                                  <th>Informations SNMP (NB: community = public)</th>
                                   <th>Informations de la BDD</th>
                                </tr>
                             </thead>

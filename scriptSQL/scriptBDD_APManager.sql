@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS accessPoints(
 );
 
 CREATE TABLE IF NOT EXISTS  lignesCommande (
-        noCli INT NOT NULL AUTO_INCREMENT,
+        noCLI INT NOT NULL AUTO_INCREMENT,
         ligneCommande TEXT NOT NULL,
         portProtocole  SMALLINT NOT NULL,
         noModeleAP INT NOT NULL,
@@ -63,5 +63,5 @@ insert into accessPoints (nomAP,adresseIPv4,password,noModeleAP) values('APADSSO
 insert into accessPoints (nomAP,adresseIPv4,password,noModeleAP) values('APADSSOL02','172.16.1.30','repuis',1);
 insert into accessPoints (nomAP,adresseIPv4,noModeleAP) values('NASMaison','10.0.0.60',2);
 insert into typesCommandes (typesCommande,description) values('Afficher infos système','Sert à afficher les informations systèmes sur les modèles AVAYA AP-X');
-insert into lignesCommande (ligneCommande,portProtocole,noModeleAP,noTypesCommande) values('show system\r\nquit\r\n',23,1,1);
-insert into lignesCommande (ligneCommande,portProtocole,noModeleAP,noTypesCommande) values('show status\r\nquit\r\n',23,2,1);
+insert into lignesCommande (ligneCommande,portProtocole,noModeleAP,noTypesCommande) values("show system\r\nquit\r\n",23,1,1);
+insert into lignesCommande (ligneCommande,portProtocole,noModeleAP,noTypesCommande) values("show status\r\nquit\r\n",23,2,1);

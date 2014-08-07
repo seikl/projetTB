@@ -51,12 +51,16 @@
                     <?php           
 
                         if ($_POST) {                            
-                            $infosRecues= htmlspecialchars(print_r($_POST, true));                            
-                            $tableau = array(($_POST['listeAP']));
+                            $tabCommandeChoisie= unserialize(base64_decode($_POST['commandeChoisie']));
+                            $tabListeAP = unserialize(base64_decode($_POST['listeAP']));
                         }
-                        else {$infosRecues =" RIEN DU TOUT"; }
+                        else {echo " RIEN RECU DU TOUT"; }
                         
-                         echo "<br><br>infos recues: ".$infosRecues;
+                         echo "<br><br> commande choisir: ".htmlspecialchars(print_r($tabCommandeChoisie, true));
+                         echo "<br><br> listeAP: ".htmlspecialchars(print_r($tabListeAP, true));
+                         
+                         
+                         echo 'test\ntest';//TODO régler problème \r\n
 
                          echo'';                        
                         ?>                        
