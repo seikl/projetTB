@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS accessPoints(
         noAP INT NOT NULL AUTO_INCREMENT,
         nomAP VARCHAR(20) NOT NULL,
         adresseIPv4 VARCHAR(15) NOT NULL,
+        snmpCommunity VARCHAR(20) NOT NULL DEFAULT 'public',
         username VARCHAR(20),
         password VARCHAR(20),
         noModeleAP INT NOT NULL REFERENCES modeles(noModeleAP),
@@ -37,6 +38,7 @@ CREATE TABLE IF NOT EXISTS accessPoints(
 CREATE TABLE IF NOT EXISTS  lignesCommande (
         noCLI INT NOT NULL AUTO_INCREMENT,
         ligneCommande TEXT NOT NULL,
+        protocole VARCHAR(10) NOT NULL,
         portProtocole  SMALLINT NOT NULL,
         noModeleAP INT NOT NULL,
         noTypesCommande INT NOT NULL,
@@ -60,8 +62,8 @@ REFERENCES typesCommandes (noTypesCommande);
 insert into modeles (nomModele,versionFirmware,nomFabricant,adrMACFabricant) values('AP-6','2.4.11','Avaya','00:20:a6');
 insert into modeles (nomModele,versionFirmware,nomFabricant,adrMACFabricant) values('SS-439','4.1.0','Qnap','00:08:9b');
 insert into accessPoints (nomAP,adresseIPv4,password,noModeleAP) values('APADSSOL01','172.16.1.29','repuis',1);
-insert into accessPoints (nomAP,adresseIPv4,password,noModeleAP) values('APADSSOL02','172.16.1.30','repuis',1);
+insert into accessPoints (nomAP,adresseIPv4,password,snmpCommunity,noModeleAP) values('APADSSOL02','172.16.1.30','repuis','repuis',1);
 insert into accessPoints (nomAP,adresseIPv4,noModeleAP) values('NASMaison','10.0.0.60',2);
 insert into typesCommandes (typesCommande,description) values('Afficher infos système','Sert à afficher les informations systèmes sur les modèles AVAYA AP-X');
-insert into lignesCommande (ligneCommande,portProtocole,noModeleAP,noTypesCommande) values("show system\r\nquit\r\n",23,1,1);
-insert into lignesCommande (ligneCommande,portProtocole,noModeleAP,noTypesCommande) values("show status\r\nquit\r\n",23,2,1);
+insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values("show system\r\nquit\r\n","telnet",23,1,1);
+insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values("show status\r\nquit\r\n","telnet",23,2,1);

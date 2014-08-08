@@ -71,7 +71,7 @@
                                 $i =0;
                                 $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
-                                $resultatsAP=$connexion->query("SELECT a.noAP, m.nomModele, m.nomFabricant, m.adrMACFabricant, m.versionFirmware, a.nomAP, a.adresseIPv4 FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP;");                                 
+                                $resultatsAP=$connexion->query("SELECT * FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP;");                                 
                                 $resultatsAP->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet                                
                                 
                                 while( $ligne = $resultatsAP->fetch() ) // on récupère la liste des membres
@@ -82,13 +82,14 @@
                                     $noAP=(string)$ligne->noAP;
                                     $nomAP=(string)$ligne->nomAP;
                                     $ip=(string)$ligne->adresseIPv4;
+                                    $snmpCommunity=(string)$ligne->snmpCommunity;
                                     $nomFabricant=(string)$ligne->nomFabricant;
                                     $adrMACFabricant=(string)$ligne->adrMACFabricant;
                                     $nomModele=(string)$ligne->nomModele;
                                     $versionFirmware=(string)$ligne->versionFirmware; 
                                     
 
-                                    $tabInfosAP= array("noAP" =>$noAP, "nomAP" => $nomAP, "nomFabricant" =>$nomFabricant, "adrMACFabricant" =>$adrMACFabricant, "nomModele" => $nomModele, "versionFirmware" =>$versionFirmware, "adresseIPv4" =>$ip);
+                                    $tabInfosAP= array("noAP" =>$noAP, "nomAP" => $nomAP, "nomFabricant" =>$nomFabricant, "adrMACFabricant" =>$adrMACFabricant, "nomModele" => $nomModele, "versionFirmware" =>$versionFirmware, "adresseIPv4" =>$ip, "snmpCommunity"=>$snmpCommunity);
                                     
                                     //exec("ping -c1 -w1 ".$ip,$reponse,$statut);//pour linux
                                     exec("ping -n 1 -w 1 ".$ip,$reponse,$statut);//pour windows

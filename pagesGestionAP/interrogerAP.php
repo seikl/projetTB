@@ -60,27 +60,26 @@
                         $nomModele=$infosRecues["nomModele"];
                         $versionFirmware=$infosRecues["versionFirmware"];
                         $adrMACFabricant =$infosRecues["adrMACFabricant"];   
-
+                        $snmpCommunity=$infosRecues["snmpCommunity"]; 
                         
                         echo '<li> Informations sur: <strong>'.$nomAP.'</strong> ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.', adresse IP: '.$ip.')</li>
                             </ol>';
                         
                         try {
                                 //récupération infos SNMP (communauté par défaut: public)
-                                $snmpcommunity ="public";
-                                $sysname[0] = snmpget($ip, $snmpcommunity, ".1.3.6.1.2.1.1.5.0");
+                                $sysname[0] = snmpget($ip, $snmpCommunity, ".1.3.6.1.2.1.1.5.0");
                                 $sysname[1] = preg_replace("/STRING:/i","",$sysname[0]); 
 
-                                $sysdesc[0] = snmpget($ip, $snmpcommunity, ".1.3.6.1.2.1.1.1.0");
+                                $sysdesc[0] = snmpget($ip, $snmpCommunity, ".1.3.6.1.2.1.1.1.0");
                                 $sysdesc[1] = preg_replace("/STRING:/i","",$sysdesc[0]);
                                 
-                                $adrMAC[0] = snmpget($ip, $snmpcommunity, ".1.3.6.1.2.1.2.2.1.6.1");
-                                $adrMAC[1] = preg_replace("/STRING:/i","",$adrMAC[0]);                                 
+                                $adrMAC = snmpwalk($ip, $snmpCommunity, ".1.3.6.1.2.1.2.2.1.6");
+                                $adrMAC = preg_replace("/STRING:/i","",$adrMAC[0]);                                 
 
-                                $sysloc[0] = snmpget($ip, $snmpcommunity, ".1.3.6.1.2.1.1.6.0");
+                                $sysloc[0] = snmpget($ip, $snmpCommunity, ".1.3.6.1.2.1.1.6.0");
                                 $sysloc[1] = preg_replace("/STRING:/i","",$sysloc[0]);                                     
 
-                                $sysuptime[0] = snmpget($ip, $snmpcommunity, ".1.3.6.1.2.1.1.3.0");
+                                $sysuptime[0] = snmpget($ip, $snmpCommunity, ".1.3.6.1.2.1.1.3.0");
                                 $sysuptime[1] = preg_replace("/Timeticks:/i","",$sysuptime[0]);                                                              
                         }
                         catch(ErrorException $e)
@@ -96,7 +95,7 @@
                             <thead>
                                <tr>
                                   <th>&nbsp;</th>
-                                  <th>Informations SNMP (NB: community = public)</th>
+                                  <th>Informations SNMP ( community = '.$snmpCommunity.')</th>
                                   <th>Informations de la BDD</th>
                                </tr>
                             </thead>
@@ -113,7 +112,7 @@
                                </tr>
                                 <tr>
                                   <td align="right"><strong>Adresse MAC du fabricant:</strong></td>
-                                  <td>'.$adrMAC[1].'</td>
+                                  <td>'.$adrMAC.'</td>
                                   <td>'.$adrMACFabricant.'</td>
                                </tr>
                                <tr>

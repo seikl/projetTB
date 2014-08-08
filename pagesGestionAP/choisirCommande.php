@@ -221,6 +221,7 @@
                                    $description=(string)$ligne->description;
                                    $noCLI=(string)$ligne->noCLI;
                                    $ligneCommande=(string)$ligne->ligneCommande;
+                                   $protocole=(string)$ligne->protocole;
                                    $portProtocole=(string)$ligne->portProtocole;
                                    $noModeleAP=(string)$ligne->noModeleAP;
                                    $nomModele=(string)$ligne->nomModele;
@@ -228,12 +229,13 @@
                                    $versionFirmware=(string)$ligne->versionFirmware;
 
                                    if ($noCommandeChoisie == $noCLI){                                
-                                       echo '<option value="'.$noCLI.'" selected>'.$typesCommande.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';
+                                       echo '<option value="'.$noCLI.'" selected>'.$typesCommande.' ( protocole ['.$protocole.':'.$portProtocole.'], mod&egrave;le concern&eacute;: '.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';
                                        $commandeTrouvee = true;
-                                       $commandeChoisie=array("noCLI"=>$noCLI,"ligneCommande"=>$ligneCommande, "portProtocole"=>$portProtocole);
+                                       $commandeChoisie=array("noCLI"=>$noCLI,"ligneCommande"=>$ligneCommande,"protocole"=>$protocole, "portProtocole"=>$portProtocole);
+                                       $descriptionChoixCLI= $description;
                                    }
                                    else {
-                                       echo '<option value="'.$noCLI.'">'.$typesCommande.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';                               
+                                       echo '<option value="'.$noCLI.'">'.$typesCommande.' ( protocole ['.$protocole.':'.$portProtocole.'], mod&egrave;le concern&eacute;: '.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';                             
                                    }
 
                                }
@@ -269,12 +271,13 @@
                                 if ($noCommandeChoisie=='0'){
                                     $textValidation=$textValidation.'<br><strong>Aucune commande s&eacute;lectionn&eacute;e.</strong>';
                                 }
-                                if ($noCommandeChoisie!='0' && $noModele=='0'){
+                                if ($noCommandeChoisie!='0' && $noModele=='0'){                                    
                                     $textValidation=$textValidation.'<br><strong>Attention au choix de la commande si les AP choisis sont de mod&egrave;les diff&eacute;rents.</strong>';
                                 }
                                 if ($noCommandeChoisie!='0' && $listeAPactuels!=null){ 
                                 $listeAP=base64_encode(serialize($listeAPactuels));
-                                $commandeChoisie=base64_encode(serialize($commandeChoisie));;
+                                $commandeChoisie=base64_encode(serialize($commandeChoisie));
+                                $textValidation=$textValidation.'<br><br><u>Description de la commande: </u>'.$descriptionChoixCLI;
                                 $textValidation=$textValidation.'<input type="hidden" value="'.$listeAP.'" name="listeAP"/>';                                
                                 $textValidation=$textValidation.'<input type="hidden" value="'.$commandeChoisie.'" name="commandeChoisie"/>';
                                 $textValidation=$textValidation.'<br><br><button class="btn btn-warning" onclick="this.form.submit()">Appliquer la commande</button>';
