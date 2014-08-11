@@ -8,8 +8,8 @@
       for($i=$adrDebutLong;$i<=$adrFinLong;$i++) {
         //Mega threaded ( This will open 255 processes ;))
         $ipAPinger=long2ip($i);
-        //$fp[$i] = popen("ping -c1 -w1 ".$ipAPinger, "r");//Pour Linux
-        $fp[$i] = popen("ping -n 1 -w 1 ".$ipAPinger, "r");//Pour windows
+        $fp[$i] = popen("ping -c 1 -W 1 ".$ipAPinger, "r");//Pour Linux
+        //$fp[$i] = popen("ping -n 1 -w 1 ".$ipAPinger, "r");//Pour windows
         //echo "<br>pour INFO, IP A PINGER: ".$ipAPinger. "  --- etat de 'i': ".$i;        
         
         //pour éviter d'atteindre la limite de processus ouverts

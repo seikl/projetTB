@@ -63,7 +63,8 @@ insert into modeles (nomModele,versionFirmware,nomFabricant,adrMACFabricant) val
 insert into modeles (nomModele,versionFirmware,nomFabricant,adrMACFabricant) values('SS-439','4.1.0','Qnap','00:08:9b');
 insert into accessPoints (nomAP,adresseIPv4,password,noModeleAP) values('APADSSOL01','172.16.1.29','repuis',1);
 insert into accessPoints (nomAP,adresseIPv4,password,snmpCommunity,noModeleAP) values('APADSSOL02','172.16.1.30','repuis','repuis',1);
+insert into accessPoints (nomAP,adresseIPv4,password,snmpCommunity,noModeleAP) values('testAPMaison','10.0.0.62','public','public',1);
 insert into accessPoints (nomAP,adresseIPv4,noModeleAP) values('NASMaison','10.0.0.60',2);
 insert into typesCommandes (typesCommande,description) values('Afficher infos système','Sert à afficher les informations systèmes sur les modèles AVAYA AP-X');
 insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values("show system\r\nquit\r\n","telnet",23,1,1);
-insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values("show status\r\nquit\r\n","telnet",23,2,1);
+insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values("uname -a\r\nquit\r\n","telnet",23,2,1);

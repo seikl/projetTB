@@ -264,34 +264,39 @@
                             $textValidation= "&nbsp;";
                             
                             if (!$initialisation){                                
-                                $textValidation=$textValidation.'<br><br>----------------------------------------------------';
+                                $textValidation.='<br><br>----------------------------------------------------';
                                 //vérification des choix effectués
                                 if ($listeAPactuels==null){
-                                    $textValidation=$textValidation.'<br><strong>Aucun AP s&eacute;lectionn&eacute;.</strong>';
+                                    $textValidation.='<br><strong>Aucun AP s&eacute;lectionn&eacute;.</strong>';
                                 }                            
                                 if ($noCommandeChoisie=='0'){
-                                    $textValidation=$textValidation.'<br><strong>Aucune commande s&eacute;lectionn&eacute;e.</strong>';
+                                    $textValidation.='<br><strong>Aucune commande s&eacute;lectionn&eacute;e.</strong>';
                                 }
                                 if ($noCommandeChoisie!='0' && $noModele=='0'){                                    
-                                    $textValidation=$textValidation.'<br><strong>Attention au choix de la commande si les AP choisis sont de mod&egrave;les diff&eacute;rents.</strong>';
+                                    $textValidation.='<br><strong>Attention au choix de la commande si les AP choisis sont de mod&egrave;les diff&eacute;rents.</strong>';
                                 }
                                 if ($noCommandeChoisie!='0' && $listeAPactuels!=null){ 
                                 $listeAP=base64_encode(serialize($listeAPactuels));
                                 $commandeChoisie=base64_encode(serialize($commandeChoisie));
-                                $textValidation=$textValidation.'<br><br><u>Description de la commande: </u>'.$descriptionChoixCLI;
-                                $textValidation=$textValidation.'<input type="hidden" value="'.$listeAP.'" name="listeAP"/>';                                
-                                $textValidation=$textValidation.'<input type="hidden" value="'.$commandeChoisie.'" name="commandeChoisie"/>';
-                                $textValidation=$textValidation.'<br><br><button class="btn btn-warning" onclick="this.form.submit()">Appliquer la commande</button>';
+                                $textValidation.='<br><br><u>Description de la commande: </u>'.$descriptionChoixCLI;
+                                $textValidation.='<input type="hidden" value="'.$listeAP.'" name="listeAP"/>';                                
+                                $textValidation.='<input type="hidden" value="'.$commandeChoisie.'" name="commandeChoisie"/>';
+                                $textValidation.='<br><br><input type="submit" id="envoiRequete" class="btn btn-warning" onclick="$(';
+                                $textValidation.="'#loading2'";
+                                $textValidation.=').show();" value="Appliquer la commande"/>';
                                 }
                             }
                             
-                            echo '<tr><td align="right">';                                                                                    
+                            echo '<tr><td align="right">';  
+                            echo '<div class="form-group" id="validation">'; 
                             echo '<form id="appliquerCommande" class="form-inline" role="form" action="appliquerCommande.php" method="POST">';                                                                                
-                            echo '<div class="form-group" id="validation" >'; 
-                                       
+                                 
                             echo $textValidation;
 
-                            echo '</div></form></td></tr></table>';
+                            echo '</form></div>';
+                            echo '<div id="loading2" style="display:none;" ><img class="img" src="../images/reqSender-loader.gif" height="34" width="34" alt=""/>&nbsp;Envoi des requ&ecirc;tes en cours...</div>';
+                            
+                            echo '</td></tr></table>';
                      //echo "<br><br>infos recues: ".$infosRecues." --- modele en cours: ".$noModele." --- AP choisis: ".htmlspecialchars(print_r($APChoisis,true));
                                             
     ?>      
@@ -304,5 +309,13 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster --> 
+    <script type="text/javascript">
+         (function (d) {
+           d.getElementById('validation').onsubmit = function () {
+             d.getElementById('envoiRequete').style.display = 'none';
+             d.getElementById('loading2').style.display = 'show';
+           };
+         }(document));
+     </script>    
   </body>
 </html>

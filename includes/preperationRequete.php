@@ -22,8 +22,8 @@
     {               
         $out="";
         
-        if (!$user=""){$out=$out.$user."\r\n";}
-        if (!$mdp=""){$out=$out.$mdp."\r\n";}
+        if ($user!=""){$out=$out.$user."\r\n";}
+        if ($mdp!=""){$out=$out.$mdp."\r\n";}
         
         $tabRequete= explode("\n", $requete);        
         foreach($tabRequete as $ligneReq)
