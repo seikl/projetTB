@@ -60,18 +60,33 @@
                         else {echo " Probl&egrave;me &agrave; la r&eacute;ception de la commande.";}
                         
                         
+                        echo '<table class="table table-responsive" align="center">
+                            <caption> R&eacute;ponses eçues des requ&ecirc;tes transmises:</caption>
+                            <thead>                            
+                               <tr>';
+                        echo "<th>No et IP de l'AP</th>
+                            <th>R&eacute;ponse</th>
+                            <th>Connexion OK?</th>
+                            </tr>
+                            </thead>
+                            <tbody>";                        
                         //parcours des AP
                         foreach ($tabListeAP as $AP){
                              
                             try{
                                 //Ouverture d'un socket sur le port concerné
                                 $fp = fsockopen($AP["adresseIPv4"], $tabCommandeChoisie["portProtocole"], $errno, $errstr, $delaiTimeout);                                
+                                $erreur = $errno.' - '.$errstr;
                             }
                             catch (ErrorException $e){
                                 $erreur=$e->getMessage();                             
                             }
                             if (!$fp) {
-                                echo "AP non atteignable! (".$AP["adresseIPv4"]."<br/>";
+                                $texteErreur ='<tr class="danger"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';
+                                $texteErreur = $texteErreur.'</td><td>Pas de reacute;ponse re&ccedil;ue ('.$erreur.')';
+                                $texteErreur= $texteErreur. '</td><td><strong>Not OK</strong></td></tr>';
+                                
+                                echo $texteErreur;
                             } 
                             else { 
                                 //Préparation de la requête à transmettre en fonction du protocole (TELNET, SSH, HTTP, HTTPS, SNMP ou AUTRE)
@@ -80,55 +95,57 @@
                                         $requete=requeteTELNET($AP["adresseIPv4"], $tabCommandeChoisie["ligneCommande"],$AP["username"],$AP["password"]);
                                         break;
                                     case "SSH":
-                                        echo "i égal 1";
+                                        echo "requ&ecirc;te SSH";
                                         break;
                                     case "HTTP":
                                         $requete= requeteHTTP($AP["adresseIPv4"], $tabCommandeChoisie["ligneCommande"]);                                        
                                         break;
                                     case "HTTPS":
-                                        echo "i égal 2";
+                                        echo "requ&ecirc;te HTTPS";;
                                         break;
                                     case "SNMP":
-                                        echo "i égal 2";
+                                        echo "requ&ecirc;te SNMP";
                                         break;      
                                     case "AUTRE":
-                                        echo "i égal 2";
+                                        echo "requ&ecirc;te AUTRE";
                                         break;  
                                     default:
                                         $requete=$tabCommandeChoisie["ligneCommande"];
                                         break;
                                 }                                
 
-                                //fwrite($fp, $out);          
+                                fwrite($fp, $requete);                                          
 
-                                $reponse = 'test';
-
-                                //$reponse .= fgets($fp);
+                                ///$reponse = fgets($fp);
+                                
+                                $reponse = '';
+                                while (!feof($fp)) {
+                                    $reponse .= fgets($fp, 128);
+                                }
 
 
                                 fclose($fp);
                                 echo substr($reponse,0,500);  
 
-                                if ($reponse != '')
-                                    echo utf8_decode("<br>Requête envoyée avec succès.<br> Requête transmise: ".$requete);
-                                else
-                                    echo utf8_decode("<br>Erreur dans la commmande.");                                 
+                                if ($reponse != ''){
+                                    echo '<tr class="success"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';
+                                    echo '</td><td>'.$reponse;
+                                    echo '</td><td><strong>OK</strong></td></tr>';
+                                }
+                                else{
+                                    //echo $texteErreur;
+                                }
                                 
                             }
                         }
-                            
-                            
-                            
+                                                    
+                        echo '</tbody></table>';                        
                         
-                        
-                         echo "<br>-------------------------------------------------<br> commande choisir: ".htmlspecialchars(print_r($tabCommandeChoisie, true));
-                         echo "<br><br> listeAP: ".htmlspecialchars(print_r($tabListeAP, true));
-                         
-                         
-                         echo '<br><br>'.stripcslashes(ereg_replace("(\r\n|\n|\r)", "[CR][LF]", $tabCommandeChoisie["ligneCommande"]));
+                        echo "<br>-------------------------------------------------<br> commande choisie: ";//.htmlspecialchars(print_r($tabCommandeChoisie, true));
+                        //echo "<br><br> listeAP: ".htmlspecialchars(print_r($tabListeAP, true));                         
 
-                         echo'';                        
-                        ?>                        
+                        echo '<br><br>'.stripcslashes(ereg_replace("(\r\n|\n|\r)", "[CR][LF]", $tabCommandeChoisie["ligneCommande"]));                                          
+                       ?>                        
 
                     </ol>
                  </td>

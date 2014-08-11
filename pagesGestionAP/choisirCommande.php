@@ -74,8 +74,7 @@
                            }
                            else {
                                $noModele = $_POST['noModele'];                            
-                               echo "<option value='0'>Tous les mod&egrave;les...&nbsp;&nbsp;&nbsp;</option>";
-                               $initialisation=FALSE;
+                               echo "<option value='0'>Tous les mod&egrave;les...&nbsp;&nbsp;&nbsp;</option>";                               
                            }
 
                            //pour récupérer la lsite des AP déjà sélectionnés
@@ -97,7 +96,9 @@
                                $commandeSelectionnee=true;
                                $initialisation=FALSE;
                            }
-                                                        
+                           
+                           //définir si état d'initialisation ou non
+                           if (($APChoisis[0]==('0')) && $noCommandeChoisie==0){$initialisation=true;}                                                                                       
 
                            //Récupération de la liste des modèles
                            try
