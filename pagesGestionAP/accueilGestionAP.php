@@ -46,11 +46,12 @@
                      <ol class="breadcrumb">
                         <li><a href="#" class="active">Accueil gestion des AP</a></li>                         
                     </ol>
-                    <?php   
-                        
-                    
+                    <ol>
+                    <form id="selectionmodele" class="form-inline" role="form" action="choisirCommande.php" method="POST">
+                        <div class="form-group">                           
+                    <?php                                               
                         echo "
-                            <table class='table table-striped' width='60%' align='center'>                            
+                            <table class='table table-responsive table-hover' width='60%' align='center'>                            
                             <thead>
                                <tr>
                                   <th>Nombre d'AP en fonction de leur mod&egrave;le respectif</th>
@@ -67,30 +68,33 @@
                                 $i =0;
                                 $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
-                                $resultatsModeles=$connexion->query("SELECT DISTINCT m.nomModele, m.nomFabricant, COUNT(a.noModeleAP)  as nombreAP, m.versionFirmware FROM modeles m, accessPoints a WHERE a.noModeleAP=m.noModeleAP GROUP BY a.noModeleAP;"); // on va chercher tous les membres de la table qu'on trie par ordre croissant
+                                $resultatsModeles=$connexion->query("SELECT DISTINCT m.noModeleAP, m.nomModele, m.nomFabricant, COUNT(a.noModeleAP)  as nombreAP, m.versionFirmware FROM modeles m, accessPoints a WHERE a.noModeleAP=m.noModeleAP GROUP BY a.noModeleAP;"); // on va chercher tous les membres de la table qu'on trie par ordre croissant
                                 $resultatsModeles->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet
                                 
                                 
                                 while( $ligne = $resultatsModeles->fetch() ) // on récupère la liste des membres
-                                {                                      
-                                        echo '<tr><td>'.(string)$ligne->nombreAP.'x '.(string)$ligne->nomFabricant.' '.(string)$ligne->nomModele.' (firmware '. (string)$ligne->versionFirmware.')</td></tr>'; // on affiche les membres
+                                {        
+                                        $textCellule= (string)$ligne->nombreAP.'x '.(string)$ligne->nomFabricant.' '.(string)$ligne->nomModele.' (firmware '. (string)$ligne->versionFirmware.')';
+                                        echo '<tr><td onclick="alert();"><input type="hidden" value="'.(string)$ligne->noModeleAP.'" name="noModele"/>'.$textCellule.'</td></tr>'; // on affiche les membres
                                 }
                                 $resultatsModeles->closeCursor(); // on ferme le curseur des résultats
                                 }
 
                         catch(Exception $e)
                         {
-                                echo 'Erreur : '.$e->getMessage().'<br />';
-                                echo 'N° : '.$e->getCode();
+                                echo '<tr><td>Erreur : '.$e->getMessage().'<br />';
+                                echo 'N° : '.$e->getCode().'</td></tr>';
                         }
 
 
                         
                         echo '</tbody>
                          </table>  
-                        ';
-                            
+                        ';                            
                     ?>
+                        </div>
+                    </form>
+                    </ol>
                  </td>
               </tr>
            </tbody>

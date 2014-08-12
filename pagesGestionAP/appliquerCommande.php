@@ -56,6 +56,10 @@
                         if ($_POST) {                            
                             $tabCommandeChoisie= unserialize(base64_decode($_POST['commandeChoisie']));
                             $tabListeAP = unserialize(base64_decode($_POST['listeAP']));
+                            $nomFichier='../fichiers/output.html';
+                            
+                            if (file_exists($nomFichier)){unlink ($nomFichier);}                            
+                            file_put_contents( $nomFichier, 'R&eacute;sultats des requ&ecirc;tes ('.date('d M Y @ H:i:s').')<br>==========================================<br>');
                         }
                         else {echo " Probl&egrave;me &agrave; la r&eacute;ception de la commande.";}
                         
@@ -83,6 +87,7 @@
                                 $texteErreur = $texteErreur.'</td><td>'.$erreur;
                                 $texteErreur= $texteErreur. '</td><td><strong>Not OK</strong></td></tr>';
                                 echo $texteErreur;
+                                file_put_contents($nomFichier, '<p><u>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</u><br>'.$erreur.'</p>', FILE_APPEND); 
                             } 
                             else {                            
                             
@@ -119,7 +124,8 @@
                                         break;
                                 }
                                                                          
-                                fclose($fp);
+                                fclose($fp);                                                                
+                                file_put_contents($nomFichier, '<p><u>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</u><br>'.$reponse.'</p>', FILE_APPEND);                                
                                 $reponse = substr($reponse,50,200);  
 
                                 if ($reponse != ''){
@@ -137,12 +143,11 @@
                         }                             
                                                     
                         echo '</tbody></table>';                        
-                        
                         //echo "<br>-------------------------------------------------<br> commande choisie: ";//.htmlspecialchars(print_r($tabCommandeChoisie, true));
                         //echo "<br><br> listeAP: ".htmlspecialchars(print_r($tabListeAP, true));                         
                         //echo '<br><br>'.stripcslashes(ereg_replace("(\r\n|\n|\r)", "[CR][LF]", $requete));                                          
                        ?>                        
-
+                         <button class="btn btn-primary" onclick="window.open('../fichiers/output.html');">Afficher le fichier des r&eacute;ponses</button>                         
                     </ol>
                  </td>
               </tr>

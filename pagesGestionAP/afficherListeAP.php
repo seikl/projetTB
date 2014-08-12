@@ -51,7 +51,7 @@
                         
                     
                         echo '
-                            <table class="table table-condensed" align="center">                            
+                            <table class="table table-condensed table-hover" align="center">                            
                             <caption> Liste des acces points enregistr&eacute;s</caption>
                             <thead>                            
                                <tr>';
@@ -91,8 +91,8 @@
 
                                     $tabInfosAP= array("noAP" =>$noAP, "nomAP" => $nomAP, "nomFabricant" =>$nomFabricant, "adrMACFabricant" =>$adrMACFabricant, "nomModele" => $nomModele, "versionFirmware" =>$versionFirmware, "adresseIPv4" =>$ip, "snmpCommunity"=>$snmpCommunity);
                                     
-                                    exec("ping -c 1 -W 1 ".$ip,$reponse,$statut);//pour linux
-                                    //exec("ping -n 1 -w 1 ".$ip,$reponse,$statut);//pour windows
+                                    //exec("ping -c 1 -W 1 ".$ip,$reponse,$statut);//pour linux
+                                    exec("ping -n 1 -w 1 ".$ip,$reponse,$statut);//pour windows
 
                                     if ($statut==0) {
                                         echo '<tr class="success">';
