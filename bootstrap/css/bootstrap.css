@@ -1441,7 +1441,7 @@ th {
 }
 .table {
   margin-bottom: 20px;
-  border: 1px solid #fff;
+  border: 0px solid #fff;
 }
 
 .table > thead > tr > th,
@@ -1487,7 +1487,8 @@ th {
   padding: 5px;
 }
 .table-bordered {
-  border: 1px solid #ddd;
+  border: 0px solid #ddd;
+ 
 }
 .table-bordered > thead > tr > th,
 .table-bordered > tbody > tr > th,
@@ -1499,7 +1500,9 @@ th {
 }
 .table-bordered > thead > tr > th,
 .table-bordered > thead > tr > td {
-  border-bottom-width: 2px;
+  border-bottom-width: 0px;
+  border-left: 0px solid #ddd;
+  border-right: 0px solid #ddd;
 }
   
 .table-striped > tbody > tr:nth-child(odd) > td,

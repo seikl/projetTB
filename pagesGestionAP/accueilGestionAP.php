@@ -46,12 +46,12 @@
                      <ol class="breadcrumb">
                         <li><a href="#" class="active">Accueil gestion des AP</a></li>                         
                     </ol>
-                    <ol>
+                     <ol>
                     <form id="selectionmodele" class="form-inline" role="form" action="choisirCommande.php" method="POST">
-                        <div class="form-group">                           
+                        <div class="form-group">                              
                     <?php                                               
                         echo "
-                            <table class='table table-responsive table-hover' width='60%' align='center'>                            
+                            <table class='table table-bordered table-hover' width='70%' align='center'>                            
                             <thead>
                                <tr>
                                   <th>Nombre d'AP en fonction de leur mod&egrave;le respectif</th>
@@ -61,7 +61,7 @@
                     
                         //connexion a la BDD et récupération de la liste des modèles
                         include '../includes/connexionBDD.php';
-
+                        $actionOnClick="$('#selectionmodele').submit();";
                         try
                         {
                             
@@ -74,8 +74,14 @@
                                 
                                 while( $ligne = $resultatsModeles->fetch() ) // on récupère la liste des membres
                                 {        
+                                    
+                                        $noModeleAP=(string)$ligne->noModeleAP;
+                                        $radioChecked="document.getElementById('radio".$noModeleAP."').checked = true";
                                         $textCellule= (string)$ligne->nombreAP.'x '.(string)$ligne->nomFabricant.' '.(string)$ligne->nomModele.' (firmware '. (string)$ligne->versionFirmware.')';
-                                        echo '<tr><td onclick="alert();"><input type="hidden" value="'.(string)$ligne->noModeleAP.'" name="noModele"/>'.$textCellule.'</td></tr>'; // on affiche les membres
+      
+                                        echo '<tr><td onmouseover="'.$radioChecked.'" onclick="'.$actionOnClick.'">';
+                                        echo '<input id="radio'.$noModeleAP.'" type="radio" class="hidden" value="'.$noModeleAP.'" name="noModele">'.$textCellule;
+                                        echo '</td></tr>';
                                 }
                                 $resultatsModeles->closeCursor(); // on ferme le curseur des résultats
                                 }
