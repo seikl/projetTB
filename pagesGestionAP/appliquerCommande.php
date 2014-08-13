@@ -49,6 +49,7 @@
                     </ol>  
                      <ol>
                     <?php           
+                        date_default_timezone_set('Europe/Zurich');
                         include '../includes/preperationRequete.php'; 
                         $delaiTimeout = 5;
                         
@@ -79,7 +80,7 @@
                             
                             
                             //Ouverture d'un socket sur le port concerné
-                            $fp = fsockopen($AP["adresseIPv4"], $tabCommandeChoisie["portProtocole"], $errno, $errstr, $delaiTimeout);                                
+                            $fp = @fsockopen($AP["adresseIPv4"], $tabCommandeChoisie["portProtocole"], $errno, $errstr, $delaiTimeout);                                
                             $erreur = $errno.' - '.$errstr;                                
 
                             if (!$fp) {
