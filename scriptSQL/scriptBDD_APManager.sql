@@ -54,17 +54,7 @@ CREATE TABLE IF NOT EXISTS  typesCommandes (
 
 ALTER TABLE lignesCommande ADD FOREIGN KEY (noModeleAP)
 REFERENCES modeles(noModeleAP);
-ALTER TABLE lignesCommande GET /mon/iparp.html HTTP/1.1
-Host: 172.16.1.29
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0
-Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Accept-Language: en-US,en;q=0.5
-Accept-Encoding: gzip, deflate
-Referer: http://172.16.1.29/mon/version.html
-Authorization: Basic OnJlcHVpcw==
-Connection: keep-alive
-
-ADD FOREIGN KEY (noTypesCommande)
+ALTER TABLE lignesCommande ADD FOREIGN KEY (noTypesCommande)
 REFERENCES typesCommandes (noTypesCommande);
 
 
@@ -76,6 +66,17 @@ insert into accessPoints (nomAP,adresseIPv4,password,snmpCommunity,noModeleAP) v
 insert into accessPoints (nomAP,adresseIPv4,password,snmpCommunity,noModeleAP) values('testAPMaison','10.0.0.62','public','public',1);
 insert into accessPoints (nomAP,adresseIPv4,noModeleAP) values('NASMaison','10.0.0.60',2);
 insert into typesCommandes (typesCommande,description) values('Afficher infos système','Sert à afficher les informations systèmes');
-insert into typesCommandes (typesCommande,description) values('Afficher infos système','Sert à afficher les informations systèmes');
-insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values("show system\r\nquit\r\n","telnet",23,1,1);
-insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values("uname -a\r\nquit\r\n","telnet",23,2,1);
+insert into typesCommandes (typesCommande,description) values('Afficher la table ARP','Sert à afficher la table ARP');
+insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values('show system\r\nquit\r\n','telnet',23,1,1);
+insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values('uname -a\r\nquit\r\n','telnet',23,2,1);
+insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values('GET /mon/iparp.html HTTP/1.1
+Host: 172.16.1.29
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: http://172.16.1.29/mon/version.html
+Authorization: Basic OnJlcHVpcw==
+Connection: keep-alive
+
+','http',80,1,2);

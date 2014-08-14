@@ -101,15 +101,19 @@
                                         $reponse = '';
                                         while (!feof($fp)) {
                                             $reponse .= fgets($fp, 128);
-                                        }                                        
+                                        }        
+                                        $debutRep=50;
+                                        $finRep=200;
                                         break;
                                     case "SSH":
                                         echo "requ&ecirc;te SSH";
                                         break;
                                     case "HTTP":
-                                        $requete= requeteHTTP($AP["adresseIPv4"], $tabCommandeChoisie["ligneCommande"]);    
+                                        $requete=requeteHTTP($AP["adresseIPv4"], $tabCommandeChoisie["ligneCommande"]);
                                         fwrite($fp, $requete);
-                                        $reponse = fgets($fp);                                        
+                                        $reponse .= fgets($fp); 
+                                        $debutRep=0;
+                                        $finRep=100;                                        
                                         break;
                                     case "HTTPS":
                                         echo "requ&ecirc;te HTTPS";;
@@ -127,7 +131,7 @@
                                                                          
                                 fclose($fp);                                                                
                                 file_put_contents($nomFichier, '<p><u>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</u><br>'.$reponse.'</p>', FILE_APPEND);                                
-                                $reponse = substr($reponse,50,200);  
+                                $reponse = substr($reponse,$debutRep,$finRep);  
 
                                 if ($reponse != ''){
                                     echo '<tr class="success"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';

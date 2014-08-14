@@ -10,8 +10,8 @@
         $uri = "EmWeb_ns%3Asnmp%3A233=APADSS0L01&EmWeb_ns%3Asnmp%3A234.0*s=testWireshark&EmWeb_ns%3Asnmp%3A235=&EmWeb_ns%3Asnmp%3A236=&EmWeb_ns%3Asnmp%3A237=";
         
         $user="";
-        $mdp="repuis";
-        $adrIP ="172.16.1.29";
+        $mdp="public";
+        $adrIP ="10.0.0.62";
         
         //Ouverture d'un socket sur le port 80 (HTTP)
         $fp = fsockopen($adrIP, 80, $errno, $errstr, 1);
@@ -51,14 +51,16 @@ Connection: keep-alive
 $out="";
 $tabRequete= explode("\n", $requete);
      
-foreach($tabRequete as $ligneReq)
-{
+        $out="";
+        $tabRequete= explode("\n", $requete);
+        
+        foreach($tabRequete as $ligneReq)
+        {
+            if (preg_match('/Host: /', $ligneReq)){$ligneReq="Host: ".$adresseIP;}  
+            if (preg_match('/Referer: /', $ligneReq)){$ligneReq="";}
 
-    if (preg_match('/Host: /', $ligneReq)){$ligneReq="Host: ".$adrIP;}  
-    if (preg_match('/Referer: /', $ligneReq)){$ligneReq="";}
-    
-    $out=$out.$ligneReq."\r\n";
-}
+            $out=$out.$ligneReq."\r\n";
+        }
             
             fwrite($fp, $out);          
             
