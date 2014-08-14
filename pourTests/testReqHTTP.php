@@ -14,7 +14,7 @@
         $adrIP ="172.16.1.29";
         
         //Ouverture d'un socket sur le port 80 (HTTP)
-        $fp = fsockopen($adrIP, 70, $errno, $errstr, 1);
+        $fp = fsockopen($adrIP, 80, $errno, $errstr, 1);
 
         if (!$fp) {
             echo "$errstr ($errno)<br />\n";
@@ -34,6 +34,19 @@ Content-Type: application/x-www-form-urlencoded
 Content-Length: 154
 
 EmWeb_ns%3Asnmp%3A233=APADSSOL01&EmWeb_ns%3Asnmp%3A234=unAutreTest&EmWeb_ns%3Asnmp%3A235=&EmWeb_ns%3Asnmp%3A236=sinfi%40lerepuis.ch&EmWeb_ns%3Asnmp%3A237=";
+
+
+$requete="GET /mon/iparp.html HTTP/1.1
+Host: 172.16.1.29
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: http://172.16.1.29/mon/version.html
+Authorization: Basic OnJlcHVpcw==
+Connection: keep-alive
+
+";
    
 $out="";
 $tabRequete= explode("\n", $requete);
