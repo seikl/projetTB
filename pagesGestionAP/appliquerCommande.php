@@ -60,9 +60,9 @@
                             $nomFichier='../fichiers/output.html';
                             
                             if (file_exists($nomFichier)){unlink ($nomFichier);}                            
-                            file_put_contents( $nomFichier, 'R&eacute;sultats des requ&ecirc;tes ('.date('d M Y @ H:i:s').')<br>==========================================<br>');
+                            file_put_contents( $nomFichier, '<html><body>R&eacute;sultats des requ&ecirc;tes ('.date('d M Y @ H:i:s').')<br>==========================================<br>');
                         }
-                        else {echo " Probl&egrave;me &agrave; la r&eacute;ception de la commande.";}
+                        else {echo " <strong>Probl&egrave;me &agrave; la r&eacute;ception de la commande.</strong>";}
                         
                         
                         echo '<table class="table table-hover" align="center" width="100%">
@@ -77,18 +77,17 @@
                             <tbody>";                        
                         //parcours des AP
                         foreach ($tabListeAP as $AP){  
-                            
-                            
+                                                        
                             //Ouverture d'un socket sur le port concerné
                             $fp = @fsockopen($AP["adresseIPv4"], $tabCommandeChoisie["portProtocole"], $errno, $errstr, $delaiTimeout);                                
                             $erreur = $errno.' - '.$errstr;                                
-
+                            $reponse = '';
                             if (!$fp) {
                                 $texteErreur ='<tr class="danger"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';
                                 $texteErreur = $texteErreur.'</td><td>'.$erreur;
                                 $texteErreur= $texteErreur. '</td><td><strong>Not OK</strong></td></tr>';
                                 echo $texteErreur;
-                                file_put_contents($nomFichier, '<p><u>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</u><br>'.$erreur.'</p>', FILE_APPEND); 
+                                file_put_contents($nomFichier, '<p><u><b>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</b></u><br>'.$erreur.'</p>', FILE_APPEND); 
                             } 
                             else {                            
                             
@@ -97,24 +96,32 @@
                                     case "TELNET":
                                         $requete=requeteTELNET($AP["adresseIPv4"], $tabCommandeChoisie["ligneCommande"],$AP["username"],$AP["password"]);
                                         fwrite($fp, $requete);
-
-                                        $reponse = '';
                                         while (!feof($fp)) {
                                             $reponse .= fgets($fp, 128);
                                         }        
                                         $debutRep=50;
                                         $finRep=200;
                                         break;
+                                        
                                     case "SSH":
                                         echo "requ&ecirc;te SSH";
                                         break;
+                                    
                                     case "HTTP":
                                         $requete=requeteHTTP($AP["adresseIPv4"], $tabCommandeChoisie["ligneCommande"]);
                                         fwrite($fp, $requete);
                                         $reponse .= fgets($fp); 
+                                        $nbTrames=500;
+                                        $tailleMTU=1500;
+                                        while(!feof($fp)){
+                                            $reponse .= fgets($fp,$tailleMTU);
+                                            $nbTrames--;
+                                            if ($nbTrames==0){break;}  
+                                        }                                        
                                         $debutRep=0;
-                                        $finRep=100;                                        
+                                        $finRep=200;                                        
                                         break;
+                                        
                                     case "HTTPS":
                                         echo "requ&ecirc;te HTTPS";;
                                         break;
@@ -129,25 +136,29 @@
                                         break;
                                 }
                                                                          
-                                fclose($fp);                                                                
-                                file_put_contents($nomFichier, '<p><u>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</u><br>'.$reponse.'</p>', FILE_APPEND);                                
-                                $reponse = substr($reponse,$debutRep,$finRep);  
+                                fclose($fp);  
+                                
+                                
+                                $extraitReponse = substr($reponse,$debutRep,$finRep);  
+                                $reponse = strip_tags($reponse,'<br>|<p>|<input>');
+                                file_put_contents($nomFichier, '<p><u><b>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</b></u><br>'.$reponse.'</p>', FILE_APPEND);
 
                                 if ($reponse != ''){
                                     echo '<tr class="success"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';
-                                    echo '</td><td>'.$reponse;                                          
+                                    echo '</td><td>'.$extraitReponse;                                          
                                     echo '</td><td><strong>OK</strong></td></tr>';
                                     
                                 }
                                 else{
-                                    echo '<tr class="success"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';
+                                    echo '<tr class="danger"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';
                                     echo '</td><td> Pas de r&eacute;ponse re&ccedil;ue';                                          
                                     echo '</td><td><strong>OK</strong></td></tr>';                                    
                                 }                           
                             }                                
                         }                             
                                                     
-                        echo '</tbody></table>';                        
+                        echo '</tbody></table>'; 
+                        file_put_contents($nomFichier, '</body></html>', FILE_APPEND);
                         //echo "<br>-------------------------------------------------<br> commande choisie: ";//.htmlspecialchars(print_r($tabCommandeChoisie, true));
                         //echo "<br><br> listeAP: ".htmlspecialchars(print_r($tabListeAP, true));                         
                         //echo '<br><br>'.stripcslashes(ereg_replace("(\r\n|\n|\r)", "[CR][LF]", $requete));                                          

@@ -10,11 +10,11 @@
         $uri = "EmWeb_ns%3Asnmp%3A233=APADSS0L01&EmWeb_ns%3Asnmp%3A234.0*s=testWireshark&EmWeb_ns%3Asnmp%3A235=&EmWeb_ns%3Asnmp%3A236=&EmWeb_ns%3Asnmp%3A237=";
         
         $user="";
-        $mdp="public";
-        $adrIP ="10.0.0.62";
+        $mdp="repuis";
+        $adrIP ="172.16.1.29";
         
         //Ouverture d'un socket sur le port 80 (HTTP)
-        $fp = fsockopen($adrIP, 80, $errno, $errstr, 1);
+        $fp = fsockopen($adrIP, 80, $errno, $errstr, 5);
 
         if (!$fp) {
             echo "$errstr ($errno)<br />\n";
@@ -36,49 +36,62 @@ Content-Length: 154
 EmWeb_ns%3Asnmp%3A233=APADSSOL01&EmWeb_ns%3Asnmp%3A234=unAutreTest&EmWeb_ns%3Asnmp%3A235=&EmWeb_ns%3Asnmp%3A236=sinfi%40lerepuis.ch&EmWeb_ns%3Asnmp%3A237=";
 
 
-$requete="GET /mon/iparp.html HTTP/1.1
+$requete="GET / HTTP/1.1
 Host: 172.16.1.29
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
 Accept-Language: en-US,en;q=0.5
 Accept-Encoding: gzip, deflate
-Referer: http://172.16.1.29/mon/version.html
+Referer: http://172.16.1.29/index.html
 Authorization: Basic OnJlcHVpcw==
 Connection: keep-alive
-
 ";
    
-$out="";
-$tabRequete= explode("\n", $requete);
-     
+   
         $out="";
         $tabRequete= explode("\n", $requete);
         
         foreach($tabRequete as $ligneReq)
         {
-            if (preg_match('/Host: /', $ligneReq)){$ligneReq="Host: ".$adresseIP;}  
-            if (preg_match('/Referer: /', $ligneReq)){$ligneReq="";}
-
-            $out=$out.$ligneReq."\r\n";
-        }
+            $checkCRLF=true;
+            if (preg_match('/Host: /', $ligneReq)){$ligneReq="Host: ".$adrIP;}  
+            if (preg_match('/Referer: /', $ligneReq)){$ligneReq="";$checkCRLF=false;}
             
+            if ($checkCRLF){$out.=$ligneReq."\r\n";};
+            
+        }
+ 
             fwrite($fp, $out);          
             
             $reponse = '';
 
-            $reponse .= fgets($fp);
+            $reponse.=fgets($fp, 128);
+            $extraitReponse = "<br><br>";
+   
+            $nbTrames=500;
+            $tailleMTU=1500;
+            while(!feof($fp)){
+                $reponse .= fgets($fp,$tailleMTU);
+                $nbTrames--;
+                if ($nbTrames==0){break;}  
+            }
 
             
             fclose($fp);
-            echo substr($reponse,0,500);  
+            echo substr($reponse,0,200);
             
-            if ($reponse != '')
-                echo utf8_decode("<br>Requête envoyée avec succès.<br> Requeête: ".$out);
+            if ($reponse != ''){
+                
+                echo utf8_decode("<br><br><br><br>Requête envoyée avec succès.<br> Requête: ");
+                echo stripcslashes(ereg_replace("(\r\n|\n|\r)", "[CR][LF]", $out));                 
+            }
             else
                 echo utf8_decode("<br>Erreur dans la commmande."); 
 
             //file_put_contents( 'c:\temp\outputAVAYA.html', $output );
-        }
+        
+                                            
+    }        
 
         ?>
     </body>

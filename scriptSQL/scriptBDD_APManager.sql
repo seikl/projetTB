@@ -17,7 +17,7 @@ use apmanagerdb;
 /*Création des tables*/
 CREATE TABLE IF NOT EXISTS  modeles (
         noModeleAP INT NOT NULL AUTO_INCREMENT,
-        nomModele VARCHAR(20) NOT NULL,
+        nomModele VARCHAR(25) NOT NULL,
         versionFirmware VARCHAR(8) NOT NULL,
         nomFabricant VARCHAR(20) NOT NULL,
         adrMACFabricant VARCHAR(8) NOT NULL,
@@ -61,22 +61,33 @@ REFERENCES typesCommandes (noTypesCommande);
 /*Insertion de données pour les tests*/
 insert into modeles (nomModele,versionFirmware,nomFabricant,adrMACFabricant) values('AP-6','2.4.11','Avaya','00:20:a6');
 insert into modeles (nomModele,versionFirmware,nomFabricant,adrMACFabricant) values('SS-439','4.1.0','Qnap','00:08:9b');
+insert into modeles (nomModele,versionFirmware,nomFabricant,adrMACFabricant) values('HL-6050D/DN serie','1.03','Brother','00:80:77');
 insert into accessPoints (nomAP,adresseIPv4,password,noModeleAP) values('APADSSOL01','172.16.1.29','repuis',1);
 insert into accessPoints (nomAP,adresseIPv4,password,snmpCommunity,noModeleAP) values('APADSSOL02','172.16.1.30','repuis','repuis',1);
 insert into accessPoints (nomAP,adresseIPv4,password,snmpCommunity,noModeleAP) values('testAPMaison','10.0.0.62','public','public',1);
 insert into accessPoints (nomAP,adresseIPv4,noModeleAP) values('NASMaison','10.0.0.60',2);
-insert into typesCommandes (typesCommande,description) values('Afficher infos système','Sert à afficher les informations systèmes');
-insert into typesCommandes (typesCommande,description) values('Afficher la table ARP','Sert à afficher la table ARP');
+insert into accessPoints (nomAP,adresseIPv4,noModeleAP) values('LNB-0123','172.16.6.63',3);
+insert into typesCommandes (typesCommande,description) values('Afficher infos système','Sert à afficher les informations systèmes via une commande TELNET');
+insert into typesCommandes (typesCommande,description) values('Afficher la page d\'acceuil','Envoi d\'une requête GET / en HTTP');
+insert into typesCommandes (typesCommande,description) values('Afficher la page d\'informations','Envoi d\'une requête GET / en HTTP pour obtenir la page d\'informations d\'un AP');
 insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values('show system\r\nquit\r\n','telnet',23,1,1);
 insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values('uname -a\r\nquit\r\n','telnet',23,2,1);
-insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values('GET /mon/iparp.html HTTP/1.1
-Host: 172.16.1.29
+insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values('GET / HTTP/1.1
+Host: 0.0.0.0
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
 Accept-Language: en-US,en;q=0.5
 Accept-Encoding: gzip, deflate
-Referer: http://172.16.1.29/mon/version.html
+Referer: http://0.0.0.0/index.html
 Authorization: Basic OnJlcHVpcw==
 Connection: keep-alive
-
 ','http',80,1,2);
+insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values('GET /printer/maininfo.html HTTP/1.1
+Host: 172.16.6.63
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Cookie: AutoRefresh=off
+Connection: keep-alive
+','http',80,3,3);

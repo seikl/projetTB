@@ -137,7 +137,7 @@
                            echo '</select><br><br></td></tr>';                                      
                            echo '<tr><td width="auto">';
                            echo '<label for="name">Choix des AP &agrave; contacter:</label><br>
-                               <select multiple class="form-control" name="APAchoisir[]">';                    
+                               <select multiple size="10" class="form-control" name="APAchoisir[]">';                    
 
                            //Pour afifcher la liste des AP à sélectionner
                            try

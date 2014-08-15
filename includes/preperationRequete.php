@@ -7,10 +7,11 @@
         
         foreach($tabRequete as $ligneReq)
         {
+            $checkCRLF=true;
             if (preg_match('/Host: /', $ligneReq)){$ligneReq="Host: ".$adresseIP;}  
-            if (preg_match('/Referer: /', $ligneReq)){$ligneReq="";}
-
-            $out=$out.$ligneReq."\r\n";
+            if (preg_match('/Referer: /', $ligneReq)){$ligneReq="";$checkCRLF=false;}
+            
+            if ($checkCRLF){$out.=$ligneReq."\r\n";};            
         }
         return $out;
     }
@@ -27,10 +28,8 @@
         $tabRequete= explode("\n", $requete);        
         foreach($tabRequete as $ligneReq)
         {
-            if (preg_match('/Host: /', $ligneReq)){$ligneReq="Host: ".$adresseIP;}  
-            if (preg_match('/Referer: /', $ligneReq)){$ligneReq="";}
-
-            $out=$out.$ligneReq."\r\n";
+            $checkCRLF=true;
+            if ($checkCRLF){$out.=$ligneReq."\r\n";};            
         }
         return $out;
     }
