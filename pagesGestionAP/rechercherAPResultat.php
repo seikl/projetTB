@@ -75,7 +75,7 @@
                             
                             $tabARP = quick_ipmac_scan(ip2long($adresseDebut),ip2long($adresseFin)); 
                             
-                            //$vendorMACLinux = preg_replace("/-/", ":", $vendorMAC); //pour Linux 
+                            $vendorMACLinux = preg_replace("/-/", ":", $vendorMAC); //pour Linux 
                             $vendorMACWindows = preg_replace("/:/", "-", $vendorMAC); //pour Windows
                                                         
                             echo "<br>Nombres d'entr&eacute;es ARP dans la table: ".count($tabARP);  
@@ -88,7 +88,7 @@
                             $listeARP=null;
                             
                             foreach($tabARP as $ligneTabARP) {  
-                                if(preg_match("/".$vendorMACWindows."/i", $ligneTabARP)) {
+                                if(preg_match("/".$vendorMACLinux."/i", $ligneTabARP)) {
                                     $listeAPTrouves .= $ligneTabARP."<br>";                                    
                                     $nombreAPTrouves++;                                    
                                 }   
