@@ -63,34 +63,48 @@
                             $adrReseau = netmask($ip, $masque);
                             $adrBroadcast =cidr2broadcast($adrReseau, $masque);  
                             
-                            echo "<br><br>=>>>> adresse reseau: ".$adrReseau."    --- Masque: ".$masque."    --- Broadcast: ".$adrBroadcast;
+                            echo "<br>Adresse r&eacute;seau: ".$adrReseau."    --- Masque: ".$masque."    --- Broadcast: ".$adrBroadcast;
   
                             $adresseDebut = long2ip(ip2long($adrReseau)+1);
                             $adresseFin = long2ip(ip2long($adrBroadcast)-1);
                             
-                            echo "<br><br>=>>>> début: ".$adresseDebut."    --- Fin: ".$adresseFin;
+                            echo "<br>Adresse de d&eacute;but: ".$adresseDebut."    --- Adresse de fin: ".$adresseFin;
                             
                             $nbiter = ip2long($adresseFin) - ip2long($adresseDebut) +1;
-                            echo "<br><br>=>>>> nb d'iterrations: ".$nbiter."--- adr MAC du vendeur: ".$vendorMAC;
+                            echo "<br>Nombre d'iterrations: ".$nbiter."--- adresse MAC du vendeur recherch&eacute;: ".$vendorMAC;
                             
                             $tabARP = quick_ipmac_scan(ip2long($adresseDebut),ip2long($adresseFin)); 
                             
-                            //$vendorMAC = preg_replace("/-/", ":", $vendorMAC); //pour Linux 
-                            $vendorMAC = preg_replace("/:/", "-", $vendorMAC); //pour Windows
+                            //$vendorMACLinux = preg_replace("/-/", ":", $vendorMAC); //pour Linux 
+                            $vendorMACWindows = preg_replace("/:/", "-", $vendorMAC); //pour Windows
                                                         
-                            echo "<br> Temps d'ex&eacute;cution:<br>";
+                            echo "<br>Nombres d'entr&eacute;es ARP dans la table: ".count($tabARP);  
+                            echo "<br> Temps d'ex&eacute;cution: ";
                             $end = microtime(true);
                             $time = number_format(($end - $start), 2);
-                            echo $time, ' secondes<br><br>';
-
+                            echo $time, ' secondes<br>';                            
+                            $nombreAPTrouves=0;
+                            $listeAPTrouves = null;
+                            $listeARP=null;
                             
-                            foreach($tabARP as $ligne) {  
-                                if(preg_match("/".$vendorMAC."/i", $ligne)) {
-                                    $ligne = $ligne."<strong><== Gefundet!</strong>";
-                                  }        
-                                echo $ligne."<br>";
-                            } 
+                            foreach($tabARP as $ligneTabARP) {  
+                                if(preg_match("/".$vendorMACWindows."/i", $ligneTabARP)) {
+                                    $listeAPTrouves .= $ligneTabARP."<br>";
+                                    
+                                    $nombreAPTrouves++;                                    
+                                }   
+                                $listeARP .= $ligneTabARP."<br>";
+                            }
+                            
+                            if ($nombreAPTrouves==0){echo 'Mod&egrave;le non trouv&eacute.';}
+                            else{echo '<br> Nombre d\'AP trouv&eacutes: '.$nombreAPTrouves.'<br>'.$listeAPTrouves;}
+                            
+                            $boutonTableARP= '<br><br><button id="afficherTableARP" class="btn btn-info" onclick="$(';
+                            $boutonTableARP.= "'#loading2'";
+                            $boutonTableARP.= ').show();">Afficher la table ARP compl&egrave;te</button>';                            
 
+                            echo $boutonTableARP;                                
+                            echo '<div id="loading2" style="display:none;" >'.$listeARP.'&nbsp;Envoi des requ&ecirc;tes en cours...</div>';
                         ?>
   
                      </ol>
@@ -107,5 +121,13 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript">
+         (function (d) {
+           d.getElementById('validation').onsubmit = function () {
+             d.getElementById('afficherTableARP').style.display = 'none';
+             d.getElementById('loading2').style.display = 'show';
+           };
+         }(document));
+     </script>    
   </body>
 </html>

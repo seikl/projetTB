@@ -7,11 +7,10 @@
         
         $getArpWindows= "arp -a";//pour Windows
         $getArpLinux= "arp -vn";//pour Linux
-
-        $flushArp="ip -s -s neigh flush all";//pour Linux
-
-        $pingLinux="ping -c 1 -W 1 ";//Pour Linux
-        $pingWindows="ping -n 1 -w 1 ";//Pour windows  
+        
+        $pingWindows="ping -n 1 -w 1 ";//Pour windows 
+        $pingLinux="ping -c 1 -w 1 ";//Pour Linux
+        
         $arp=null;
         
       for($i=$adrDebutLong;$i<=$adrFinLong;$i++) {
@@ -25,11 +24,6 @@
                     pclose($fp[$j]);
             }
         }   
-        //pour vider la table ARP du serveur
-        if (($i % 256)==0){
-            $arp .= shell_exec($getArpWindows);
-            shell_exec($flushArp);
-        }
       }
      
       /*
@@ -37,7 +31,7 @@
         while( $fp[$i] && !feof($fp[$i]) ) { fgets($fp[$i]); }
       } 
       */
-      $arp .= shell_exec($getArpWindows);        
+      $arp = shell_exec($getArpWindows);        
       $tableARP= explode("\n", $arp);
        
       //print_r($tableARP); //DEBUG
