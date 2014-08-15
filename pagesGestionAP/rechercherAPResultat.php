@@ -89,8 +89,7 @@
                             
                             foreach($tabARP as $ligneTabARP) {  
                                 if(preg_match("/".$vendorMACWindows."/i", $ligneTabARP)) {
-                                    $listeAPTrouves .= $ligneTabARP."<br>";
-                                    
+                                    $listeAPTrouves .= $ligneTabARP."<br>";                                    
                                     $nombreAPTrouves++;                                    
                                 }   
                                 $listeARP .= $ligneTabARP."<br>";

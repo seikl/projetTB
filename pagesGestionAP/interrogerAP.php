@@ -86,7 +86,7 @@
                         {                            
                                 $sysname[1] = $e->getMessage();
                                 $sysdesc[1] = $e->getMessage();
-                                $adrMAC[1] = $e->getMessage();
+                                $adrMAC = $e->getMessage();
                                 $sysloc[1] = $e->getMessage();
                                 $sysuptime[1] = $e->getMessage();
                         }     

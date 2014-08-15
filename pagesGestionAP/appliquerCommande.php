@@ -48,7 +48,10 @@
                         <li>R&eacute;sultat des requ&ecirc;tes</li>
                     </ol>  
                      <ol>
-                    <?php           
+                    <?php       
+                    
+                        //pour autoriser le script à s'exécuter au-delà de 10 secondes
+                        set_time_limit(10);                    
                         date_default_timezone_set('Europe/Zurich');
                         include '../includes/preperationRequete.php'; 
                         $delaiTimeout = 5;
@@ -82,6 +85,7 @@
                             $fp = @fsockopen($AP["adresseIPv4"], $tabCommandeChoisie["portProtocole"], $errno, $errstr, $delaiTimeout);                                
                             $erreur = $errno.' - '.$errstr;                                
                             $reponse = '';
+                            $i=0;
                             if (!$fp) {
                                 $texteErreur ='<tr class="danger"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';
                                 $texteErreur = $texteErreur.'</td><td>'.$erreur;
@@ -96,8 +100,10 @@
                                     case "TELNET":
                                         $requete=requeteTELNET($AP["adresseIPv4"], $tabCommandeChoisie["ligneCommande"],$AP["username"],$AP["password"]);
                                         fwrite($fp, $requete);
+                                        $taille=128;
                                         while (!feof($fp)) {
-                                            $reponse .= fgets($fp, 128);
+                                            $reponse .= fgets($fp,$taille);
+                                            $i++; 
                                         }        
                                         $debutRep=50;
                                         $finRep=200;
@@ -110,16 +116,19 @@
                                     case "HTTP":
                                         $requete=requeteHTTP($AP["adresseIPv4"], $tabCommandeChoisie["ligneCommande"]);
                                         fwrite($fp, $requete);
-                                        $reponse .= fgets($fp); 
+                                        $reponse .= fgets($fp);                                         
                                         $nbTrames=500;
-                                        $tailleMTU=1500;
+                                        $taille=1500;
+                                        //Vérification du code de réponse
+                                        if (!preg_match('/20/', substr($reponse,9,3))){$nbTrames=5;}             
+                                        
                                         while(!feof($fp)){
-                                            $reponse .= fgets($fp,$tailleMTU);
+                                            $reponse .= fgets($fp,$taille);                                         
                                             $nbTrames--;
-                                            if ($nbTrames==0){break;}  
-                                        }                                        
+                                            if ($nbTrames==0){break;}                                              
+                                        }                                              
                                         $debutRep=0;
-                                        $finRep=200;                                        
+                                        $finRep=128;                                        
                                         break;
                                         
                                     case "HTTPS":
@@ -137,10 +146,9 @@
                                 }
                                                                          
                                 fclose($fp);  
-                                
-                                
+
                                 $extraitReponse = substr($reponse,$debutRep,$finRep);  
-                                $reponse = strip_tags($reponse,'<br>|<p>|<input>');
+                                $reponse = strip_tags($reponse,'<br>|<p>|<i>|<input>');
                                 file_put_contents($nomFichier, '<p><u><b>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</b></u><br>'.$reponse.'</p>', FILE_APPEND);
 
                                 if ($reponse != ''){
@@ -152,13 +160,13 @@
                                 else{
                                     echo '<tr class="danger"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';
                                     echo '</td><td> Pas de r&eacute;ponse re&ccedil;ue';                                          
-                                    echo '</td><td><strong>OK</strong></td></tr>';                                    
+                                    echo '</td><td><strong>Not OK</strong></td></tr>';                                    
                                 }                           
                             }                                
                         }                             
                                                     
                         echo '</tbody></table>'; 
-                        file_put_contents($nomFichier, '</body></html>', FILE_APPEND);
+                        file_put_contents($nomFichier, '<input type="button" value="Imprimer..." onClick="window.print()"></body></html>', FILE_APPEND);
                         //echo "<br>-------------------------------------------------<br> commande choisie: ";//.htmlspecialchars(print_r($tabCommandeChoisie, true));
                         //echo "<br><br> listeAP: ".htmlspecialchars(print_r($tabListeAP, true));                         
                         //echo '<br><br>'.stripcslashes(ereg_replace("(\r\n|\n|\r)", "[CR][LF]", $requete));                                          
