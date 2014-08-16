@@ -95,7 +95,7 @@
                                 $listeARP .= $ligneTabARP."<br>";
                             }
                             
-                            if ($nombreAPTrouves==0){echo 'Mod&egrave;le non trouv&eacute.';}
+                            if ($nombreAPTrouves==0){echo '<strong>Aucun  mod&egrave;le trouv&eacute </strong>';}
                             else{echo '<br> Nombre d\'AP trouv&eacutes: '.$nombreAPTrouves.'<br>'.$listeAPTrouves;}
                             
                             $boutonTableARP= '<br><br><button id="afficherTableARP" class="btn btn-info" onclick="$(';
@@ -103,7 +103,7 @@
                             $boutonTableARP.= ').show();">Afficher la table ARP compl&egrave;te</button>';                            
 
                             echo $boutonTableARP;                                
-                            echo '<div id="loading2" style="display:none;" >'.$listeARP.'&nbsp;Envoi des requ&ecirc;tes en cours...</div>';
+                            echo '<div id="loading2" style="display:none;" >'.$listeARP.'</div>';
                         ?>
   
                      </ol>
