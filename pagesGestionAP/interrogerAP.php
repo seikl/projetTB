@@ -66,21 +66,22 @@
                             </ol>';
                         
                         try {
+                                $timeout=1000000;
                                 //récupération infos SNMP (communauté par défaut: public)
-                                $sysname[0] = snmpget($ip, $snmpCommunity, ".1.3.6.1.2.1.1.5.0");
+                                $sysname[0] = snmpget($ip, $snmpCommunity, ".1.3.6.1.2.1.1.5.0",$timeout);
                                 $sysname[1] = preg_replace("/STRING:/i","",$sysname[0]); 
 
-                                $sysdesc[0] = snmpget($ip, $snmpCommunity, ".1.3.6.1.2.1.1.1.0");
+                                $sysdesc[0] = snmpget($ip, $snmpCommunity, ".1.3.6.1.2.1.1.1.0",$timeout);
                                 $sysdesc[1] = preg_replace("/STRING:/i","",$sysdesc[0]);
                                 
-                                $adrMACreq = snmpwalkoid($ip, $snmpCommunity, ".1.3.6.1.2.1.2.2.1.6");
+                                $adrMACreq = snmpwalkoid($ip, $snmpCommunity, ".1.3.6.1.2.1.2.2.1.6",$timeout);
                                 $adrMAC = implode($adrMACreq);
                                 $adrMAC = preg_replace("/STRING:/i","",$adrMAC);                                 
 
-                                $sysloc[0] = snmpget($ip, $snmpCommunity, ".1.3.6.1.2.1.1.6.0");
+                                $sysloc[0] = snmpget($ip, $snmpCommunity, ".1.3.6.1.2.1.1.6.0",$timeout);
                                 $sysloc[1] = preg_replace("/STRING:/i","",$sysloc[0]);                                     
 
-                                $sysuptime[0] = snmpget($ip, $snmpCommunity, ".1.3.6.1.2.1.1.3.0");
+                                $sysuptime[0] = snmpget($ip, $snmpCommunity, ".1.3.6.1.2.1.1.3.0",$timeout);
                                 $sysuptime[1] = preg_replace("/Timeticks:/i","",$sysuptime[0]);                                                              
                         }
                         catch(ErrorException $e)

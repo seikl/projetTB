@@ -54,6 +54,7 @@
                         set_time_limit(10);                    
                         date_default_timezone_set('Europe/Zurich');
                         include '../includes/preperationRequete.php'; 
+                        include '../includes/fonctionsUtiles.php';
                         $delaiTimeout = 5;
                         
                         //Récupération des informations
@@ -137,16 +138,16 @@
                                         echo "requ&ecirc;te HTTPS";;
                                         break;
                                     case "SNMP":
-                                        try{                                        
-                                            $requete = new SNMP(1, $AP["adresseIPv4"], $AP["snmpCommunity"], 1000000,2);
-                                            $reponse = $requete->walk($tabCommandeChoisie["ligneCommande"],FALSE);                                                                                                                                   
-                                            //$reponse = implode($requete);
-                                            $requete->close(); 
+                                        try {      
+                                            $timeout=1000000;
+                                            $requete = snmprealwalk($AP["adresseIPv4"], $AP["snmpCommunity"],$tabCommandeChoisie["ligneCommande"],$timeout);
+                                            $reponse = implode($requete);
                                         }
-                                        catch(SNMPException $e)
+                                        catch(ErrorException $e)
                                         {                            
-                                            $reponse = $e->getMessage();
-                                        }                                         
+                                            $info_erreur= $e->getMessage();
+                                        }   
+                                        
                                         $debutRep=0;
                                         $finRep=128;                                         
                                         break;      
@@ -160,18 +161,21 @@
 
                                 $extraitReponse = substr($reponse,$debutRep,$finRep);  
                                 $reponse = strip_tags($reponse,'<br>|<p>|<i>|</i>|<input>');
-                                file_put_contents($nomFichier, '<p><u><b>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</b></u><br>'.$reponse.'</p>', FILE_APPEND);
+                                
 
                                 if ($reponse != ''){
                                     echo '<tr class="success"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';
                                     echo '</td><td>'.$extraitReponse;                                          
                                     echo '</td><td><strong>OK</strong></td></tr>';
+                                    file_put_contents($nomFichier, '<p><u><b>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</b></u><br>'.$reponse.'</p>', FILE_APPEND);
                                     
                                 }
                                 else{
                                     echo '<tr class="danger"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';
-                                    echo '</td><td> Pas de r&eacute;ponse re&ccedil;ue';                                          
-                                    echo '</td><td><strong>Not OK</strong></td></tr>';                                    
+                                    $erreur = 'Pas de r&eacute;ponse re&ccedil;ue ('.$info_erreur.')';
+                                    echo '</td><td>'.$erreur;                                       
+                                    echo '</td><td><strong>Not OK</strong></td></tr>'; 
+                                    file_put_contents($nomFichier, '<p><u><b>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</b></u><br>'.$erreur.'</p>', FILE_APPEND);
                                 }                           
                             }                                
                         }                             
