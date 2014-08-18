@@ -131,22 +131,24 @@
                                         $debutRep=0;
                                         $finRep=128; 
                                         fclose($fp);
-                                        break;
+                                        break;                                        
                                         
                                     case "HTTPS":
                                         echo "requ&ecirc;te HTTPS";;
                                         break;
                                     case "SNMP":
-                                        try{
-                                            $reponse = snmpwalk($AP["adresseIPv4"],$AP["snmpCommunity"],$tabCommandeChoisie["ligneCommande"]);
+                                        try{                                        
+                                            $requete = new SNMP(1, $AP["adresseIPv4"], $AP["snmpCommunity"], 1000000,2);
+                                            $reponse = $requete->walk($tabCommandeChoisie["ligneCommande"],FALSE);                                                                                                                                   
+                                            //$reponse = implode($requete);
+                                            $requete->close(); 
                                         }
-                                        catch(warning $e)
+                                        catch(SNMPException $e)
                                         {                            
                                             $reponse = $e->getMessage();
                                         }                                         
                                         $debutRep=0;
-                                        $finRep=128; 
-                                        $reponse = $reponse[0];
+                                        $finRep=128;                                         
                                         break;      
                                     case "AUTRE":
                                         echo "requ&ecirc;te AUTRE";

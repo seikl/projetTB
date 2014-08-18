@@ -73,8 +73,9 @@
                                 $sysdesc[0] = snmpget($ip, $snmpCommunity, ".1.3.6.1.2.1.1.1.0");
                                 $sysdesc[1] = preg_replace("/STRING:/i","",$sysdesc[0]);
                                 
-                                $adrMAC = snmpwalk($ip, $snmpCommunity, ".1.3.6.1.2.1.2.2.1.6");
-                                $adrMAC = preg_replace("/STRING:/i","",$adrMAC[0]);                                 
+                                $adrMACreq = snmpwalkoid($ip, $snmpCommunity, ".1.3.6.1.2.1.2.2.1.6");
+                                $adrMAC = implode($adrMACreq);
+                                $adrMAC = preg_replace("/STRING:/i","",$adrMAC);                                 
 
                                 $sysloc[0] = snmpget($ip, $snmpCommunity, ".1.3.6.1.2.1.1.6.0");
                                 $sysloc[1] = preg_replace("/STRING:/i","",$sysloc[0]);                                     
