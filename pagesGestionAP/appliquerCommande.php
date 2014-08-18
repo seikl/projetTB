@@ -157,8 +157,7 @@
                                 }                                                                                                           
 
                                 $extraitReponse = substr($reponse,$debutRep,$finRep);  
-                                $reponse = strip_tags($reponse,'<br>|<p>|<i>|<input>');
-                                
+                                $reponse = strip_tags($reponse,'<br>|<p>|<i>|</i>|<input>');
                                 file_put_contents($nomFichier, '<p><u><b>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</b></u><br>'.$reponse.'</p>', FILE_APPEND);
 
                                 if ($reponse != ''){
