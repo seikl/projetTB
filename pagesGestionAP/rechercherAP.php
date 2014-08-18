@@ -3,7 +3,7 @@
   <head>
     <title>AP Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <script type="text/javascript" src="../js/jquery-1.11.1.js"></script>    
+    <script type="text/javascript" src="../js/jquery-1.11.1.js"></script>  
     <!-- Bootstrap core CSS -->
     <link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
   </head>
@@ -48,7 +48,7 @@
                     </ol>  
                      <ol>
                          
-                    <form id="form" class="form-inline" role="form" action="rechercherAPResultat.php" method="POST">
+                         <form id="form" class="form-inline" role="form" action="rechercherAPResultat.php" method="POST" onsubmit="return validationAdresseIP(this);" >
                         <div class="form-group">       
                             
                             <label for="name">Veuillez s&eacute;lectionner le type de mat&eacute;riel &agrave; rechercher et saisir la plage d'adresses &agrave; scanner</label><br>
@@ -95,15 +95,15 @@
                             </br></br>
                             <table border="0">
                                 <tr><td>
-                                    <input type="text" class="form-control" name="groupeA" size="3" maxlength="3" value="192"/>
+                                    <input type="text" class="form-control" name="groupeA" size="3" maxlength="3" value="192" onkeypress="return checkOnlyDigits(event)"/>
                                     <strong>.</strong>
-                                     <input type="text" class="form-control" name="groupeB" size="3" maxlength="3" value="168"/>
+                                     <input type="text" class="form-control" name="groupeB" size="3" maxlength="3" value="168" onkeypress="return checkOnlyDigits(event)"/>
                                      <strong>.</strong>
-                                    <input type="text" class="form-control" name="groupeC" size="3" maxlength="3" value="1"/>
+                                    <input type="text" class="form-control" name="groupeC" size="3" maxlength="3" value="1" onkeypress="return checkOnlyDigits(event)"/>
                                     <strong>.</strong>
-                                    <input type="text" class="form-control" name="groupeD" size="3" maxlength="3" value="0"/>
+                                    <input type="text" class="form-control" name="groupeD" size="3" maxlength="3" value="0" onkeypress="return checkOnlyDigits(event)"/>
                                     &nbsp;<strong class="indication">/</strong>&nbsp;
-                                    <input type="text" class="form-control" name="masque" size="2" maxlength="2" value="24"/>                               
+                                    <input type="text" class="form-control" name="masque" size="2" maxlength="2" value="24" onkeypress="return checkOnlyDigits(event)"/>                               
 
                                     </td><td>
                                     &nbsp;&nbsp;<input type="submit" id="submit" class="btn btn-primary" value="Rechercher" onclick="$('#loading2').show();"/>                           
@@ -111,8 +111,9 @@
                                         <div id="loading2" style="display:none;" ><img class="img" src="../images/search-loader-circle2.gif" height="34" width="34" alt=""/>&nbsp;Recherche en cours...</div>
                                     </td></tr>
                             </table>                                    
-                         </div>
-                        </form>   
+                         </div>                             
+                        </form>
+                         <div id="errorMsg"></div>
                      </ol> 
                  </td>
               </tr>
@@ -132,5 +133,21 @@
            };
          }(document));
      </script>    
+    <script type="text/javascript">
+        function checkOnlyDigits(e) {
+            e = e ? e : window.event;
+            var charCode = e.which ? e.which : e.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                document.getElementById('errorMsg').style.display = 'block';
+                document.getElementById('errorMsg').style.color = 'red';
+                document.getElementById('errorMsg').innerHTML = 'Uniquement des nombres compris entre 0 et 256.';
+                return false;
+            } else {
+                document.getElementById('errorMsg').style.display = 'none';
+                return true;
+            }
+        }
+    </script>     
+     
   </body>
 </html>
