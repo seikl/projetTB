@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    <title>AP Manager</title>
+    <title>AP Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <script type="text/javascript" src="../js/jquery-1.11.1.js"></script>
     <!-- Bootstrap core CSS -->

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>AP Manager</title>
+    <title>AP Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <script type="text/javascript" src="../js/jquery-1.11.1.js"></script>                
     <!-- Bootstrap core CSS -->
@@ -86,7 +86,7 @@
                             $erreur = $errno.' - '.$errstr;                                
                             $reponse = '';
                             $i=0;
-                            if (!$fp) {
+                            if ((!$fp) && ((strtoupper($tabCommandeChoisie["protocole"]))!= "SNMP")) {
                                 $texteErreur ='<tr class="danger"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';
                                 $texteErreur = $texteErreur.'</td><td>'.$erreur;
                                 $texteErreur= $texteErreur. '</td><td><strong>Not OK</strong></td></tr>';
@@ -107,6 +107,7 @@
                                         }        
                                         $debutRep=50;
                                         $finRep=200;
+                                        fclose($fp);
                                         break;
                                         
                                     case "SSH":
@@ -128,14 +129,24 @@
                                             if ($nbTrames==0){break;}                                              
                                         }                                              
                                         $debutRep=0;
-                                        $finRep=128;                                        
+                                        $finRep=128; 
+                                        fclose($fp);
                                         break;
                                         
                                     case "HTTPS":
                                         echo "requ&ecirc;te HTTPS";;
                                         break;
                                     case "SNMP":
-                                        echo "requ&ecirc;te SNMP";
+                                        try{
+                                            $reponse = snmpwalk($AP["adresseIPv4"],$AP["snmpCommunity"],$tabCommandeChoisie["ligneCommande"]);
+                                        }
+                                        catch(warning $e)
+                                        {                            
+                                            $reponse = $e->getMessage();
+                                        }                                         
+                                        $debutRep=0;
+                                        $finRep=128; 
+                                        $reponse = $reponse[0];
                                         break;      
                                     case "AUTRE":
                                         echo "requ&ecirc;te AUTRE";
@@ -143,12 +154,11 @@
                                     default:
                                         $requete=$tabCommandeChoisie["ligneCommande"];
                                         break;
-                                }
-                                                                         
-                                fclose($fp);  
+                                }                                                                                                           
 
                                 $extraitReponse = substr($reponse,$debutRep,$finRep);  
                                 $reponse = strip_tags($reponse,'<br>|<p>|<i>|<input>');
+                                
                                 file_put_contents($nomFichier, '<p><u><b>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</b></u><br>'.$reponse.'</p>', FILE_APPEND);
 
                                 if ($reponse != ''){

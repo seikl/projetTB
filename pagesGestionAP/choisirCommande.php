@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>AP Manager</title>
+    <title>AP Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <script type="text/javascript" src="../js/jquery-1.11.1.js"></script>                
     <!-- Bootstrap core CSS -->
@@ -163,6 +163,7 @@
                                    $ip=(string)$ligne->adresseIPv4;
                                    $username=(string)$ligne->username;
                                    $password=(string)$ligne->password;
+                                   $snmpCommunity=(string)$ligne->snmpCommunity;
                                    $nomFabricant=(string)$ligne->nomFabricant;
                                    $nomModele=(string)$ligne->nomModele;
                                    $versionFirmware=(string)$ligne->versionFirmware;   
@@ -171,7 +172,7 @@
 
                                    if (in_array($noAP, $APChoisis)){
                                        echo '<option value="'.$noAP.'" selected>'.$noAP.' - '.$nomAP.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';                                       
-                                       $listeAPactuels[$i]=array("noAP" =>$noAP, "nomAP"=>$nomAP, "adresseIPv4"=>$ip, "username"=>$username, "password"=>$password);       
+                                       $listeAPactuels[$i]=array("noAP" =>$noAP, "nomAP"=>$nomAP, "adresseIPv4"=>$ip,"snmpCommunity"=>$snmpCommunity, "username"=>$username, "password"=>$password);       
                                        $i++;
                                    }
                                    else {
