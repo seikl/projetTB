@@ -144,7 +144,8 @@
                                             $reponse = implode($requete);
                                         }
                                         catch(ErrorException $e)
-                                        {                            
+                                        {        
+                                            $reponse='';
                                             $info_erreur= $e->getMessage();
                                         }   
                                         
