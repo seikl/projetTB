@@ -118,7 +118,7 @@
                                   if ($noModele!= 0){
                                   echo "<br>------------------------------------------------<br>";
                                   echo'                                  
-                                    <form id="confirmSupprimerModele" name="confirmSupprimerModele" class="form-inline" role="form" action="confirmSupprimerModele.php" method="POST">
+                                    <form onsubmit="return confirm(\'Valider la suppression de ce mod&eacute;le?\');" id="confirmSupprimerModele" name="confirmSupprimerModele" class="form-inline" role="form" action="confirmSupprimerModele.php" method="POST">
                                         <div class="form-group">       
                                             <table border="0" class="table">
                                                 <tr><td align="right">
@@ -146,13 +146,13 @@
                                                     '.$modeleChoisi["adrMACFabricant"].'
                                                 </td></tr>                                 
                                                 <tr><td  align="right" colspan="2">
-                                                    <input type="submit" id="submit" class="btn btn-warning" value="Valider la suppression"/>                           
+                                                    <button class="btn btn-warning">Valider la suppression</button>                           
                                                 </td></tr>
                                             </table>                                    
                                          </div>                             
                                         </form>';                                                                                                                                
                                   }                                  
-                            ?>    
+                            ?>                             
                      </ol> 
                  </td>
               </tr>
@@ -165,6 +165,6 @@
 
 
     <!-- Bootstrap core JavaScrip ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->       
+    <!-- Placed at the end of the document so the pages load faster -->     
   </body>
 </html>
