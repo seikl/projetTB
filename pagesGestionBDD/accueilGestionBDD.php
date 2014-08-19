@@ -31,23 +31,23 @@
                  <td width="30%" class="leftmenu">
                         <p><b>G&eacute;rer les enregistrments des AP</b></p>
                         <ul class="nav nav-pills nav-justified">                       
-                           <li><a href="ajoutModifAP.php">Ajouter</a></li>
+                           <li><a href="ajoutAP.php">Ajouter</a></li>
                            <li><a href="selectModifAP.php">Modifier</a></li>                       
                            <li><a href="supprimerAP.php">Supprimer</a></li>
                         </ul>
                          <p><b>G&eacute;rer les mod&egrave;les enregistr&eacute;s</b></p>
                         <ul class="nav nav-pills nav-justified">                       
-                           <li><a href="ajoutModifModele.php">Ajouter</a></li>
+                           <li><a href="ajoutModele.php">Ajouter</a></li>
                            <li><a href="selectModifModele.php">Modifier</a></li>                       
                            <li><a href="supprimerModele.php">Supprimer</a></li>
                         </ul>
                          <p><b>G&eacute;rer les lignes de commandes (CLI)</b></p>
                         <ul class="nav nav-pills nav-justified">                       
-                           <li><a href="ajoutModifCLI.php">Ajouter</a></li>
+                           <li><a href="ajoutCLI.php">Ajouter</a></li>
                            <li><a href="selectModifCLI.php">Modifier</a></li>                       
                            <li><a href="supprimerCLI.php">Supprimer</a></li>
                         </ul>                      
-                 </td>                 
+                 </td>                     
                  <td class="informations">
                      
                      <ol class="breadcrumb">
@@ -57,7 +57,7 @@
                         <div class="form-group">                              
                     <?php                                               
                         echo "
-                            <table class='table table-bordered table-hover' width='auto' align='left'>                            
+                            <table class='table table-striped' width='auto' align='left'>                            
                             <thead>
                                <tr>
                                   <th>Nombre d'enregistrements contenus dans la BDD</th>

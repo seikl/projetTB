@@ -53,7 +53,7 @@
                  <td class="informations">                     
                     <ol class="breadcrumb">
                         <li><a href="accueilGestionBDD.php">Accueil gestion de la BDD</a></li> 
-                        <li><a href="ajoutModele.php">Ajouter un mod&egrave;le d'AP</a></li>
+                        <li><a href="selectModifModele.php">Modifier un mod&egrave;le</a></li>
                         <li>R&eacute;sultat</li>
                     </ol>
                    <ol>
@@ -62,17 +62,19 @@
                             
                             
                             //Récupération des informations
-                            if ($_POST) {                            
+                            if ($_POST) {       
+                                $noModeleAP = $_POST['noModeleAP'];
                                 $nomModele= $_POST['nomModele'];
                                 $versionFirmware= $_POST['versionFirmware'];
                                 $nomFabricant= $_POST['nomFabricant'];
                                 $adrMACFabricant = $_POST['adrMACFabricant1'].':'.$_POST['adrMACFabricant2'].':'.$_POST['adrMACFabricant3'];
 
                                 $boutonRetour = '<button class="btn btn-primary" onclick="history.back()">Revenir sur le formulaire</button>';
-                                $boutonReinit = '<button class="btn btn-default" onclick="window.location.href = \'ajoutModele.php\'">R&eacute;initialiser le formulaire</button>';
+                                $boutonReinit = '<button class="btn btn-default" onclick="window.location.href = \'selectModifModele.php\'">R&eacute;initialiser le formulaire</button>';
                                 $boutonRetourSucces = '<button class="btn btn-success" onclick="window.location.href = \'../pagesGestionAP/accueilGestionAP.php\'">Afficher la liste des mod&egrave;les</button>';
                                 
                                 echo "<table class='table'><tr><th colspan='2'>Informations re&ccedil;ues:</th></tr>";
+                                echo "<tr><td>No du mod&egrave;le concern&eacute;:&nbsp;</td><td>".$noModeleAP."</td></tr>";
                                 echo "<tr><td>Nom du mod&egrave;le:&nbsp;</td><td>".$nomModele."</td></tr>";
                                 echo "<tr><td>Version du firmware:&nbsp;</td><td>".$versionFirmware."</td></tr>";
                                 echo "<tr><td>Nom du fabricant:&nbsp;</td><td>".$nomFabricant."</td></tr>";
@@ -85,26 +87,17 @@
                                     $i =0;
                                     $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
-                                    $resultatsModeles=$connexion->query("SELECT * FROM modeles m WHERE m.nomModele = '".$nomModele."' AND  m.versionFirmware = '".$versionFirmware."';");
-                                    $resultatsModeles->setFetchMode(PDO::FETCH_OBJ);                                    
-                                    if ($resultatsModeles->fetch()){
-                                        echo "<p><strong> Ce mod&egrave;le existe d&eacute;j&agrave; avec la m&ecirc;me version de firmware</strong>!<br>";
-                                        echo "Veuillez effectuer les modifications n&eacute;cessaires</p>";
+                                    $reqModification = $connexion->query("UPDATE ".$PARAM_nom_bd.".modeles SET nomModele='".$nomModele."',versionFirmware='".$versionFirmware."',adrMACFabricant='".$adrMACFabricant."',nomFabricant='".$nomFabricant."' WHERE noModeleAP='".$noModeleAP."';");
+
+                                    if (!$reqModification){
+                                        echo "<p><strong> Probl&egrave;me lors de l'enregistrement</strong>!<br>";
                                         echo "<p>".$boutonRetour."&nbsp;&nbsp;&nbsp;&nbsp;".$boutonReinit."</p>";
                                     }
-                                    else{                                        
-                                        $reqEnregistrement = $connexion->query("INSERT INTO modeles (nomModele, versionFirmware,nomFabricant,adrMACFabricant) VALUES ('".$nomModele."','".$versionFirmware."','".$nomFabricant."','".$adrMACFabricant."');");
-                                       
-                                        if (!$reqEnregistrement){
-                                            echo "<p><strong> Probl&egrave;me lors de l'enregistrement</strong>!<br>";
-                                            echo "<p>".$boutonRetour."&nbsp;&nbsp;&nbsp;&nbsp;".$boutonReinit."</p>";
-                                        }
-                                        else{
-                                            echo "<p><strong> Enregistrement effect&eacute; avec succ&egrave;s</strong>!<br>";
-                                            echo "<p>".$boutonRetourSucces."</p>";                                            
-                                        }                                                                                                                                    
-                                    }
-                                    $resultatsModeles->closeCursor();
+                                    else{
+                                        echo "<p><strong> Enregistrement effect&eacute; avec succ&egrave;s</strong>!<br>";
+                                        echo "<p>".$boutonRetourSucces."</p>";                                            
+                                    }                                                                                                                                                                        
+                                    $reqModification->closeCursor();
                                 }
 
                                 catch(Exception $e)

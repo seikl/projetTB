@@ -33,23 +33,23 @@
                  <td width="30%" class="leftmenu">
                         <p><b>G&eacute;rer les enregistrments des AP</b></p>
                         <ul class="nav nav-pills nav-justified">                       
-                           <li><a href="ajouterAP.php">Ajouter</a></li>
-                           <li><a href="modifierAP.php">Modifier</a></li>                       
+                           <li><a href="ajoutAP.php">Ajouter</a></li>
+                           <li><a href="selectModifAP.php">Modifier</a></li>                       
                            <li><a href="supprimerAP.php">Supprimer</a></li>
                         </ul>
                          <p><b>G&eacute;rer les mod&egrave;les enregistr&eacute;s</b></p>
                         <ul class="nav nav-pills nav-justified">                       
-                           <li><a href="ajouterModele.php">Ajouter</a></li>
-                           <li><a href="modifierModele.php">Modifier</a></li>                       
+                           <li><a href="ajoutModele.php">Ajouter</a></li>
+                           <li><a href="selectModifModele.php">Modifier</a></li>                       
                            <li><a href="supprimerModele.php">Supprimer</a></li>
                         </ul>
                          <p><b>G&eacute;rer les lignes de commandes (CLI)</b></p>
                         <ul class="nav nav-pills nav-justified">                       
-                           <li><a href="ajouterCLI.php">Ajouter</a></li>
-                           <li><a href="modifierCLI.php">Modifier</a></li>                       
+                           <li><a href="ajoutCLI.php">Ajouter</a></li>
+                           <li><a href="selectModifCLI.php">Modifier</a></li>                       
                            <li><a href="supprimerCLI.php">Supprimer</a></li>
                         </ul>                      
-                 </td>                 
+                 </td>                   
                  <td class="informations">
                      
                      <ol class="breadcrumb">
@@ -80,7 +80,7 @@
                                 <tr><td align="right">
                                     <input type="text" class="form-control" name="adrMACFabricant1" id="adrMACFabricant1" size="2" maxlength="2" placeholder="00"><strong>:</strong>
                                     <input type="text" class="form-control" name="adrMACFabricant2" id="adrMACFabricant2" size="2" maxlength="2" placeholder="a6"><strong>:</strong>
-                                    <input type="text" class="form-control" name="adrMACFabricant3" id="adrMACFabricant3" size="2" maxlength="2" placeholder="23"><strong>:</strong>
+                                    <input type="text" class="form-control" name="adrMACFabricant3" id="adrMACFabricant3" size="2" maxlength="2" placeholder="23">
                                 </td><td>
                                     <strong class="obligatoire">*&nbsp;</strong><label for='adrMACFabricant'>Adresse MAC du fabricant (par ex. 00:11:22)</label><br>
                                 </td></tr>                                 

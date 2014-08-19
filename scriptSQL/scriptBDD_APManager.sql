@@ -68,6 +68,9 @@ insert into accessPoints (nomAP,adresseIPv4,password,snmpCommunity,noModeleAP) v
 insert into accessPoints (nomAP,adresseIPv4,password,snmpCommunity,noModeleAP) values('testAPMaison','10.0.0.62','public','public',1);
 insert into accessPoints (nomAP,adresseIPv4,noModeleAP) values('NASMaison','10.0.0.60',2);
 insert into accessPoints (nomAP,adresseIPv4,noModeleAP) values('LNB-0123','172.16.6.63',3);
+insert into accessPoints (nomAP,adresseIPv4,noModeleAP) values('LNB-0068','172.16.6.40',3);
+insert into accessPoints (nomAP,adresseIPv4,noModeleAP) values('LNB-0069 ','172.16.6.44',3);
+insert into accessPoints (nomAP,adresseIPv4,noModeleAP) values('LNB-0138','192.168.18.41',3);
 insert into accessPoints (nomAP,adresseIPv4,password,snmpCommunity,noModeleAP) values('APTOOL','127.0.0.1','aptool','public',4);
 insert into typesCommandes (typesCommande,description) values('Afficher infos système','Sert à afficher les informations systèmes via une commande TELNET');
 insert into typesCommandes (typesCommande,description) values('Afficher la page d\'accueil','Envoi d\'une requête GET / en HTTP');
@@ -77,7 +80,7 @@ insert into typesCommandes (typesCommande,description) values('Parcourir toutes 
 insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values('show system\r\nquit\r\n','telnet',23,1,1);
 insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values('uname -a\r\nquit\r\n','telnet',23,2,1);
 insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values('.1.3.6.1.2.1.43.10.2.1.4','snmp',161,3,4);
-insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values('SNMPv2-MIB','snmp',161,4,5);
+insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values('.','snmp',161,4,5);
 insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values('GET / HTTP/1.1
 Host: 0.0.0.0
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0
