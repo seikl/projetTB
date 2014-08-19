@@ -58,7 +58,7 @@
                     </ol>
                    <ol>
                        
-                    <form id="ajoutModele" name="ajoutModele" class="form-inline" role="form" action="enregistrerModeleAP.php" method="POST">
+                    <form id="ajoutModele" name="ajoutModele" class="form-inline" role="form" action="enregistrerModele.php" method="POST">
                         <div class="form-group">       
 
                             <table border="0" class="table">
@@ -78,9 +78,11 @@
                                     &nbsp;&nbsp;&nbsp;<label for='nomFabricant'>Nom du fabricant (par ex. Avaya)</label><br>
                                 </td></tr> 
                                 <tr><td align="right">
-                                    <input type="text" class="form-control" name="adrMACFabricant" id="adrMACFabricant" size="8" maxlength="8" placeholder="00:a6:50">
+                                    <input type="text" class="form-control" name="adrMACFabricant1" id="adrMACFabricant1" size="2" maxlength="2" placeholder="00"><strong>:</strong>
+                                    <input type="text" class="form-control" name="adrMACFabricant2" id="adrMACFabricant2" size="2" maxlength="2" placeholder="a6"><strong>:</strong>
+                                    <input type="text" class="form-control" name="adrMACFabricant3" id="adrMACFabricant3" size="2" maxlength="2" placeholder="23"><strong>:</strong>
                                 </td><td>
-                                    <strong class="obligatoire">*&nbsp;</strong><label for='adrMACFabricant'>Adresse MAC du Fabricant (par ex. 00:11:22)</label><br>
+                                    <strong class="obligatoire">*&nbsp;</strong><label for='adrMACFabricant'>Adresse MAC du fabricant (par ex. 00:11:22)</label><br>
                                 </td></tr>                                 
                                 <tr><td  align="right">
                                     <input type="submit" id="submit" class="btn btn-primary" value="Enregistrer"/>                           
@@ -119,7 +121,15 @@
                   {
                     required: true
                   },
-                  adrMACFabricant: 
+                  adrMACFabricant1: 
+                  {
+                    required: true
+                  },  
+                  adrMACFabricant2: 
+                  {
+                    required: true
+                  }, 
+                  adrMACFabricant3: 
                   {
                     required: true
                   }                   

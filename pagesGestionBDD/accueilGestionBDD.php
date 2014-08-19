@@ -31,20 +31,20 @@
                  <td width="30%" class="leftmenu">
                         <p><b>G&eacute;rer les enregistrments des AP</b></p>
                         <ul class="nav nav-pills nav-justified">                       
-                           <li><a href="ajouterAP.php">Ajouter</a></li>
-                           <li><a href="modifierAP.php">Modifier</a></li>                       
+                           <li><a href="ajoutModifAP.php">Ajouter</a></li>
+                           <li><a href="selectModifAP.php">Modifier</a></li>                       
                            <li><a href="supprimerAP.php">Supprimer</a></li>
                         </ul>
                          <p><b>G&eacute;rer les mod&egrave;les enregistr&eacute;s</b></p>
                         <ul class="nav nav-pills nav-justified">                       
-                           <li><a href="ajouterModele.php">Ajouter</a></li>
-                           <li><a href="modifierModele.php">Modifier</a></li>                       
+                           <li><a href="ajoutModifModele.php">Ajouter</a></li>
+                           <li><a href="selectModifModele.php">Modifier</a></li>                       
                            <li><a href="supprimerModele.php">Supprimer</a></li>
                         </ul>
                          <p><b>G&eacute;rer les lignes de commandes (CLI)</b></p>
                         <ul class="nav nav-pills nav-justified">                       
-                           <li><a href="ajouterCLI.php">Ajouter</a></li>
-                           <li><a href="modifierCLI.php">Modifier</a></li>                       
+                           <li><a href="ajoutModifCLI.php">Ajouter</a></li>
+                           <li><a href="selectModifCLI.php">Modifier</a></li>                       
                            <li><a href="supprimerCLI.php">Supprimer</a></li>
                         </ul>                      
                  </td>                 
@@ -65,7 +65,7 @@
                             </thead>
                             <tbody>";                   
                     
-                        //connexion a la BDD et récupération de la liste des modèles
+                        //connexion a la BDD
                         include '../includes/connexionBDD.php';
                         
                         $actionOnClick="alert();";
@@ -79,7 +79,7 @@
                                 while( $ligne = $resultatsAP->fetch() ) 
                                 {                                                                                  
                                         $textCellule= (string)$ligne->nombreAP.' access points enregistr&eacute;(s)';
-                                        echo '<tr><td onclick="window.location.href = \'modifierAP.php\'">';
+                                        echo '<tr><td onclick="window.location.href = \'selectModifAP.php\'">';
                                         echo $textCellule;
                                         echo '</td></tr>';
                                 }
@@ -90,7 +90,7 @@
                                 while( $ligne = $resultatsModeles->fetch() ) 
                                 {                                                                                  
                                         $textCellule= (string)$ligne->nombreModelesAP.' mod&egrave;les enregistr&eacute;(s)';
-                                        echo '<tr><td onclick="window.location.href = \'modifierModele.php\'">';
+                                        echo '<tr><td onclick="window.location.href = \'selectModifModele.php\'">';
                                         echo $textCellule;
                                         echo '</td></tr>';
                                 }
@@ -102,7 +102,7 @@
                                 while( $ligne = $resultatsCLI->fetch() ) 
                                 {                                                                                  
                                         $textCellule= (string)$ligne->nombreCLI.' lignes de commande enregistr&eacute;e(s)';
-                                        echo '<tr><td onclick="window.location.href = \'modifierCLI.php\'">';
+                                        echo '<tr><td onclick="window.location.href = \'selectModifCLI.php\'">';
                                         echo $textCellule;
                                         echo '</td></tr>';
                                 }
