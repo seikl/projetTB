@@ -190,7 +190,7 @@
                            }                                                
                            echo '</select><br></td></tr>';
                            echo '<tr><td width="auto">';
-                           echo '<label for="name">Choix de la commande &agrave; appliquer:</label><br>
+                           echo '<label for="commande">Choix de la commande &agrave; appliquer:</label><br>
                                <select class="form-control" name="commande">';     
 
                             if ($noCommandeChoisie == '0'){                                

@@ -306,7 +306,7 @@ $.extend( $.validator, {
 	},
 
 	messages: {
-		required: "This field is required.",
+		required: "Une valeur est requise.",
 		remote: "Please fix this field.",
 		email: "Please enter a valid email address.",
 		url: "Please enter a valid URL.",
@@ -318,10 +318,10 @@ $.extend( $.validator, {
 		equalTo: "Please enter the same value again.",
 		maxlength: $.validator.format( "Please enter no more than {0} characters." ),
 		minlength: $.validator.format( "Please enter at least {0} characters." ),
-		rangelength: $.validator.format( "Ce zone de texte doit comprendre entre {0} et {1}caractères." ),
+		rangelength: $.validator.format( "Ce zone de texte doit comprendre entre {0} et {1} caractères." ),
 		range: $.validator.format( "Veuillez saisir une valeur entre {0} et {1}." ),
-		max: $.validator.format( "Please enter a value less than or equal to {0}." ),
-		min: $.validator.format( "Please enter a value greater than or equal to {0}." )
+		max: $.validator.format( "Veuillez saisir une valeur plus petite ou égale à {0}." ),
+		min: $.validator.format( "Veuillez saisir une valeur plus grande ou égale à {0}." )
 	},
 
 	autoCreateRanges: false,

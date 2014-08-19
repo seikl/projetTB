@@ -31,29 +31,99 @@
                  <td width="30%" class="leftmenu">
                         <p><b>G&eacute;rer les enregistrments des AP</b></p>
                         <ul class="nav nav-pills nav-justified">                       
-                           <li><a href="#">Ajouter</a></li>
-                           <li><a href="#">Modifier</a></li>                       
-                           <li><a href="#">Supprimer</a></li>
+                           <li><a href="ajouterAP.php">Ajouter</a></li>
+                           <li><a href="modifierAP.php">Modifier</a></li>                       
+                           <li><a href="supprimerAP.php">Supprimer</a></li>
                         </ul>
                          <p><b>G&eacute;rer les mod&egrave;les enregistr&eacute;s</b></p>
                         <ul class="nav nav-pills nav-justified">                       
-                           <li><a href="#">Ajouter</a></li>
-                           <li><a href="#">Modifier</a></li>                       
-                           <li><a href="#">Supprimer</a></li>
+                           <li><a href="ajouterModele.php">Ajouter</a></li>
+                           <li><a href="modifierModele.php">Modifier</a></li>                       
+                           <li><a href="supprimerModele.php">Supprimer</a></li>
                         </ul>
                          <p><b>G&eacute;rer les lignes de commandes (CLI)</b></p>
                         <ul class="nav nav-pills nav-justified">                       
-                           <li><a href="#">Ajouter</a></li>
-                           <li><a href="#">Modifier</a></li>                       
-                           <li><a href="#">Supprimer</a></li>
+                           <li><a href="ajouterCLI.php">Ajouter</a></li>
+                           <li><a href="modifierCLI.php">Modifier</a></li>                       
+                           <li><a href="supprimerCLI.php">Supprimer</a></li>
                         </ul>                      
                  </td>                 
                  <td class="informations">
                      
                      <ol class="breadcrumb">
-                        <li><a href="#">Accueil gestion de la BDD</a></li> 
+                        <li><a href="accueilGestionBDD.php">Accueil gestion de la BDD</a></li> 
                     </ol>
-                     INFOS
+                   <ol>
+                        <div class="form-group">                              
+                    <?php                                               
+                        echo "
+                            <table class='table table-bordered table-hover' width='auto' align='left'>                            
+                            <thead>
+                               <tr>
+                                  <th>Nombre d'enregistrements contenus dans la BDD</th>
+                               </tr>
+                            </thead>
+                            <tbody>";                   
+                    
+                        //connexion a la BDD et récupération de la liste des modèles
+                        include '../includes/connexionBDD.php';
+                        
+                        $actionOnClick="alert();";
+                        try
+                        {                            
+                                $i =0;
+                                $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
+
+                                $resultatsAP=$connexion->query("SELECT COUNT(a.noAP) as nombreAP FROM accessPoints a;"); 
+                                $resultatsAP->setFetchMode(PDO::FETCH_OBJ);                                                                 
+                                while( $ligne = $resultatsAP->fetch() ) 
+                                {                                                                                  
+                                        $textCellule= (string)$ligne->nombreAP.' access points enregistr&eacute;(s)';
+                                        echo '<tr><td onclick="window.location.href = \'modifierAP.php\'">';
+                                        echo $textCellule;
+                                        echo '</td></tr>';
+                                }
+                                $resultatsAP->closeCursor();
+                                
+                                $resultatsModeles=$connexion->query("SELECT COUNT(m.noModeleAP) as nombreModelesAP FROM modeles m;"); 
+                                $resultatsModeles->setFetchMode(PDO::FETCH_OBJ);                                 
+                                while( $ligne = $resultatsModeles->fetch() ) 
+                                {                                                                                  
+                                        $textCellule= (string)$ligne->nombreModelesAP.' mod&egrave;les enregistr&eacute;(s)';
+                                        echo '<tr><td onclick="window.location.href = \'modifierModele.php\'">';
+                                        echo $textCellule;
+                                        echo '</td></tr>';
+                                }
+                                $resultatsModeles->closeCursor();
+                                
+                                
+                                $resultatsCLI=$connexion->query("SELECT COUNT(l.noCLI) as nombreCLI FROM lignesCommande l;"); 
+                                $resultatsCLI->setFetchMode(PDO::FETCH_OBJ);                                 
+                                while( $ligne = $resultatsCLI->fetch() ) 
+                                {                                                                                  
+                                        $textCellule= (string)$ligne->nombreCLI.' lignes de commande enregistr&eacute;e(s)';
+                                        echo '<tr><td onclick="window.location.href = \'modifierCLI.php\'">';
+                                        echo $textCellule;
+                                        echo '</td></tr>';
+                                }
+                                $resultatsCLI->closeCursor();                                
+                        }
+
+                        catch(Exception $e)
+                        {
+                                echo '<tr><td>Erreur : '.$e->getMessage().'<br />';
+                                echo 'N° : '.$e->getCode().'</td></tr>';
+                        }
+
+
+                        
+                        echo '</tbody>
+                         </table>  
+                        ';                            
+                    ?>
+                        </div>
+                    </form>
+                    </ol>
                  </td>
               </tr>
            </tbody>

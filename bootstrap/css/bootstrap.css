@@ -18,19 +18,18 @@ color:#f00;
 font-family:verdana, Helvetica;
 display:block;
 }
+divRight.error{
+color: #f33;
+padding: 0;
+font-family:verdana, Helvetica;
+font-size: 0.9em;
+display:inline;
+}
 divBelow.error{
 color: #f33;
 padding: 0;
 font-family:verdana, Helvetica;
 font-size: 0.9em;
-display:inline-block;
-}
-divRight.error{
-color: #f33;
-padding: 0;
-font-family:verdana, Helvetica;
-font-size: 1.0em;
-padding-left: 18px;
 display:block;
 }
 article,
@@ -78,9 +77,12 @@ b {
 strong {
   font-weight: bold;
 }
-.indication {
+.obligatoire {
   font-weight: bold;
+  font-size: 16px;
+  color: red;
 }
+
 dfn {
   font-style: italic;
 }
@@ -1472,7 +1474,7 @@ th {
 .table > tfoot > tr > td {
   padding: 8px;
   line-height: 1.42857143;
-  vertical-align: top;
+  vertical-align: bottom;
   border-top: 0px solid #ddd;
 }
 .table > thead > tr > th {

@@ -50,7 +50,7 @@
                     </ol>  
                      <ol>
                          
-                    <form id="CIDRform" class="form-inline" role="form" action="rechercherAPResultat.php" method="POST">
+                    <form id="CIDRform" name="CIDRform" class="form-inline" role="form" action="rechercherAPResultat.php" method="POST">
                         <div class="form-group">       
                             
                             <label for="name">Veuillez s&eacute;lectionner le type de mat&eacute;riel &agrave; rechercher et saisir la plage d'adresses &agrave; scanner</label><br>
@@ -145,13 +145,13 @@
         $(function()
         {
             $("#CIDRform").validate(
-              {
+              {                
                 rules: 
-                {
+                {            
                   groupeA: 
                   {
                     required: true,
-                    range:[10,255]
+                    range:[10,255]                    
                   },
                   groupeB: 
                   {
@@ -172,13 +172,13 @@
                   {
                     required: true,
                     range:[8,32]
-                  }                  
+                  }                   
                 },
                 errorElement: "divBelow",
                 errorPlacement: function(error, element) {
-                    error.insertAfter(element);
+                    error.insertAfter(element);                    
                 }                
-              });	
+              });
         });
     </script>     
      
