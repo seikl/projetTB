@@ -64,6 +64,9 @@
                             //Récupération des informations
                             if ($_POST) {       
                                 $noModeleAP = $_POST['noModeleAP'];
+                                $nomFabricant = $_POST['nomFabricant'];
+                                $versionFirmware = $_POST['versionFirmware'];
+                                $nomModele = $_POST['nomModele'];
                                 
                                 $boutonRetour = '<button class="btn btn-default" onclick="window.location.href = \'supprimerModele.php\'">Revenir &agrave; la s&eacute;lection</button>';
                                 $boutonRetourSucces = '<button class="btn btn-success" onclick="window.location.href = \'../pagesGestionAP/accueilGestionAP.php\'">Afficher la liste des mod&egrave;les</button>';
@@ -74,28 +77,27 @@
                                     $i =0;
                                     $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
-                                    $reqSuppressionAP = false;// $connexion->query("DELETE FROM ".$PARAM_nom_bd.".accessPoints WHERE noModeleAP='".$noModeleAP."';");                                   
-                                    $reqSuppressionModele = $connexion->query("DELETE FROM modeles WHERE noModeleAP='".$noModeleAP."';");
+                                    $reqSuppressionCLI = $connexion->query("DELETE FROM ".$PARAM_nom_bd.".lignesCommande WHERE noModeleAP='".$noModeleAP."';"); 
+                                    $reqSuppressionAP = $connexion->query("DELETE FROM ".$PARAM_nom_bd.".accessPoints WHERE noModeleAP='".$noModeleAP."';");                                   
+                                    $reqSuppressionModele = $connexion->query("DELETE FROM ".$PARAM_nom_bd.".modeles WHERE noModeleAP='".$noModeleAP."';");
                                     
-                                    if ((!$reqSuppressionAP) && (!$reqSuppressionModele)){ echo "<p><strong> Probl&egrave;me lors de l'envoi de la requ&ecirc;te</strong>!<br><p>".$boutonRetour."</p>";}
-                                    else{
-                                        if (!$reqSuppressionAP) {echo "<p><strong> Pas d'AP &agrave; supprimer</strong>!</p>";}
-                                        else{$reqSuppressionAP->closeCursor();}
-                                        
-                                        echo "<p><strong> Effacement effect&eacute; avec succ&egrave;s</strong>!<br>";
-                                        
+                                    if ((!$reqSuppressionAP) && (!$reqSuppressionModele) && (!$reqSuppressionCLI)){ echo "<p><strong> Probl&egrave;me lors de l'envoi de la requ&ecirc;te</strong>!<br><p>".$boutonRetour."</p>";}
+                                    else{                                      
+                                        echo "<p><strong> Suppression du mod&egrave;le \"".$nomFabricant." ".$nomModele." (".$versionFirmware.")\" effect&eacute;e avec succ&egrave;s</strong>!<br>";
+                                        echo "<p>Nombre d'AP retir&eacute;(s): ".$reqSuppressionAP->rowCount()."</p>";
+                                        echo "<p>Nombre de lignes de commande retir&eacute;e(s): ".$reqSuppressionCLI->rowCount()."</p>";
+                                        echo "<p>".$boutonRetourSucces."&nbsp;&nbsp;&nbsp;&nbsp;".$boutonRetour."</p>";
                                         $reqSuppressionModele->closeCursor();
+                                        $reqSuppressionCLI->closeCursor();
+                                        $reqSuppressionAP->closeCursor();
                                     }
 
-                                }
-                                
-
+                                }                               
                                 catch(Exception $e)
                                 {
                                         echo '<tr><td>Erreur : '.$e->getMessage().'<br />';
                                         echo 'N° : '.$e->getCode().'</td></tr>';
                                 }                                
-echo "<H1>".$noModeleAP."</h1>";
                             }
                             else {echo " <strong>Aucune information reçue. Veuillez corriger la s&eacute;lection.</strong><br>";}
 

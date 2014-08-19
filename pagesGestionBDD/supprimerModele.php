@@ -120,10 +120,12 @@
                                   echo'                                  
                                     <form id="confirmSupprimerModele" name="confirmSupprimerModele" class="form-inline" role="form" action="confirmSupprimerModele.php" method="POST">
                                         <div class="form-group">       
-
                                             <table border="0" class="table">
                                                 <tr><td align="right">
                                                     <input type="hidden" name="noModeleAP" value="'.$modeleChoisi["noModeleAP"].'"/>
+                                                    <input type="hidden" name="nomFabricant" value="'.$modeleChoisi["nomFabricant"].'"/>
+                                                    <input type="hidden" name="versionFirmware" value="'.$modeleChoisi["versionFirmware"].'"/>
+                                                    <input type="hidden" name="nomModele" value="'.$modeleChoisi["nomModele"].'"/>
                                                     Nom du mod&egrave;le:<br>                                                    
                                                 </td><td>
                                                     '.$modeleChoisi["nomModele"].'                                                    
