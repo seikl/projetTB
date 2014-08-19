@@ -88,11 +88,13 @@
                             $listeARP=null;
                             
                             foreach($tabARP as $ligneTabARP) {  
-                                if(preg_match("/".$vendorMACLinux."/i", $ligneTabARP)) {
-                                    $listeAPTrouves .= $ligneTabARP."<br>";                                    
+                                if(preg_match("/".$vendorMACWindows."/i", $ligneTabARP)) {
+                                    $listeAPTrouves .= "<strong>".$ligneTabARP."</strong><br>";                                    
                                     $nombreAPTrouves++;                                    
-                                }   
-                                $listeARP .= $ligneTabARP."<br>";
+                                } 
+                                if(!preg_match("/incomplete/i", $ligneTabARP)){
+                                    $listeARP .= "<strong>".$ligneTabARP."</strong><br>";
+                                }
                             }
                             
                             if ($nombreAPTrouves==0){echo '<strong>Aucun  mod&egrave;le trouv&eacute </strong>';}

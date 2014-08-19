@@ -3,7 +3,9 @@
   <head>
     <title>AP Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <script type="text/javascript" src="../js/jquery-1.11.1.js"></script>  
+    <script type="text/javascript" src="../js/jquery-1.11.1.js"></script>
+    <script type="text/javascript" src="../js/jquery.validate.js"></script>
+    <script type="text/javascript" src="../js/additional-methods.js"></script>
     <!-- Bootstrap core CSS -->
     <link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
   </head>
@@ -48,7 +50,7 @@
                     </ol>  
                      <ol>
                          
-                         <form id="form" class="form-inline" role="form" action="rechercherAPResultat.php" method="POST" onsubmit="return validationAdresseIP(this);" >
+                    <form id="CIDRform" class="form-inline" role="form" action="rechercherAPResultat.php" method="POST">
                         <div class="form-group">       
                             
                             <label for="name">Veuillez s&eacute;lectionner le type de mat&eacute;riel &agrave; rechercher et saisir la plage d'adresses &agrave; scanner</label><br>
@@ -95,25 +97,31 @@
                             </br></br>
                             <table border="0">
                                 <tr><td>
-                                    <input type="text" class="form-control" name="groupeA" size="3" maxlength="3" value="192" onkeypress="return checkOnlyDigits(event)"/>
+                                    <input type="text" class="form-control" name="groupeA" id="groupeA" size="3" maxlength="3" value="192">
+                                </td><td>
                                     <strong>.</strong>
-                                     <input type="text" class="form-control" name="groupeB" size="3" maxlength="3" value="168" onkeypress="return checkOnlyDigits(event)"/>
+                                </td><td>
+                                     <input type="text" class="form-control" name="groupeB" id="groupeB" size="3" maxlength="3" value="168">
+                                </td><td>
                                      <strong>.</strong>
-                                    <input type="text" class="form-control" name="groupeC" size="3" maxlength="3" value="1" onkeypress="return checkOnlyDigits(event)"/>
+                                </td><td>
+                                    <input type="text" class="form-control" name="groupeC" size="3" maxlength="3" value="1">
+                                </td><td>
                                     <strong>.</strong>
-                                    <input type="text" class="form-control" name="groupeD" size="3" maxlength="3" value="0" onkeypress="return checkOnlyDigits(event)"/>
+                                </td><td>
+                                    <input type="text" class="form-control" name="groupeD" size="3" maxlength="3" value="0">
+                                </td><td>
                                     &nbsp;<strong class="indication">/</strong>&nbsp;
-                                    <input type="text" class="form-control" name="masque" size="2" maxlength="2" value="24" onkeypress="return checkOnlyDigits(event)"/>                               
-
-                                    </td><td>
+                                </td><td>
+                                    <input type="text" class="form-control" name="masque" size="2" maxlength="2" value="24">                               
+                                </td><td>
                                     &nbsp;&nbsp;<input type="submit" id="submit" class="btn btn-primary" value="Rechercher" onclick="$('#loading2').show();"/>                           
-                                    </td><td>
+                                </td><td>
                                         <div id="loading2" style="display:none;" ><img class="img" src="../images/search-loader-circle2.gif" height="34" width="34" alt=""/>&nbsp;Recherche en cours...</div>
-                                    </td></tr>
+                                </td></tr>
                             </table>                                    
                          </div>                             
                         </form>
-                         <div id="errorMsg"></div>
                      </ol> 
                  </td>
               </tr>
@@ -127,26 +135,51 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script type="text/javascript">
          (function (d) {
-           d.getElementById('form').onsubmit = function () {
+           d.getElementById('CIDRform').onsubmit = function () {
              d.getElementById('submit').style.display = 'none';
              d.getElementById('loading2').style.display = 'show';
            };
          }(document));
      </script>    
     <script type="text/javascript">
-        function checkOnlyDigits(e) {
-            e = e ? e : window.event;
-            var charCode = e.which ? e.which : e.keyCode;
-            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-                document.getElementById('errorMsg').style.display = 'block';
-                document.getElementById('errorMsg').style.color = 'red';
-                document.getElementById('errorMsg').innerHTML = 'Uniquement des nombres compris entre 0 et 256.';
-                return false;
-            } else {
-                document.getElementById('errorMsg').style.display = 'none';
-                return true;
-            }
-        }
+        $(function()
+        {
+            $("#CIDRform").validate(
+              {
+                rules: 
+                {
+                  groupeA: 
+                  {
+                    required: true,
+                    range:[10,255]
+                  },
+                  groupeB: 
+                  {
+                    required: true,
+                    range:[0,255]
+                  },
+                  groupeC: 
+                  {
+                    required: true,
+                    range:[0,255]
+                  },
+                  groupeD: 
+                  {
+                    required: true,
+                    range:[0,255]
+                  },
+                  masque:
+                  {
+                    required: true,
+                    range:[8,32]
+                  }                  
+                },
+                errorElement: "divBelow",
+                errorPlacement: function(error, element) {
+                    error.insertAfter(element);
+                }                
+              });	
+        });
     </script>     
      
   </body>
