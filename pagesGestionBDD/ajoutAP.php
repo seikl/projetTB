@@ -64,6 +64,7 @@
                         
                         //Récupération nombre d'AP à ajouter
                         if (!isset($_POST['qtyAP'])){$qtyAP=0;} else {$qtyAP=$_POST['qtyAP'];}    
+                        if (!isset($_POST['$tabReqplique'])){$tabReqplique=0;} else {$tabReqplique=$_POST['$tabReqplique'];}
                         
                         //enregistrement des modèles d'AP dans un tableau pour affichage dans une liste
                         try
@@ -114,7 +115,7 @@
                                 <?php
                                 for($i=0;$i<=$qtyAP;$i++){                                                                                                            
                                     echo '<tr>';
-                                    echo '<td><input type="text" class="form-control" name="nomModele'.$i.'" id="nomModele'.$i.'" size="18" maxlength="25" placeholder="AP-'.$i.'"></td>';
+                                    echo '<td><input type="text" class="form-control" name="nomAP'.$i.'" id="nomAP'.$i.'" size="18" maxlength="25" placeholder="AP-'.$i.'"></td>';
                                     
                                     echo '<td><select class="form-control" id="noModeleAP'.$i.'" name="noModeleAP'.$i.'">';
                                     echo '<option value="">Choix du mod&egrave;le</option>';
@@ -136,19 +137,30 @@
                                     echo '</tr>';
                                 }
                                 
+                                echo '<td align="left">Nombre d\'AP &agrave; enregistrer: '.($qtyAP+1).'<input type="hidden" value="'.$qtyAP.'" name="qtyAP"/></td>';                                
                                 ?>
-                                <td colspan="6" align="right"><input type="submit" class="form-control" name="submit" id="submit" value="Enregistrer"/></td>
+                                <td colspan="5" align="right"><input type="submit" class="btn btn-primary" name="submit" id="submit" value="Enregistrer"/></td>
                             </tbody>
                             </table>                                    
                          </div>                             
                         </form>
                         <div>
-                            <p>
+                           <table align="center" width="80%"><tr><td align="left" width="30%">                                    
+                           <?php
+                                if ($qtyAP>=1){                                       
+                                    echo '<input type="button" class="btn btn-default" name="repliquerAP" id="repliquerAP" onclick="repliquerAP()" value="Copier"/>&nbsp;Repliquer la 1&egrave;re ligne';
+                                    echo '</td><td align="right">';
+                                    echo '<form id="diminueQty" name="diminueQty" class="form-inline" role="form" action="ajoutAP.php" method="POST">';
+                                    echo 'Retirer une ligne&nbsp;<input type="hidden" value="'.($qtyAP-1).'" name="qtyAP"/>';
+                                    echo '<input type="submit" class="btn btn-warning" name="retirerForm" id="retirerForm" value="-"/></form>';
+                                }
+                            ?>  
+                            </td><td algin="left" >
                                 <form id="ajoutQty" name="ajoutQty" class="form-inline" role="form" action="ajoutAP.php" method="POST">
-                                    <?php $qtyAP++; echo '<input type="hidden" value="'.$qtyAP.'" name="qtyAP"/>';?>
-                                    <input type="submit" class="btn btn-success" name="ajouterForm" id="ajouterForm" value="Ajouter un champ pour un AP"/>
+                                    <?php echo '<input type="hidden" value="'.($qtyAP+1).'" name="qtyAP"/>';?>
+                                    <input type="submit" class="btn btn-success" name="ajouterForm" id="ajouterForm" value="+"/>&nbsp;Ajouter une ligne
                                 </form>
-                            </p>
+                            </td></tr></table>
                            
                            
                        </div>
@@ -166,6 +178,28 @@
     <!-- Bootstrap core JavaScrip ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     
+    <!-- Pour répliquer les données de la ere ligne -->
+    <script type="text/javascript">
+     function repliquerAP()
+     {         
+     <?php
+        for($i=1;$i<=$qtyAP;$i++){  
+            echo'document.ajoutAP.nomAP'.$i.'.value=document.ajoutAP.nomAP0.value+"'.$i.'";';   
+            echo'document.ajoutAP.noModeleAP'.$i.'.value=document.ajoutAP.noModeleAP0.value;';                                    
+            echo'document.ajoutAP.IPgroupeA'.$i.'.value=document.ajoutAP.IPgroupeA0.value;'; 
+            echo'document.ajoutAP.IPgroupeB'.$i.'.value=document.ajoutAP.IPgroupeB0.value;'; 
+            echo'document.ajoutAP.IPgroupeC'.$i.'.value=document.ajoutAP.IPgroupeC0.value;'; 
+            echo'document.ajoutAP.IPgroupeD'.$i.'.value=document.ajoutAP.IPgroupeD0.value;'; 
+            echo'document.ajoutAP.snmpCommunity'.$i.'.value=document.ajoutAP.snmpCommunity0.value;'; 
+            echo'document.ajoutAP.username'.$i.'.value=document.ajoutAP.username0.value;'; 
+            echo'document.ajoutAP.password'.$i.'.value=document.ajoutAP.password0.value;'; 
+        } 
+
+    ?>
+     }
+     </script>    
+    
+    <!-- Pour la validation des champs du formulaire -->
     <script type="text/javascript">
   <?php
         echo'
