@@ -54,11 +54,11 @@
                      
                      <ol class="breadcrumb">
                         <li><a href="accueilGestionBDD.php">Accueil gestion de la BDD</a></li> 
-                        <li>Ajouter un mod&egrave;le d'AP</li>
+                        <li>Ajouter un ou plusieurs AP</li>
                     </ol>
                    <ol>
                        
-                    <form id="ajoutModele" name="ajoutModele" class="form-inline" role="form" action="enregistrerModele.php" method="POST">
+                    <form id="ajoutModele" name="ajoutAP" class="form-inline" role="form" action="enregistrerAP.php" method="POST">
                         <div class="form-group">       
 
                             <table border="0" class="table">

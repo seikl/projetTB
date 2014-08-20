@@ -41,7 +41,7 @@
                         <ul class="nav nav-pills nav-justified">                       
                            <li><a href="ajoutModele.php">Ajouter</a></li>
                            <li><a href="selectModifModele.php">Modifier</a></li>                       
-                           <li><a href="supprimerModele.php">Supprimer</a></li>
+                           <li><a href="selectSupprModele.php">Supprimer</a></li>
                         </ul>
                          <p><b>G&eacute;rer les lignes de commandes (CLI)</b></p>
                         <ul class="nav nav-pills nav-justified">                       
@@ -49,122 +49,66 @@
                            <li><a href="selectModifCLI.php">Modifier</a></li>                       
                            <li><a href="supprimerCLI.php">Supprimer</a></li>
                         </ul>                      
-                 </td>                
-                 <td class="informations">
-                     
-                     <ol class="breadcrumb">
+                 </td>                   
+                 <td class="informations">                     
+                    <ol class="breadcrumb">
                         <li><a href="accueilGestionBDD.php">Accueil gestion de la BDD</a></li> 
-                        <li>Supprimer un mod&egrave;le d'AP</li>
+                        <li><a href="selectSupprModele.php">Supprimer un mod&egrave;le</a></li>
+                        <li>R&eacute;sultat</li>
                     </ol>
-                     <ol>
-                         
-                        <form id="supprimerModele" class="form-inline" role="form" action="supprimerModele.php" method="POST">
-                            <div class="form-group">                                                           
-                            <label for="name">Veuilllez s&eacute;lectionner le mod&egrave;le &agrave; supprimer:</label><br>
-                            <select class="form-control" id="noModele" name="noModele" onChange="this.form.submit()">
-                     
-                            <?php                                          
-                               //connexion a la BDD et récupération de la liste des modèles
-                               include '../includes/connexionBDD.php';                    
-                               include '../includes/fonctionsUtiles.php';                     
+                   <ol>
+                        <?php
+                            include '../includes/connexionBDD.php';
+                            
+                            
+                            //Récupération des informations
+                            if ($_POST) {       
+                                $noModeleAP = $_POST['noModeleAP'];
+                                $nomFabricant = $_POST['nomFabricant'];
+                                $versionFirmware = $_POST['versionFirmware'];
+                                $nomModele = $_POST['nomModele'];
+                                
+                                $boutonRetour = '<button class="btn btn-default" onclick="window.location.href = \'selectSupprModele.php\'">Revenir &agrave; la s&eacute;lection</button>';
+                                $boutonRetourSucces = '<button class="btn btn-success" onclick="window.location.href = \'../pagesGestionAP/accueilGestionAP.php\'">Afficher la liste des mod&egrave;les</button>';
+                                                                
+                                //Vérification si le modèle existe 
+                                try
+                                {                            
+                                    $i =0;
+                                    $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
-                               //pour vérifier si valeurs déjà existantes dans le formulaire
-                               if (!isset($_POST['noModele'])){                            
-                                   $noModele='0';
-                                   echo "<option value='0' selected>Choix du mod&egrave;le...&nbsp;&nbsp;&nbsp;</option>";
-                               }
-                               else {
-                                   $noModele = $_POST['noModele'];                            
-                                   echo "<option value='0'>Tous les mod&egrave;les...&nbsp;&nbsp;&nbsp;</option>"; 
-                               }
+                                    $reqSuppressionCLI = $connexion->query("DELETE FROM ".$PARAM_nom_bd.".lignesCommande WHERE noModeleAP='".$noModeleAP."';"); 
+                                    $reqSuppressionAP = $connexion->query("DELETE FROM ".$PARAM_nom_bd.".accessPoints WHERE noModeleAP='".$noModeleAP."';");                                   
+                                    $reqSuppressionModele = $connexion->query("DELETE FROM ".$PARAM_nom_bd.".modeles WHERE noModeleAP='".$noModeleAP."';");
+                                    
+                                    if ((!$reqSuppressionAP) && (!$reqSuppressionModele) && (!$reqSuppressionCLI)){ echo "<p><strong> Probl&egrave;me lors de l'envoi de la requ&ecirc;te</strong>!<br><p>".$boutonRetour."</p>";}
+                                    else{                                      
+                                        echo "<p><strong> Suppression du mod&egrave;le \"".$nomFabricant." ".$nomModele." (".$versionFirmware.")\" effect&eacute;e avec succ&egrave;s</strong>!<br>";
+                                        echo "<p>Nombre d'AP retir&eacute;(s): ".$reqSuppressionAP->rowCount()."</p>";
+                                        echo "<p>Nombre de lignes de commande retir&eacute;e(s): ".$reqSuppressionCLI->rowCount()."</p>";
+                                        echo "<p>".$boutonRetourSucces."&nbsp;&nbsp;&nbsp;&nbsp;".$boutonRetour."</p>";
+                                        $reqSuppressionModele->closeCursor();
+                                        $reqSuppressionCLI->closeCursor();
+                                        $reqSuppressionAP->closeCursor();
+                                    }
 
-                                  //Récupération de la liste des modèles
-                                  try
-                                  {                            
-                                          $i =0;                                
-                                          $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
+                                }                               
+                                catch(Exception $e)
+                                {
+                                        echo '<tr><td>Erreur : '.$e->getMessage().'<br />';
+                                        echo 'N° : '.$e->getCode().'</td></tr>';
+                                }                                
+                            }
+                            else {echo " <strong>Aucune information reçue. Veuillez corriger la s&eacute;lection.</strong><br>";}
 
-                                          $resultatsModelesAP=$connexion->query("SELECT * FROM modeles;");                                 
-                                          $resultatsModelesAP->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet                                                                          
-                                          
-                                          while( $ligne = $resultatsModelesAP->fetch() ) // on récupère la liste des membres
-                                          {     
-                                              $noModeleAP=(string)$ligne->noModeleAP;
-                                              $nomModele=(string)$ligne->nomModele;
-                                              $versionFirmware=(string)$ligne->versionFirmware;
-                                              $nomFabricant=(string)$ligne->nomFabricant;
-                                              $adrMACFabricant=(string)$ligne->adrMACFabricant; 
-                                              if ($noModeleAP==$noModele){
-                                                  echo '<option value="'.$noModeleAP.'" selected>'.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.'&nbsp;&nbsp;&nbsp;</option>';
-                                                  $modeleChoisi=array("noModeleAP" =>$noModeleAP, "nomModele"=>$nomModele, "versionFirmware"=>$versionFirmware,"nomFabricant"=>$nomFabricant, "adrMACFabricant"=>$adrMACFabricant);
-                                              }
-                                              else {
-                                                  echo '<option value="'.$noModeleAP.'">'.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.'&nbsp;&nbsp;&nbsp;</option>';                                                    
-                                              }
-                                          }
-                                      $resultatsModelesAP->closeCursor(); // on ferme le curseur des résultats                                                                            
-                                  }
-
-                                  catch(Exception $e)
-                                  {
-                                          echo '</select></div></form></td></tr></table><li>Erreur lors du chargement</li></ol>';
-                                          echo 'Erreur : '.$e->getMessage().'<br />';
-                                          echo 'N° : '.$e->getCode();
-                                          break;
-                                  }                        
-
-                                  echo '</select><br></div></form>';   
-                                  
-                                  if ($noModele!= 0){
-                                  echo "<br>------------------------------------------------<br>";
-                                  echo'                                  
-                                    <form onsubmit="return confirm(\'Valider la suppression de ce mod&eacute;le?\');" id="confirmSupprimerModele" name="confirmSupprimerModele" class="form-inline" role="form" action="confirmSupprimerModele.php" method="POST">
-                                        <div class="form-group">       
-                                            <table border="0" class="table">
-                                                <tr><td align="right">
-                                                    <input type="hidden" name="noModeleAP" value="'.$modeleChoisi["noModeleAP"].'"/>
-                                                    <input type="hidden" name="nomFabricant" value="'.$modeleChoisi["nomFabricant"].'"/>
-                                                    <input type="hidden" name="versionFirmware" value="'.$modeleChoisi["versionFirmware"].'"/>
-                                                    <input type="hidden" name="nomModele" value="'.$modeleChoisi["nomModele"].'"/>
-                                                    Nom du mod&egrave;le:<br>                                                    
-                                                </td><td>
-                                                    '.$modeleChoisi["nomModele"].'                                                    
-                                                </td></tr>
-                                                <tr><td align="right">
-                                                    Version du firmware<br>
-                                                </td><td>
-                                                    '.$modeleChoisi["versionFirmware"].'                                                   
-                                                </td></tr>
-                                                <tr><td align="right">
-                                                    Nom du fabricant<br>
-                                                </td><td>
-                                                    '.$modeleChoisi["nomFabricant"].'
-                                                </td></tr>
-                                                <tr><td align="right">
-                                                    Adresse MAC du fabricant:<br>
-                                                </td><td>
-                                                    '.$modeleChoisi["adrMACFabricant"].'
-                                                </td></tr>                                 
-                                                <tr><td  align="right" colspan="2">
-                                                    <button class="btn btn-warning">Valider la suppression</button>                           
-                                                </td></tr>
-                                            </table>                                    
-                                         </div>                             
-                                        </form>';                                                                                                                                
-                                  }                                  
-                            ?>                             
-                     </ol> 
+                        ?>
+                    </ol>
                  </td>
               </tr>
            </tbody>
-        </table>
-        
-        
-
+        </table>                
       </div><!-- /container -->
-
-
     <!-- Bootstrap core JavaScrip ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->     
+    <!-- Placed at the end of the document so the pages load faster -->        
   </body>
 </html>

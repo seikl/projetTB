@@ -68,8 +68,7 @@
                         $pingLinux="ping -c 1 -w 1 ";//Pour Linux
 
                         try
-                        {
-                            
+                        {                            
                                 $i =0;
                                 $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
@@ -92,7 +91,7 @@
                                     
 
                                     $tabInfosAP= array("noAP" =>$noAP, "nomAP" => $nomAP, "nomFabricant" =>$nomFabricant, "adrMACFabricant" =>$adrMACFabricant, "nomModele" => $nomModele, "versionFirmware" =>$versionFirmware, "adresseIPv4" =>$ip, "snmpCommunity"=>$snmpCommunity);                                                                        
-                                    exec($pingLinux.$ip,$reponse,$statut);//pour windows
+                                    exec($pingWindows.$ip,$reponse,$statut);//pour windows
 
                                     if ($statut==0) {
                                         echo '<tr class="success">';

@@ -54,13 +54,13 @@
                      
                      <ol class="breadcrumb">
                         <li><a href="accueilGestionBDD.php">Accueil gestion de la BDD</a></li> 
-                        <li>Modifier un mod&egrave;le d'AP</li>
+                        <li>Supprimer un mod&egrave;le d'AP</li>
                     </ol>
                      <ol>
                          
-                        <form id="selectModifModele" class="form-inline" role="form" action="selectModifModele.php" method="POST">
+                        <form id="supprimerModele" class="form-inline" role="form" action="selectSupprModele.php" method="POST">
                             <div class="form-group">                                                           
-                            <label for="name">Veuilllez s&eacute;lectionner le mod&egrave;le &agrave; modifier:</label><br>
+                            <label for="name">Veuilllez s&eacute;lectionner le mod&egrave;le &agrave; supprimer:</label><br>
                             <select class="form-control" id="noModele" name="noModele" onChange="this.form.submit()">
                      
                             <?php                                          
@@ -118,48 +118,41 @@
                                   if ($noModele!= 0){
                                   echo "<br>------------------------------------------------<br>";
                                   echo'                                  
-                                    <form id="modifModele" name="modifModele" class="form-inline" role="form" action="modifierModele.php" method="POST">
+                                    <form onsubmit="return confirm(\'Valider la suppression de ce mod&eacute;le?\');" id="confirmSupprimerModele" name="confirmSupprimerModele" class="form-inline" role="form" action="supprimerModele.php" method="POST">
                                         <div class="form-group">       
-
                                             <table border="0" class="table">
                                                 <tr><td align="right">
-                                                    <input type="hidden" name="noModeleAP" value="'.$modeleChoisi["noModeleAP"].'">
-                                                    <input type="text" class="form-control" name="nomModele" id="nomModele" size="25" maxlength="25" value="'.$modeleChoisi["nomModele"].'">
+                                                    <input type="hidden" name="noModeleAP" value="'.$modeleChoisi["noModeleAP"].'"/>
+                                                    <input type="hidden" name="nomFabricant" value="'.$modeleChoisi["nomFabricant"].'"/>
+                                                    <input type="hidden" name="versionFirmware" value="'.$modeleChoisi["versionFirmware"].'"/>
+                                                    <input type="hidden" name="nomModele" value="'.$modeleChoisi["nomModele"].'"/>
+                                                    Nom du mod&egrave;le:<br>                                                    
                                                 </td><td>
-                                                    <strong class="obligatoire">*&nbsp;</strong><label for=\'modifNomModele\'>Nom du mod&egrave;le (par ex. AP-6 ou RT66CU)</label><br>
+                                                    '.$modeleChoisi["nomModele"].'                                                    
                                                 </td></tr>
                                                 <tr><td align="right">
-                                                    <input type="text" class="form-control" name="versionFirmware" id="versionFirmware" size="8" maxlength="8" value="'.$modeleChoisi["versionFirmware"].'">
+                                                    Version du firmware<br>
                                                 </td><td>
-                                                    <strong class="obligatoire">*&nbsp;</strong><label for=\'versionFirmware\'>Version du firmware (par ex. 2.4.11)</label><br>
+                                                    '.$modeleChoisi["versionFirmware"].'                                                   
                                                 </td></tr>
                                                 <tr><td align="right">
-                                                    <input type="text" class="form-control" name="nomFabricant" id="nomFabricant" size="20" maxlength="20"  value="'.$modeleChoisi["nomFabricant"].'">
+                                                    Nom du fabricant<br>
                                                 </td><td>
-                                                    &nbsp;&nbsp;&nbsp;<label for=\'nomFabricant\'>Nom du fabricant (par ex. Avaya)</label><br>
-                                                </td></tr>';
-                                  
-                                            $adrMACFabricant1 = substr($modeleChoisi["adrMACFabricant"],0,2);
-                                            $adrMACFabricant2 = substr($modeleChoisi["adrMACFabricant"],3,2);
-                                            $adrMACFabricant3 = substr($modeleChoisi["adrMACFabricant"],6,2);
-                                            
-                                            echo  '<tr><td align="right">
-                                                    <input type="text" class="form-control" name="adrMACFabricant1" id="adrMACFabricant1" size="2" maxlength="2" value="'.$adrMACFabricant1.'"><strong>:</strong>
-                                                    <input type="text" class="form-control" name="adrMACFabricant2" id="adrMACFabricant2" size="2" maxlength="2" value="'.$adrMACFabricant2.'"><strong>:</strong>
-                                                    <input type="text" class="form-control" name="adrMACFabricant3" id="adrMACFabricant3" size="2" maxlength="2" value="'.$adrMACFabricant3.'">
+                                                    '.$modeleChoisi["nomFabricant"].'
+                                                </td></tr>
+                                                <tr><td align="right">
+                                                    Adresse MAC du fabricant:<br>
                                                 </td><td>
-                                                    <strong class="obligatoire">*&nbsp;</strong><label for=\'adrMACFabricant\'>Adresse MAC du fabricant (par ex. 00:11:22)</label><br>
+                                                    '.$modeleChoisi["adrMACFabricant"].'
                                                 </td></tr>                                 
-                                                <tr><td  align="right">
-                                                    <input type="submit" id="submit" class="btn btn-primary" value="Enregistrer"/>                           
-                                                </td><td>
-                                                        Tous les champs marqu&eacute;s d\'une <strong class="obligatoire">*&nbsp;</strong>sont obligatoires.
+                                                <tr><td  align="right" colspan="2">
+                                                    <button class="btn btn-warning">Valider la suppression</button>                           
                                                 </td></tr>
                                             </table>                                    
                                          </div>                             
                                         </form>';                                                                                                                                
                                   }                                  
-                            ?>    
+                            ?>                             
                      </ol> 
                  </td>
               </tr>
@@ -172,42 +165,6 @@
 
 
     <!-- Bootstrap core JavaScrip ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    
-    <script type="text/javascript">
-        $(function()
-        {
-            $("#modifModele").validate(
-              {                
-                rules: 
-                {            
-                  nomModele: 
-                  {
-                    required: true                   
-                  },
-                  versionFirmware: 
-                  {
-                    required: true
-                  },
-                  adrMACFabricant1: 
-                  {
-                    required: true
-                  },  
-                  adrMACFabricant2: 
-                  {
-                    required: true
-                  }, 
-                  adrMACFabricant3: 
-                  {
-                    required: true
-                  }                   
-                },
-                errorElement: "divRight",
-                errorPlacement: function(error, element) {
-                    error.insertAfter(element);                    
-                }                
-              });
-        });
-    </script>      
+    <!-- Placed at the end of the document so the pages load faster -->     
   </body>
 </html>

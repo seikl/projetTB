@@ -41,7 +41,7 @@
                         <ul class="nav nav-pills nav-justified">                       
                            <li><a href="ajoutModele.php">Ajouter</a></li>
                            <li><a href="selectModifModele.php">Modifier</a></li>                       
-                           <li><a href="supprimerModele.php">Supprimer</a></li>
+                           <li><a href="selectSupprModele.php">Supprimer</a></li>
                         </ul>
                          <p><b>G&eacute;rer les lignes de commandes (CLI)</b></p>
                         <ul class="nav nav-pills nav-justified">                       

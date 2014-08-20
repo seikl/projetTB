@@ -16,7 +16,7 @@
       for($i=$adrDebutLong;$i<=$adrFinLong;$i++) {
         //Mega threaded ( This will open 255 processes ;))
         $ipAPinger=long2ip($i);
-        $fp[$i] = popen($pingLinux.$ipAPinger, "r");       
+        $fp[$i] = popen($pingWindows.$ipAPinger, "r");       
         
         //pour éviter d'atteindre la limite de processus ouverts
         if ((($i % 16) == 0) && (($adrFinLong - $adrDebutLong) >= 512)){
@@ -31,7 +31,7 @@
         while( $fp[$i] && !feof($fp[$i]) ) { fgets($fp[$i]); }
       } 
       */
-      $arp = shell_exec($getArpLinux);        
+      $arp = shell_exec($getArpWindows);        
       $tableARP= explode("\n", $arp);
        
       //print_r($tableARP); //DEBUG
