@@ -82,6 +82,8 @@
                                   try
                                   {                            
                                           $i =0;                                
+                                          $nombreAPLies = 0;
+                                          $nombreCLILies = 0;
                                           $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
                                           $resultatsModelesAP=$connexion->query("SELECT * FROM modeles;");                                 
@@ -97,8 +99,14 @@
                                               if ($noModeleAP==$noModele){
                                                   echo '<option value="'.$noModeleAP.'" selected>'.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.'&nbsp;&nbsp;&nbsp;</option>';
                                                   $modeleChoisi=array("noModeleAP" =>$noModeleAP, "nomModele"=>$nomModele, "versionFirmware"=>$versionFirmware,"nomFabricant"=>$nomFabricant, "adrMACFabricant"=>$adrMACFabricant);
+                                                  $reqNombreCLI = $connexion->query("SELECT * FROM ".$PARAM_nom_bd.".lignesCommande WHERE noModeleAP='".$noModeleAP."';");
+                                                  $reqNombreAP = $connexion->query("SELECT * FROM ".$PARAM_nom_bd.".accessPoints WHERE noModeleAP='".$noModeleAP."';");  
+                                                  $nombreAPLies = $reqNombreCLI->rowCount();
+                                                  $nombreCLILies = $reqNombreAP->rowCount();
+                                                  $reqNombreAP->closeCursor();
+                                                  $reqNombreCLI->closeCursor();
                                               }
-                                              else {
+                                              else {                                                  
                                                   echo '<option value="'.$noModeleAP.'">'.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.'&nbsp;&nbsp;&nbsp;</option>';                                                    
                                               }
                                           }
@@ -110,15 +118,15 @@
                                           echo '</select></div></form></td></tr></table><li>Erreur lors du chargement</li></ol>';
                                           echo 'Erreur : '.$e->getMessage().'<br />';
                                           echo 'N° : '.$e->getCode();
-                                          break;
                                   }                        
 
                                   echo '</select><br></div></form>';   
                                   
                                   if ($noModele!= 0){
                                   echo "<br>------------------------------------------------<br>";
+                                  $textAvertissement = "Valider la suppression de ce mod&eacute;le?(! Cela entra&icirc;nera la suppression de ".$nombreAPLies." AP et de ".$nombreCLILies." lignes de commande !)";
                                   echo'                                  
-                                    <form onsubmit="return confirm(\'Valider la suppression de ce mod&eacute;le?\');" id="confirmSupprimerModele" name="confirmSupprimerModele" class="form-inline" role="form" action="supprimerModele.php" method="POST">
+                                    <form onsubmit="return confirm(\''.$textAvertissement.'\');" id="confirmSupprimerModele" name="confirmSupprimerModele" class="form-inline" role="form" action="supprimerModele.php" method="POST">
                                         <div class="form-group">       
                                             <table border="0" class="table">
                                                 <tr><td align="right">

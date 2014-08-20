@@ -77,19 +77,25 @@
                                     $i =0;
                                     $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
-                                    $reqSuppressionCLI = $connexion->query("DELETE FROM ".$PARAM_nom_bd.".lignesCommande WHERE noModeleAP='".$noModeleAP."';"); 
+                                    $reqNombreCLI = $connexion->query("SELECT * FROM ".$PARAM_nom_bd.".lignesCommande WHERE noModeleAP='".$noModeleAP."';");
+                                    $reqNombreAP = $connexion->query("SELECT * FROM ".$PARAM_nom_bd.".accessPoints WHERE noModeleAP='".$noModeleAP."';"); 
+                                    $listeCLI = $reqNombreCLI->fetchAll();
+                                    $listeAP = $reqNombreAP->fetchAll();
+                                    $reqSuppressionCLI = $connexion->query("DELETE FROM ".$PARAM_nom_bd.".lignesCommande WHERE noModeleAP='".$noModeleAP."';");                                     
                                     $reqSuppressionAP = $connexion->query("DELETE FROM ".$PARAM_nom_bd.".accessPoints WHERE noModeleAP='".$noModeleAP."';");                                   
                                     $reqSuppressionModele = $connexion->query("DELETE FROM ".$PARAM_nom_bd.".modeles WHERE noModeleAP='".$noModeleAP."';");
                                     
                                     if ((!$reqSuppressionAP) && (!$reqSuppressionModele) && (!$reqSuppressionCLI)){ echo "<p><strong> Probl&egrave;me lors de l'envoi de la requ&ecirc;te</strong>!<br><p>".$boutonRetour."</p>";}
                                     else{                                      
                                         echo "<p><strong> Suppression du mod&egrave;le \"".$nomFabricant." ".$nomModele." (".$versionFirmware.")\" effect&eacute;e avec succ&egrave;s</strong>!<br>";
-                                        echo "<p>Nombre d'AP retir&eacute;(s): ".$reqSuppressionAP->rowCount()."</p>";
-                                        echo "<p>Nombre de lignes de commande retir&eacute;e(s): ".$reqSuppressionCLI->rowCount()."</p>";
+                                        echo "<p>Nombre d'AP retir&eacute;(s): ".$reqSuppressionAP->rowCount()." <br> (liste: <br> ";print_r($listeAP);echo ")</p>";
+                                        echo "<p>Nombre de lignes de commande retir&eacute;e(s): ".$reqSuppressionCLI->rowCount()." <br> (liste: <br> ";print_r($listeCLI);echo ")</p>";
                                         echo "<p>".$boutonRetourSucces."&nbsp;&nbsp;&nbsp;&nbsp;".$boutonRetour."</p>";
                                         $reqSuppressionModele->closeCursor();
                                         $reqSuppressionCLI->closeCursor();
                                         $reqSuppressionAP->closeCursor();
+                                        $reqNombreAP->closeCursor();
+                                        $reqNombreCLI->closeCursor();
                                     }
 
                                 }                               

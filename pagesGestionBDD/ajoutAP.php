@@ -148,7 +148,7 @@
                            <table align="center" width="80%"><tr><td align="left" width="30%">                                    
                            <?php
                                 if ($qtyAP>=1){                                       
-                                    echo '<input type="button" class="btn btn-default" name="repliquerAP" id="repliquerAP" onclick="repliquerAP()" value="Copier"/>&nbsp;Repliquer la 1&egrave;re ligne';
+                                    echo '<input type="button" class="btn btn-default" name="repliquerAP" id="repliquerAP" onclick="repliquerAP()" value="Copier"/>&nbsp;R&eacute;pliquer la 1&egrave;re ligne';
                                     echo '</td><td align="right">';
                                     echo '<form id="diminueQty" name="diminueQty" class="form-inline" role="form" action="ajoutAP.php" method="POST">';
                                     echo 'Retirer une ligne&nbsp;<input type="hidden" value="'.($qtyAP-1).'" name="qtyAP"/>';

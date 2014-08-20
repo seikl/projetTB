@@ -258,7 +258,7 @@
                             echo '<tr><td valign="bottom">';                            
                             $actionOnClick="$('#selectioncommande').submit();";
                             $actionReset="location='choisirCommande.php'";
-                            echo '<table width="100%"><tr><td align="left"><button class="btn btn-primary" onclick="'.$actionOnClick.'">Valider les choix</button></td>';
+                            echo '<table width="100%"><tr><td align="left"><button class="btn btn-primary" onclick="'.$actionOnClick.'">V&eacute;rifier les choix</button></td>';
                             echo '<td align="right"><button class="btn  btn-default" onclick="'.$actionReset.'">R&eacute;initialiser</button></td></tr></table>';
                             echo '</td></tr>';
 
