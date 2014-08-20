@@ -26,11 +26,11 @@ CREATE TABLE IF NOT EXISTS  modeles (
 
 CREATE TABLE IF NOT EXISTS accessPoints(
         noAP INT NOT NULL AUTO_INCREMENT,
-        nomAP VARCHAR(20) NOT NULL,
+        nomAP VARCHAR(25),
         adresseIPv4 VARCHAR(15) NOT NULL,
-        snmpCommunity VARCHAR(20) NOT NULL DEFAULT 'public',
+        snmpCommunity VARCHAR(12) NOT NULL DEFAULT 'public',
         username VARCHAR(20),
-        password VARCHAR(20),
+        password VARCHAR(20) DEFAULT 'admin',
         noModeleAP INT NOT NULL REFERENCES modeles(noModeleAP),
      PRIMARY KEY (noAP)
 );

@@ -57,41 +57,101 @@
                         <li>Ajouter un ou plusieurs AP</li>
                     </ol>
                    <ol>
+                    <?php 
+                        //connexion a la BDD et récupération de la liste des modèles
+                        include '../includes/connexionBDD.php';                    
+                        include '../includes/fonctionsUtiles.php';
+                        
+                        //Récupération nombre d'AP à ajouter
+                        if (!isset($_POST['qtyAP'])){$qtyAP=0;} else {$qtyAP=$_POST['qtyAP'];}    
+                        
+                        //enregistrement des modèles d'AP dans un tableau pour affichage dans une liste
+                        try
+                        {            
+                                $i=0;
+                                $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
+
+                                $resultatsAP=$connexion->query("SELECT * FROM modeles;");                                 
+                                $resultatsAP->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet                                
+                                
+                                while( $ligne = $resultatsAP->fetch() ) // on récupère la liste des membres
+                                {     
+                                    $noModeleAP =(string)$ligne->noModeleAP;
+                                    $nomModele =(string)$ligne->nomModele;
+                                    $versionFirmware=(string)$ligne->versionFirmware;
+                                    $nomFabricant=(string)$ligne->nomFabricant;
+                                    $adrMACFabricant=(string)$ligne->adrMACFabricant; 
+                                    $tabListeModeles[$i]=array("noModeleAP" =>$noModeleAP, "nomModele"=>$nomModele, "versionFirmware"=>$versionFirmware,"nomFabricant"=>$nomFabricant, "adrMACFabricant"=>$adrMACFabricant);
+                                    $i++;
+                                }
+                            $resultatsAP->closeCursor(); // on ferme le curseur des résultats
+                                                
+                        }                                                
+                        catch(Exception $e)
+                        {
+                                echo '</select></form><li> Erreur lors du chargement</li></ol>';
+                                echo 'Erreur : '.$e->getMessage().'<br />';
+                                echo 'N° : '.$e->getCode();
+                        } 
+                    ?>                        
                        
-                    <form id="ajoutModele" name="ajoutAP" class="form-inline" role="form" action="enregistrerAP.php" method="POST">
+                       
+                    <form id="ajoutAP" name="ajoutAP" class="form-inline" role="form" action="enregistrerAP.php" method="POST">
                         <div class="form-group">       
 
-                            <table border="0" class="table">
-                                <tr><td align="right">
-                                    <input type="text" class="form-control" name="nomModele" id="nomModele" size="25" maxlength="25" placeholder="AP-7">
-                                </td><td>
-                                    <strong class="obligatoire">*&nbsp;</strong><label for='nomModele'>Nom du mod&egrave;le (par ex. AP-6 ou RT66CU)</label><br>
-                                </td></tr>
-                                <tr><td align="right">
-                                    <input type="text" class="form-control" name="versionFirmware" id="versionFirmware" size="8" maxlength="8" placeholder="1.24.10">
-                                </td><td>
-                                    <strong class="obligatoire">*&nbsp;</strong><label for='versionFirmware'>Version du firmware (par ex. 2.4.11)</label><br>
-                                </td></tr>
-                                <tr><td align="right">
-                                    <input type="text" class="form-control" name="nomFabricant" id="nomFabricant" size="20" maxlength="20" placeholder="Avaya">
-                                </td><td>
-                                    &nbsp;&nbsp;&nbsp;<label for='nomFabricant'>Nom du fabricant (par ex. Avaya)</label><br>
-                                </td></tr> 
-                                <tr><td align="right">
-                                    <input type="text" class="form-control" name="adrMACFabricant1" id="adrMACFabricant1" size="2" maxlength="2" placeholder="00"><strong>:</strong>
-                                    <input type="text" class="form-control" name="adrMACFabricant2" id="adrMACFabricant2" size="2" maxlength="2" placeholder="a6"><strong>:</strong>
-                                    <input type="text" class="form-control" name="adrMACFabricant3" id="adrMACFabricant3" size="2" maxlength="2" placeholder="23">
-                                </td><td>
-                                    <strong class="obligatoire">*&nbsp;</strong><label for='adrMACFabricant'>Adresse MAC du fabricant (par ex. 00:11:22)</label><br>
-                                </td></tr>                                 
-                                <tr><td  align="right">
-                                    <input type="submit" id="submit" class="btn btn-primary" value="Enregistrer"/>                           
-                                </td><td>
-                                        Tous les champs marqu&eacute;s d'une <strong class="obligatoire">*&nbsp;</strong>sont obligatoires.
-                                </td></tr>
+                            <table border="0" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nom de l'AP (d&eacute;faut: "AP-xx")</th>
+                                    <th>Mod&egrave;le de l'AP</th>
+                                    <th>Adresse IPv4</th>
+                                    <th>SNMP <br>(d&eacute;faut: "public")</th>
+                                    <th>Nom d'utilisateur</th>
+                                    <th>Mot de passe</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                for($i=0;$i<=$qtyAP;$i++){                                                                                                            
+                                    echo '<tr>';
+                                    echo '<td><input type="text" class="form-control" name="nomModele'.$i.'" id="nomModele'.$i.'" size="18" maxlength="25" placeholder="AP-'.$i.'"></td>';
+                                    
+                                    echo '<td><select class="form-control" id="noModeleAP'.$i.'" name="noModeleAP'.$i.'">';
+                                    echo '<option value="">Choix du mod&egrave;le</option>';
+                                    foreach ($tabListeModeles as $modele){
+                                        echo '<option value="'.$modele["noModeleAP"].'">'.$modele["nomFabricant"].' '.$modele["nomModele"].' v.'.$modele["versionFirmware"].'</option>';                                                    
+                                    }
+                                    echo '</select></td>';
+                                    
+                                    echo '<td><span class="nowrap">';
+                                    echo '<input type="text" class="form-control" name="IPgroupeA'.$i.'" id="IPgroupeA'.$i.'" size="1" maxlength="3" placeholder="192"><strong>.</strong>';
+                                    echo '<input type="text" class="form-control" name="IPgroupeB'.$i.'" id="IPgroupeB'.$i.'" size="1" maxlength="3" placeholder="168"><strong>.</strong>';
+                                    echo '<input type="text" class="form-control" name="IPgroupeC'.$i.'" id="IPgroupeC'.$i.'" size="1" maxlength="3" placeholder="1"><strong>.</strong>';
+                                    echo '<input type="text" class="form-control" name="IPgroupeD'.$i.'" id="IPgroupeD'.$i.'" size="1" maxlength="3" placeholder="0">';
+                                    echo '</span></td>'; 
+                                    
+                                    echo '<td><input type="text" class="form-control" name="snmpCommunity'.$i.'" id="snmpCommunity'.$i.'" size="10" maxlength="12" placeholder="public"></td>';
+                                    echo '<td><input type="text" class="form-control" name="username'.$i.'" id="username'.$i.'" size="10" maxlength="20" placeholder="username"></td>';
+                                    echo '<td><input type="password" class="form-control" name="password'.$i.'" id="password'.$i.'" size="10" maxlength="20" placeholder="password"></td>';
+                                    echo '</tr>';
+                                }
+                                
+                                ?>
+                                <td colspan="6" align="right"><input type="submit" class="form-control" name="submit" id="submit" value="Enregistrer"/></td>
+                            </tbody>
                             </table>                                    
                          </div>                             
                         </form>
+                        <div>
+                            <p>
+                                <form id="ajoutQty" name="ajoutQty" class="form-inline" role="form" action="ajoutAP.php" method="POST">
+                                    <?php $qtyAP++; echo '<input type="hidden" value="'.$qtyAP.'" name="qtyAP"/>';?>
+                                    <input type="submit" class="btn btn-success" name="ajouterForm" id="ajouterForm" value="Ajouter un champ pour un AP"/>
+                                </form>
+                            </p>
+                           
+                           
+                       </div>
                     </ol>
                  </td>
               </tr>
@@ -107,39 +167,56 @@
     <!-- Placed at the end of the document so the pages load faster -->
     
     <script type="text/javascript">
+  <?php
+        echo'
         $(function()
         {
-            $("#ajoutModele").validate(
+            $("#ajoutAP").validate(
               {                
                 rules: 
-                {            
-                  nomModele: 
+                {'; 
+        
+                for($i=0;$i<=$qtyAP;$i++){  
+                    echo'
+                  noModeleAP'.$i.': 
                   {
                     required: true                   
                   },
-                  versionFirmware: 
+                  IPgroupeA'.$i.': 
                   {
-                    required: true
+                    required: true,
+                    range:[10,255] 
                   },
-                  adrMACFabricant1: 
+                  IPgroupeB'.$i.':
                   {
-                    required: true
+                    required: true,
+                    range:[0,255] 
                   },  
-                  adrMACFabricant2: 
+                  IPgroupeC'.$i.':
                   {
-                    required: true
+                    required: true,
+                    range:[0,255] 
                   }, 
-                  adrMACFabricant3: 
+                  IPgroupeD'.$i.': 
+                  {
+                    required: true,
+                    range:[0,255] 
+                  }, 
+                  password'.$i.':
                   {
                     required: true
-                  }                   
+                  }';
+                  if ($i<=$qtyAP){echo ',';};                    
+                }
+        echo'
                 },
-                errorElement: "divRight",
+                errorElement: "divBelow",
                 errorPlacement: function(error, element) {
                     error.insertAfter(element);                    
-                }                
+                }           
               });
-        });
+        });';
+        ?>
     </script>      
   </body>
 </html>
