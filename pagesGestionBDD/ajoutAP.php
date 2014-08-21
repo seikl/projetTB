@@ -62,9 +62,34 @@
                         include '../includes/connexionBDD.php';                    
                         include '../includes/fonctionsUtiles.php';
                         
-                        //Récupération nombre d'AP à ajouter
-                        if (!isset($_POST['qtyAP'])){$qtyAP=0;} else {$qtyAP=$_POST['qtyAP'];}    
-                        if (!isset($_POST['$tabReqplique'])){$tabReqplique=0;} else {$tabReqplique=$_POST['$tabReqplique'];}
+                        //Récupération nombre d'AP à ajouter et des valeurs déjà saisies
+                        $tabValeursSaisies=null;
+                        if (!isset($_POST['qtyAP'])){$qtyAP=0;} 
+                        else {
+                            $qtyAP=$_POST['qtyAP'];                                                        
+                            for ($i=0;$i<$qtyAP;$i++)
+                            {
+                                $tabValeursSaisies[$i]=array("nomAP" =>$_POST['nomAP'.$i], 
+                                                        "noModeleAP"=>$_POST['noModeleAP'.$i], 
+                                                        "IPgroupeA"=>$_POST['IPgroupeA'.$i],
+                                                        "IPgroupeB"=>$_POST['IPgroupeB'.$i],
+                                                        "IPgroupeC"=>$_POST['IPgroupeC'.$i],
+                                                        "IPgroupeD"=>$_POST['IPgroupeD'.$i],
+                                                        "snmpCommunity"=>$_POST['snmpCommunity'.$i],
+                                                        "username"=>$_POST['username'.$i],
+                                                        "password"=>$_POST['password'.$i]);
+                            }
+                            if ($qtyAP==0){$tabValeursSaisies[0]=array("nomAP" =>$_POST['nomAP0'],
+                                                      "noModeleAP"=>$_POST['noModeleAP0'], 
+                                                        "IPgroupeA"=>$_POST['IPgroupeA0'],
+                                                        "IPgroupeB"=>$_POST['IPgroupeB0'],
+                                                        "IPgroupeC"=>$_POST['IPgroupeC0'],
+                                                        "IPgroupeD"=>$_POST['IPgroupeD0'],
+                                                        "snmpCommunity"=>$_POST['snmpCommunity0'],
+                                                        "username"=>$_POST['username0'],
+                                                        "password"=>$_POST['password0']);}                                
+                            
+                        }    
                         
                         //enregistrement des modèles d'AP dans un tableau pour affichage dans une liste
                         try
@@ -113,27 +138,52 @@
                             </thead>
                             <tbody>
                                 <?php
+                                
+                                //Affichage du formulaire
                                 for($i=0;$i<=$qtyAP;$i++){                                                                                                            
                                     echo '<tr>';
-                                    echo '<td><input type="text" class="form-control" name="nomAP'.$i.'" id="nomAP'.$i.'" size="18" maxlength="25" placeholder="AP-'.$i.'"></td>';
                                     
+                                    $infosNomAP='placeholder="AP-'.$i.'"';  
+                                    $infosNoModeleAP="";
+                                    $infosIPgroupeA='placeholder="192"';
+                                    $infosIPgroupeB='placeholder="168"';
+                                    $infosIPgroupeC='placeholder="1"';
+                                    $infosIPgroupeD='placeholder="0"';
+                                    $infosSNMP='placeholder="public"';
+                                    $infosUsername='placeholder="username"';
+                                    $infosPassword='placeholder="password"';
+                                    if(isset($tabValeursSaisies[$i])){
+                                        
+                                        if ($tabValeursSaisies[$i]["nomAP"]!=""){$infosNomAP='value="'.$tabValeursSaisies[$i]["nomAP"].'"';}
+                                        if ($tabValeursSaisies[$i]["noModeleAP"]!=""){$infosNoModeleAP=$tabValeursSaisies[$i]["noModeleAP"];}
+                                        if ($tabValeursSaisies[$i]["IPgroupeA"]!=""){$infosIPgroupeA='value="'.$tabValeursSaisies[$i]["IPgroupeA"].'"';}
+                                        if ($tabValeursSaisies[$i]["IPgroupeB"]!=""){$infosIPgroupeB='value="'.$tabValeursSaisies[$i]["IPgroupeB"].'"';}
+                                        if ($tabValeursSaisies[$i]["IPgroupeC"]!=""){$infosIPgroupeC='value="'.$tabValeursSaisies[$i]["IPgroupeC"].'"';}
+                                        if ($tabValeursSaisies[$i]["IPgroupeD"]!=""){$infosIPgroupeD='value="'.$tabValeursSaisies[$i]["IPgroupeD"].'"';}
+                                        if ($tabValeursSaisies[$i]["snmpCommunity"]!=""){$infosSNMP='value="'.$tabValeursSaisies[$i]["snmpCommunity"].'"';}
+                                        if ($tabValeursSaisies[$i]["username"]!=""){$infosUsername='value="'.$tabValeursSaisies[$i]["username"].'"';}
+                                        if ($tabValeursSaisies[$i]["password"]!=""){$infosPassword='value="'.$tabValeursSaisies[$i]["password"].'"';}
+                                    }  
+                                    
+                                    echo '<td><input type="text" class="form-control" name="nomAP'.$i.'" id="nomAP'.$i.'" size="18" maxlength="25" '.$infosNomAP.'></td>';                                    
                                     echo '<td><select class="form-control" id="noModeleAP'.$i.'" name="noModeleAP'.$i.'">';
                                     echo '<option value="">Choix du mod&egrave;le</option>';
                                     foreach ($tabListeModeles as $modele){
-                                        echo '<option value="'.$modele["noModeleAP"].'">'.$modele["nomFabricant"].' '.$modele["nomModele"].' v.'.$modele["versionFirmware"].'</option>';                                                    
+                                        echo '<option value="'.$modele["noModeleAP"].'"';
+                                        if ($modele["noModeleAP"]==$infosNoModeleAP){echo " selected";}    
+                                        echo '>'.$modele["nomFabricant"].' '.$modele["nomModele"].' v.'.$modele["versionFirmware"].'</option>';                                                    
                                     }
-                                    echo '</select></td>';
-                                    
+                                    echo '</select></td>';                                    
                                     echo '<td><span class="nowrap">';
-                                    echo '<input type="text" class="form-control" name="IPgroupeA'.$i.'" id="IPgroupeA'.$i.'" size="1" maxlength="3" placeholder="192"><strong>.</strong>';
-                                    echo '<input type="text" class="form-control" name="IPgroupeB'.$i.'" id="IPgroupeB'.$i.'" size="1" maxlength="3" placeholder="168"><strong>.</strong>';
-                                    echo '<input type="text" class="form-control" name="IPgroupeC'.$i.'" id="IPgroupeC'.$i.'" size="1" maxlength="3" placeholder="1"><strong>.</strong>';
-                                    echo '<input type="text" class="form-control" name="IPgroupeD'.$i.'" id="IPgroupeD'.$i.'" size="1" maxlength="3" placeholder="0">';
+                                    echo '<input type="text" class="form-control" name="IPgroupeA'.$i.'" id="IPgroupeA'.$i.'" size="1" maxlength="3" '.$infosIPgroupeA.'><strong>.</strong>';
+                                    echo '<input type="text" class="form-control" name="IPgroupeB'.$i.'" id="IPgroupeB'.$i.'" size="1" maxlength="3" '.$infosIPgroupeB.'><strong>.</strong>';
+                                    echo '<input type="text" class="form-control" name="IPgroupeC'.$i.'" id="IPgroupeC'.$i.'" size="1" maxlength="3" '.$infosIPgroupeC.'><strong>.</strong>';
+                                    echo '<input type="text" class="form-control" name="IPgroupeD'.$i.'" id="IPgroupeD'.$i.'" size="1" maxlength="3" '.$infosIPgroupeD.'>';
                                     echo '</span></td>'; 
                                     
-                                    echo '<td><input type="text" class="form-control" name="snmpCommunity'.$i.'" id="snmpCommunity'.$i.'" size="10" maxlength="12" placeholder="public"></td>';
-                                    echo '<td><input type="text" class="form-control" name="username'.$i.'" id="username'.$i.'" size="10" maxlength="20" placeholder="username"></td>';
-                                    echo '<td><input type="password" class="form-control" name="password'.$i.'" id="password'.$i.'" size="10" maxlength="20" placeholder="password"></td>';
+                                    echo '<td><input type="text" class="form-control" name="snmpCommunity'.$i.'" id="snmpCommunity'.$i.'" size="10" maxlength="12" '.$infosSNMP.'></td>';
+                                    echo '<td><input type="text" class="form-control" name="username'.$i.'" id="username'.$i.'" size="10" maxlength="20" '.$infosUsername.'></td>';
+                                    echo '<td><input type="password" class="form-control" name="password'.$i.'" id="password'.$i.'" size="10" maxlength="20" '.$infosPassword.'></td>';
                                     echo '</tr>';
                                 }
                                 
@@ -147,18 +197,45 @@
                         <div>
                            <table align="center" width="80%"><tr><td align="left" width="30%">                                    
                            <?php
-                                if ($qtyAP>=1){                                       
-                                    echo '<input type="button" class="btn btn-default" name="repliquerAP" id="repliquerAP" onclick="repliquerAP()" value="Copier"/>&nbsp;R&eacute;pliquer la 1&egrave;re ligne';
+                                if ($qtyAP>0){                                       
+                                    echo '<input type="button" class="btn btn-default" name="repliquerAP" id="repliquerAP" onclick="repliquerAP('.$qtyAP.')" value="Copier"/>&nbsp;R&eacute;pliquer la 1&egrave;re ligne';
                                     echo '</td><td align="right">';
                                     echo '<form id="diminueQty" name="diminueQty" class="form-inline" role="form" action="ajoutAP.php" method="POST">';
                                     echo 'Retirer une ligne&nbsp;<input type="hidden" value="'.($qtyAP-1).'" name="qtyAP"/>';
-                                    echo '<input type="submit" class="btn btn-warning" name="retirerForm" id="retirerForm" value="-"/></form>';
+                                    //pour mémoriser les saisies déjà effectuées
+                                    for($i=0;$i<=$qtyAP;$i++){  
+                                        echo '<input type="hidden" name="nomAP'.$i.'"/>';
+                                        echo '<input type="hidden" name="noModeleAP'.$i.'"/>';
+                                        echo '<input type="hidden" name="IPgroupeA'.$i.'"/>';
+                                        echo '<input type="hidden" name="IPgroupeB'.$i.'"/>';
+                                        echo '<input type="hidden" name="IPgroupeC'.$i.'"/>';
+                                        echo '<input type="hidden" name="IPgroupeD'.$i.'"/>';
+                                        echo '<input type="hidden" name="snmpCommunity'.$i.'"/>';
+                                        echo '<input type="hidden" name="username'.$i.'"/>';
+                                        echo '<input type="hidden" name="password'.$i.'"/>';
+                                    }                                    
+                                    echo '<input type="submit" class="btn btn-warning" name="retirerForm" onMouseOver="backupAP(this.form,'.$qtyAP.')" id="retirerForm" value="-"/></form>';
                                 }
                             ?>  
-                            </td><td algin="left" >
-                                <form id="ajoutQty" name="ajoutQty" class="form-inline" role="form" action="ajoutAP.php" method="POST">
-                                    <?php echo '<input type="hidden" value="'.($qtyAP+1).'" name="qtyAP"/>';?>
-                                    <input type="submit" class="btn btn-success" name="ajouterForm" id="ajouterForm" value="+"/>&nbsp;Ajouter une ligne
+                            </td><td align="left" >                                
+                                    <?php 
+                                    echo '<form id="ajoutQty" name="ajoutQty" class="form-inline" role="form" action="ajoutAP.php" method="POST">';                                    
+                                    echo '<input type="hidden" value="'.($qtyAP+1).'" name="qtyAP"/>';
+                                    //pour mémoriser les saisies déjà effectuées
+                                    for($i=0;$i<=$qtyAP;$i++){  
+                                        echo '<input type="hidden" name="nomAP'.$i.'"/>';
+                                        echo '<input type="hidden" name="noModeleAP'.$i.'"/>';
+                                        echo '<input type="hidden" name="IPgroupeA'.$i.'"/>';
+                                        echo '<input type="hidden" name="IPgroupeB'.$i.'"/>';
+                                        echo '<input type="hidden" name="IPgroupeC'.$i.'"/>';
+                                        echo '<input type="hidden" name="IPgroupeD'.$i.'"/>';
+                                        echo '<input type="hidden" name="snmpCommunity'.$i.'"/>';
+                                        echo '<input type="hidden" name="username'.$i.'"/>';
+                                        echo '<input type="hidden" name="password'.$i.'"/>';
+                                    }
+                                    echo '<input type="submit" class="btn btn-success" name="ajouterForm" onMouseOver="backupAP(this.form,'.$qtyAP.')" id="ajouterForm" value="+"/>&nbsp;Ajouter une ligne';
+                                    ?>
+                                    
                                 </form>
                             </td></tr></table>
                            
@@ -168,10 +245,7 @@
                  </td>
               </tr>
            </tbody>
-        </table>
-        
-        
-
+        </table>      
       </div><!-- /container -->
 
 
@@ -180,27 +254,39 @@
     
     <!-- Pour répliquer les données de la ere ligne -->
     <script type="text/javascript">
-     function repliquerAP()
-     {         
-     <?php
-        for($i=1;$i<=$qtyAP;$i++){  
-            echo'document.ajoutAP.nomAP'.$i.'.value=document.ajoutAP.nomAP0.value+"'.$i.'";';   
-            echo'document.ajoutAP.noModeleAP'.$i.'.value=document.ajoutAP.noModeleAP0.value;';                                    
-            echo'document.ajoutAP.IPgroupeA'.$i.'.value=document.ajoutAP.IPgroupeA0.value;'; 
-            echo'document.ajoutAP.IPgroupeB'.$i.'.value=document.ajoutAP.IPgroupeB0.value;'; 
-            echo'document.ajoutAP.IPgroupeC'.$i.'.value=document.ajoutAP.IPgroupeC0.value;'; 
-            echo'document.ajoutAP.IPgroupeD'.$i.'.value=document.ajoutAP.IPgroupeD0.value;'; 
-            echo'document.ajoutAP.snmpCommunity'.$i.'.value=document.ajoutAP.snmpCommunity0.value;'; 
-            echo'document.ajoutAP.username'.$i.'.value=document.ajoutAP.username0.value;'; 
-            echo'document.ajoutAP.password'.$i.'.value=document.ajoutAP.password0.value;'; 
-        } 
-
-    ?>
+    function backupAP(nomFormulaire, qtyAP)
+     {        
+         var formName = nomFormulaire.name;
+        for(i=0;i<=qtyAP;i++){                
+            document.getElementById(formName).elements['nomAP'+i].value=document.getElementById('ajoutAP').elements['nomAP'+i].value;
+            document.getElementById(formName).elements['noModeleAP'+i].value=document.getElementById('ajoutAP').elements['noModeleAP'+i].value;
+            document.getElementById(formName).elements['IPgroupeA'+i].value=document.getElementById('ajoutAP').elements['IPgroupeA'+i].value;
+            document.getElementById(formName).elements['IPgroupeB'+i].value=document.getElementById('ajoutAP').elements['IPgroupeB'+i].value;
+            document.getElementById(formName).elements['IPgroupeC'+i].value=document.getElementById('ajoutAP').elements['IPgroupeC'+i].value;
+            document.getElementById(formName).elements['IPgroupeD'+i].value=document.getElementById('ajoutAP').elements['IPgroupeD'+i].value;
+            document.getElementById(formName).elements['snmpCommunity'+i].value=document.getElementById('ajoutAP').elements['snmpCommunity'+i].value;
+            document.getElementById(formName).elements['username'+i].value=document.getElementById('ajoutAP').elements['username'+i].value;
+            document.getElementById(formName).elements['password'+i].value=document.getElementById('ajoutAP').elements['password'+i].value;
+        }
      }
-     </script>    
-    
+     
+     function repliquerAP(qtyAP)
+     {         
+        var formName = 'ajoutAP';
+         
+        for(i=1;i<=qtyAP;i++){                
+            document.getElementById(formName).elements['nomAP'+i].value=document.getElementById(formName).elements['nomAP0'].value;
+            document.getElementById(formName).elements['noModeleAP'+i].value=document.getElementById(formName).elements['noModeleAP0'].value;
+            document.getElementById(formName).elements['IPgroupeA'+i].value=document.getElementById(formName).elements['IPgroupeA0'].value;
+            document.getElementById(formName).elements['IPgroupeB'+i].value=document.getElementById(formName).elements['IPgroupeB0'].value;
+            document.getElementById(formName).elements['IPgroupeC'+i].value=document.getElementById(formName).elements['IPgroupeC0'].value;
+            document.getElementById(formName).elements['IPgroupeD'+i].value=document.getElementById(formName).elements['IPgroupeD0'].value;
+            document.getElementById(formName).elements['snmpCommunity'+i].value=document.getElementById(formName).elements['snmpCommunity0'].value;
+            document.getElementById(formName).elements['username'+i].value=document.getElementById(formName).elements['username0'].value;
+            document.getElementById(formName).elements['password'+i].value=document.getElementById(formName).elements['password0'].value;
+        }
+     }      
     <!-- Pour la validation des champs du formulaire -->
-    <script type="text/javascript">
   <?php
         echo'
         $(function()

@@ -60,14 +60,14 @@
                         <?php
                             include '../includes/connexionBDD.php';
                             $boutonRetour = '<button class="btn btn-primary" onclick="history.back()">Revenir sur le formulaire</button>';
-                            $boutonReinit = '<button class="btn btn-default" onclick="window.location.href = \'ajoutModele.php\'">R&eacute;initialiser le formulaire</button>';
+                            $boutonReinit = '<button class="btn btn-default" onclick="window.location.href = \'ajoutAP.php\'">R&eacute;initialiser le formulaire</button>';
                             $boutonRetourSucces = '<button class="btn btn-success" onclick="window.location.href = \'../pagesGestionAP/accueilGestionAP.php\'">Afficher la liste des mod&egrave;les</button>';
 
                             
                             //Récupération des informations
                             if ($_POST) {  
                                 $qtyAP=$_POST['qtyAP'];
-                                echo "<table class='table'><tr><th'>Informations re&ccedil;ues:</th></tr>";
+                                echo "<table class='table'><tr><th'>Informations re&ccedil;ues:</th></tr><tr><td>";
 
                                 
                                 //Rcéupération des valeurs
@@ -79,9 +79,9 @@
                                                     "snmpCommunity" =>$_POST['snmpCommunity'.$i],
                                                     "username" =>$_POST['username'.$i],
                                                     "password" =>$_POST['password'.$i]);
-
+                                    echo $tabInfosAP[$i]["nomAP"].' '.$tabInfosAP[$i]["noModeleAP"].' '.$tabInfosAP[$i]["adresseIPv4"].' '.$tabInfosAP[$i]["snmpCommunity"].' '.$tabInfosAP[$i]["username"].' ******<br>';
                                 }   
-                                echo "<tr><td>";print_r($tabInfosAP);echo"</td></tr>";
+                                echo "</td></tr>";
                                 
                                 echo "<tr><td>-----------------------------------------------------------------------</td></tr></table>";
                                 
@@ -90,29 +90,36 @@
                                 try
                                 {                            
                                     $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
-
+                                     
+                                    $nbErreurs=0;
                                     foreach ($tabInfosAP as $AP){ 
                                         $resultatsAP=$connexion->query("SELECT * FROM accessPoints a WHERE a.adresseIPv4 = '".$AP["adresseIPv4"]."';");
                                         $resultatsAP->setFetchMode(PDO::FETCH_OBJ);                                    
                                         if ($resultatsAP->fetch()){
-                                            echo "<p><strong> Ce mod&egrave;le (".$AP["nomAP"].") existe d&eacute;j&agrave; avec la m&ecirc;me adresse IP</strong>!<br>";
+                                            echo '<p><strong> Ce mod&egrave;le ('.$AP["nomAP"].' - '.$AP["adresseIPv4"].') existe d&eacute;j&agrave; avec la m&ecirc;me adresse IP</strong>!<br>';
                                             echo "Veuillez effectuer les modifications n&eacute;cessaires</p>";
-                                            echo "<p>".$boutonRetour."&nbsp;&nbsp;&nbsp;&nbsp;".$boutonReinit."</p>";
+                                            $nbErreurs++;
                                         }
                                         else{                                        
                                             $reqEnregistrement = $connexion->query("INSERT INTO accessPoints (nomAP, adresseIPv4,snmpCommunity,username,password,noModeleAP) VALUES ('".$AP["nomAP"]."','".$AP["adresseIPv4"]."','".$AP["snmpCommunity"]."','".$AP["username"]."','".$AP["password"]."','".$AP["noModeleAP"]."');");
 
                                             if (!$reqEnregistrement){
-                                                echo "<p><strong> Probl&egrave;me lors de l'enregistrement</strong>!<br>";
-                                                echo "<p>".$boutonRetour."&nbsp;&nbsp;&nbsp;&nbsp;".$boutonReinit."</p>";
+                                                echo '<p><strong> Probl&egrave;me lors de l\'enregistrement pour '.$AP["nomAP"].' - '.$AP["adresseIPv4"].' </strong>!<br>';
                                             }
                                             else{
-                                                echo "<p><strong> Enregistrement effect&eacute; avec succ&egrave;s</strong>!<br>";
-                                                echo "<p>".$boutonRetourSucces."</p>";                                            
+                                                echo '<p> Enregistrement effect&eacute; avec succ&egrave;s pour '.$AP["nomAP"].' - '.$AP["adresseIPv4"].'<br>';                                          
                                             }                                                                                                                                    
                                         }
                                         $resultatsAP->closeCursor();
                                     }
+                                    if ($nbErreurs>0){
+                                                echo "<p><strong>".$nbErreurs." enregistrement(s)  n'ont pas pu &ecirc;tre effectu&eacute;(s)</strong>!<br>";
+                                                echo "<p>".$boutonRetour."&nbsp;&nbsp;&nbsp;&nbsp;".$boutonReinit."</p>";
+                                            }
+                                            else{
+                                                echo "<p><strong> Tous les enregistrement ont &eacute;t&eacute; effect&eacute; avec succ&egrave;s</strong>!<br>";
+                                                echo "<p>".$boutonRetourSucces."</p>";                                            
+                                            }
                                 }
 
                                 catch(Exception $e)
