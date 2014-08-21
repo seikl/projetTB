@@ -73,10 +73,11 @@
                                 //Rcéupération des valeurs
                                 for($i=0;$i<=$qtyAP;$i++){                                     
                                     $adresseIPv4=$_POST['IPgroupeA'.$i].'.'.$_POST['IPgroupeB'.$i].'.'.$_POST['IPgroupeC'.$i].'.'.$_POST['IPgroupeD'.$i];
+                                    if ($_POST['snmpCommunity'.$i]==""){ $snmpCommunity="public";}else{$snmpCommunity=$_POST['snmpCommunity'.$i];}                                    
                                     $tabInfosAP[$i]= array("nomAP" =>$_POST['nomAP'.$i],
                                                     "noModeleAP" =>$_POST['noModeleAP'.$i],
                                                     "adresseIPv4" =>$adresseIPv4,
-                                                    "snmpCommunity" =>$_POST['snmpCommunity'.$i],
+                                                    "snmpCommunity" =>$snmpCommunity,
                                                     "username" =>$_POST['username'.$i],
                                                     "password" =>$_POST['password'.$i]);
                                     echo $tabInfosAP[$i]["nomAP"].' '.$tabInfosAP[$i]["noModeleAP"].' '.$tabInfosAP[$i]["adresseIPv4"].' '.$tabInfosAP[$i]["snmpCommunity"].' '.$tabInfosAP[$i]["username"].' ******<br>';
@@ -100,7 +101,7 @@
                                             echo "Veuillez effectuer les modifications n&eacute;cessaires</p>";
                                             $nbErreurs++;
                                         }
-                                        else{                                        
+                                        else{                                                 
                                             $reqEnregistrement = $connexion->query("INSERT INTO accessPoints (nomAP, adresseIPv4,snmpCommunity,username,password,noModeleAP) VALUES ('".$AP["nomAP"]."','".$AP["adresseIPv4"]."','".$AP["snmpCommunity"]."','".$AP["username"]."','".$AP["password"]."','".$AP["noModeleAP"]."');");
 
                                             if (!$reqEnregistrement){
