@@ -316,7 +316,7 @@ $.extend( $.validator, {
 		digits: "Please enter only digits.",
 		creditcard: "Please enter a valid credit card number.",
 		equalTo: "Please enter the same value again.",
-		maxlength: $.validator.format( "Please enter no more than {0} characters." ),
+		maxlength: $.validator.format( "Pas plus de {0} caractères." ),
 		minlength: $.validator.format( "Please enter at least {0} characters." ),
 		rangelength: $.validator.format( "Ce zone de texte doit comprendre entre {0} et {1} caractères." ),
 		range: $.validator.format( "Veuillez saisir une valeur entre {0} et {1}." ),

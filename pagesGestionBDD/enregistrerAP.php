@@ -35,7 +35,7 @@
                         <ul class="nav nav-pills nav-justified">                       
                            <li><a href="ajoutAP.php">Ajouter</a></li>
                            <li><a href="selectModifAP.php">Modifier</a></li>                       
-                           <li><a href="supprimerAP.php">Supprimer</a></li>
+                           <li><a href="selectSupprAP.php">Supprimer</a></li>
                         </ul>
                          <p><b>G&eacute;rer les mod&egrave;les enregistr&eacute;s</b></p>
                         <ul class="nav nav-pills nav-justified">                       

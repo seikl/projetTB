@@ -35,7 +35,7 @@
                         <ul class="nav nav-pills nav-justified">                       
                            <li><a href="ajoutAP.php">Ajouter</a></li>
                            <li><a href="selectModifAP.php">Modifier</a></li>                       
-                           <li><a href="supprimerAP.php">Supprimer</a></li>
+                           <li><a href="selectSupprAP.php">Supprimer</a></li>
                         </ul>
                          <p><b>G&eacute;rer les mod&egrave;les enregistr&eacute;s</b></p>
                         <ul class="nav nav-pills nav-justified">                       
@@ -60,7 +60,7 @@
                          
                         <form id="selectModifModele" class="form-inline" role="form" action="selectModifModele.php" method="POST">
                             <div class="form-group">                                                           
-                            <label for="name">Veuilllez s&eacute;lectionner le mod&egrave;le &agrave; modifier:</label><br>
+                            <label for="name">Veuillez s&eacute;lectionner le mod&egrave;le &agrave; modifier:</label><br>
                             <select class="form-control" id="noModele" name="noModele" onChange="this.form.submit()">
                      
                             <?php                                          
