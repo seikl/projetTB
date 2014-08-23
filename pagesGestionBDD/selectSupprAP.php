@@ -38,7 +38,6 @@
                            include '../includes/fonctionsUtiles.php';                          
 
                            $infosRecues ='Le n&eacute;ant';
-                           $commandeSelectionnee=FALSE;
                            $initialisation=true;
 
                            //pour vérifier si valeurs déjà existantes dans le formulaire
@@ -57,14 +56,12 @@
                            //pour récupérer la lsite des AP déjà sélectionnés
                            if (!isset($_POST['APAchoisir'])){                                                        
                                $APChoisis[0]=('0');
+                               $initialisation=true;
                            }
                            else {
                                $APChoisis=$_POST['APAchoisir'];  
                                $initialisation=FALSE;
-                           }     
-                           
-                           //définir si état d'initialisation ou non
-                           if (($APChoisis[0]==('0'))){$initialisation=true;}                                                                                       
+                           }                                                                                                                 
 
                            //Récupération de la liste des modèles
                            try
@@ -97,7 +94,6 @@
                                    echo '</select></div></form></td></tr></table><li>Erreur lors du chargement</li></ol>';
                                    echo 'Erreur : '.$e->getMessage().'<br />';
                                    echo 'N° : '.$e->getCode();
-                                   break;
                            }                        
 
                            echo '</select><br><br></td></tr>';                                      
@@ -155,32 +151,33 @@
                                         echo 'N° : '.$e->getCode();
                                 }                                                                                                                                                       
                                 echo '</select><br></td></tr></div></form>';                                                                                 
-
-                                echo '<tr><td valign="bottom">';                            
+                            
                                 $actionOnClick="$('#supprimerAP').submit();";
                                 $actionReset="location='selectSupprAP.php'";
-                                echo '<table width="100%"><tr><td align="left"><button class="btn btn-warning" onclick="'.$actionOnClick.'">Supprimer les AP s&eacute;lectionn&eacute;s</button></td>';
-                                echo '<td align="right"><button class="btn  btn-default" onclick="'.$actionReset.'">R&eacute;initialiser</button></td></tr></table>';
-                                echo '</td></tr>';
 
-                                $testInfos= "&nbsp;";
-
+                                $textInfos= "&nbsp;";
                                 if (!$initialisation){                                
-                                    $testInfos ='<br>';
+                                    $textInfos ='<br>';
                                     //vérification des choix effectués
                                     if ($listeAPactuels==null){
-                                        $testInfos .='<br><strong>Aucun AP s&eacute;lectionn&eacute;.</strong>';
+                                        $infoAvertissement="";
+                                        $textInfos .='<br><strong>Aucun AP s&eacute;lectionn&eacute;.</strong>';
                                     }                            
-                                    if ($listeAPactuels!=null){                                     
-                                    $listeAP=base64_encode(serialize($listeAPactuels));                                
-                                    $testInfos .='<input type="hidden" value="'.$listeAP.'" name="listeAP"/>';
+                                    else {                                     
+                                    $listeAP=base64_encode(serialize($listeAPactuels));      
+                                    $infoAvertissement = 'onsubmit="return confirm(\'Valider la suppression de ces AP?\');"';
+                                    $textInfos .='<input type="hidden" value="'.$listeAP.'" name="listeAP"/>';
+                                    $textInfos .= '<table width="100%"><tr><td align="left"><input type="submit" class="btn btn-warning" value="Supprimer les AP s&eacute;lectionn&eacute;s"/></td>';
+                                    $textInfos .= '<td align="right"><input type="button" class="btn  btn-default" onclick="'.$actionReset.'" value="R&eacute;initialiser"/></td></tr></table>';
                                     }
                                 }
 
                                 echo '<tr><td align="right">';  
-                                echo '<div class="form-group" id="validation">'; 
-                                echo '<form id="supprimerAP" class="form-inline" role="form" action="supprimerAP.php" method="POST">';                                                                                
-                                echo $testInfos;
+                                echo '<div class="form-group" id="validation">';                                
+                                echo '<form id="supprimerAP" '.$infoAvertissement.' class="form-inline" role="form" action="supprimerAP.php" method="POST">';                                                                                
+
+                                echo $textInfos;
+
                                 echo '</form></div>';
                                 echo '</td></tr></table>';
                      //echo "<br><br>infos recues: ".$infosRecues." --- modele en cours: ".$noModele." --- AP choisis: ".htmlspecialchars(print_r($APChoisis,true));
@@ -197,6 +194,6 @@
 
 
     <!-- Bootstrap core JavaScrip ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->         
+    <!-- Placed at the end of the document so the pages load faster -->              
   </body>
 </html>

@@ -56,8 +56,16 @@
                                     if ((!$reqSuppressionAP) && (!$reqSuppressionModele) && (!$reqSuppressionCLI)){ echo "<p><strong> Probl&egrave;me lors de l'envoi de la requ&ecirc;te</strong>!<br><p>".$boutonRetour."</p>";}
                                     else{                                      
                                         echo "<p><strong> Suppression du mod&egrave;le \"".$nomFabricant." ".$nomModele." (".$versionFirmware.")\" effect&eacute;e avec succ&egrave;s</strong>!<br>";
-                                        echo "<p>Nombre d'AP retir&eacute;(s): ".$reqSuppressionAP->rowCount()." <br> (liste: <br> ";print_r($listeAP);echo ")</p>";
-                                        echo "<p>Nombre de lignes de commande retir&eacute;e(s): ".$reqSuppressionCLI->rowCount()." <br> (liste: <br> ";print_r($listeCLI);echo ")</p>";
+                                        echo "<p><u>Nombre d'AP retir&eacute;(s): ".$reqSuppressionAP->rowCount()."</u><br> ";
+                                        foreach ($listeAP as $AP){
+                                            echo '>> '.$AP["noAP"].' - '.$AP["nomAP"].' ('.$AP["adresseIPv4"].')<br>';                                            
+                                        }                                        
+                                        echo "</p>";
+                                        echo "<p><u>Nombre de lignes de commande retir&eacute;e(s): ".$reqSuppressionCLI->rowCount()."</u><br> ";
+                                        foreach ($listeCLI as $CLI){
+                                            echo '>> '.$CLI["noCLI"].' - '.$CLI["ligneCommande"].' ('.$CLI["protocole"].'[:'.$CLI["portProtocole"].'])<br>';                                            
+                                        }                                        
+                                        echo "<br>------------------------------------------------------</p>";
                                         echo "<p>".$boutonRetourSucces."&nbsp;&nbsp;&nbsp;&nbsp;".$boutonRetour."</p>";
                                         $reqSuppressionModele->closeCursor();
                                         $reqSuppressionCLI->closeCursor();

@@ -122,7 +122,7 @@
                                                     '.$modeleChoisi["adrMACFabricant"].'
                                                 </td></tr>                                 
                                                 <tr><td  align="right" colspan="2">
-                                                    <button class="btn btn-warning">Valider la suppression</button>                           
+                                                    <input type="submit" class="btn btn-warning" value="Valider la suppression"/>                           
                                                 </td></tr>
                                             </table>                                    
                                          </div>                             

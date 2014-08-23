@@ -27,7 +27,7 @@
                      <ol>
                         <table width="auto">
                         <tr><td width="auto">                          
-                        <form id="selectModifAP" class="form-inline" role="form" action="selectModifAP.php" method="POST">
+                        <form id="selectModifAP" name="selectModifAP" class="form-inline" role="form" action="selectModifAP.php" method="POST">
                             <div class="form-group">                                                           
                             <label for="name">Veuillez s&eacute;lectionner les AP &agrave; modifier:</label><br>
                             <select class="form-control" id="noModele" name="noModele" onChange="this.form.submit()">
@@ -57,14 +57,12 @@
                            //pour récupérer la lsite des AP déjà sélectionnés
                            if (!isset($_POST['APAchoisir'])){                                                        
                                $APChoisis[0]=('0');
+                               $initialisation=true;
                            }
                            else {
                                $APChoisis=$_POST['APAchoisir'];  
                                $initialisation=FALSE;
-                           }     
-                           
-                           //définir si état d'initialisation ou non
-                           if (($APChoisis[0]==('0'))){$initialisation=true;}                                                                                       
+                           }                                                                                                                   
 
                            //Récupération de la liste des modèles
                            try
@@ -97,7 +95,6 @@
                                    echo '</select></div></form></td></tr></table><li>Erreur lors du chargement</li></ol>';
                                    echo 'Erreur : '.$e->getMessage().'<br />';
                                    echo 'N° : '.$e->getCode();
-                                   break;
                            }                        
 
                            echo '</select><br><br></td></tr>';                                      
@@ -156,25 +153,22 @@
                                         echo 'N° : '.$e->getCode();
                                 }                                                                                                                                                       
                                 echo '</select><br></td></tr></div></form>';                                                                                 
-
-                                echo '<tr><td valign="bottom">';                            
+                         
                                 $actionOnClick="$('#mofifierAP').submit();";
                                 $actionReset="location='selectModifAP.php'";
-                                echo '<table width="100%"><tr><td align="left"><button class="btn btn-primary" onclick="'.$actionOnClick.'">Modifier les AP s&eacute;lectionn&eacute;s</button></td>';
-                                echo '<td align="right"><button class="btn  btn-default" onclick="'.$actionReset.'">R&eacute;initialiser</button></td></tr></table>';
-                                echo '</td></tr>';
 
                                 $textInfos= "&nbsp;";
-
                                 if (!$initialisation){                                
                                     $textInfos ='<br>';
                                     //vérification des choix effectués
                                     if ($listeAPactuels==null){
                                         $textInfos .='<br><strong>Aucun AP s&eacute;lectionn&eacute;.</strong>';
                                     }                            
-                                    if ($listeAPactuels!=null){                                     
+                                    else {                                     
                                     $listeAP=base64_encode(serialize($listeAPactuels));                                
                                     $textInfos .='<input type="hidden" value="'.$listeAP.'" name="listeAP"/>';
+                                    $textInfos .= '<table width="100%"><tr><td align="left"><button class="btn btn-primary" onclick="'.$actionOnClick.'">Modifier les AP s&eacute;lectionn&eacute;s</button></td>';
+                                    $textInfos .= '<td align="right"><input type="button" class="btn  btn-default" onclick="'.$actionReset.'" value="R&eacute;initialiser"/></td></tr></table>';
                                     }
                                 }
 
@@ -200,6 +194,6 @@
 
 
     <!-- Bootstrap core JavaScrip ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->         
+    <!-- Placed at the end of the document so the pages load faster -->       
   </body>
 </html>

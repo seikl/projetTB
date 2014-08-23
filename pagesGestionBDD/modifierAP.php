@@ -74,11 +74,11 @@
                             <table border="0" class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Nom de l'AP (d&eacute;faut: "AP-xx")</th>
-                                    <th>Mod&egrave;le de l'AP</th>
-                                    <th>Adresse IPv4</th>
+                                    <th>Nom de l'AP <br>(d&eacute;faut: "AP-xx")</th>
+                                    <th>Mod&egrave;le de l'AP<strong class="obligatoire">&nbsp;*</strong></th>
+                                    <th>Adresse IPv4<strong class="obligatoire">&nbsp;*</strong></th>
                                     <th>SNMP <br>(d&eacute;faut: "public")</th>
-                                    <th>Nom d'utilisateur</th>
+                                    <th>Nom <br>d'utilisateur</th>
                                     <th>Mot de passe</th>
                                 </tr>
                             </thead>
@@ -108,20 +108,20 @@
                                     if ($AP["password"]==""){$infosPassword='placeholder="non indiqu&eacute;"';}                                      
                                     
                                     echo '<td><input type="hidden" class="form-control" name="noAP'.$i.'" id="noAP'.$i.'"'.$infosNoAP.'>';
-                                    echo '<input type="text" class="form-control" name="nomAP'.$i.'" id="nomAP'.$i.'" size="18" maxlength="25" '.$infosNomAP.'></td>';                                    
+                                    echo '<input type="text" class="form-control" name="nomAP'.$i.'" id="nomAP'.$i.'" size="15" maxlength="25" '.$infosNomAP.'></td>';                                    
                                     echo '<td><select class="form-control" id="noModeleAP'.$i.'" name="noModeleAP'.$i.'">';
                                     echo '<option value="">Choix du mod&egrave;le</option>';
                                     foreach ($tabListeModeles as $modele){
                                         echo '<option value="'.$modele["noModeleAP"].'"';
                                         if ($modele["noModeleAP"]==$infosNoModeleAP){echo " selected";}    
-                                        echo '>'.$modele["nomFabricant"].' '.$modele["nomModele"].' v.'.$modele["versionFirmware"].'</option>';                                                    
+                                        echo '>'.$modele["nomFabricant"].' '.$modele["nomModele"].' v.'.$modele["versionFirmware"].'&nbsp;&nbsp;&nbsp;</option>';                                                    
                                     }
                                     echo '</select></td>';                                    
                                     echo '<td><span class="nowrap">';
-                                    echo '<input type="text" class="form-control" name="IPgroupeA'.$i.'" id="IPgroupeA'.$i.'" size="1" maxlength="3" '.$infosIPgroupeA.'><strong>.</strong>';
-                                    echo '<input type="text" class="form-control" name="IPgroupeB'.$i.'" id="IPgroupeB'.$i.'" size="1" maxlength="3" '.$infosIPgroupeB.'><strong>.</strong>';
-                                    echo '<input type="text" class="form-control" name="IPgroupeC'.$i.'" id="IPgroupeC'.$i.'" size="1" maxlength="3" '.$infosIPgroupeC.'><strong>.</strong>';
-                                    echo '<input type="text" class="form-control" name="IPgroupeD'.$i.'" id="IPgroupeD'.$i.'" size="1" maxlength="3" '.$infosIPgroupeD.'>';
+                                    echo '<input type="text" class="form-control" name="IPgroupeA'.$i.'" id="IPgroupeA'.$i.'" size="2" maxlength="3" '.$infosIPgroupeA.'><strong>.</strong>';
+                                    echo '<input type="text" class="form-control" name="IPgroupeB'.$i.'" id="IPgroupeB'.$i.'" size="2" maxlength="3" '.$infosIPgroupeB.'><strong>.</strong>';
+                                    echo '<input type="text" class="form-control" name="IPgroupeC'.$i.'" id="IPgroupeC'.$i.'" size="2" maxlength="3" '.$infosIPgroupeC.'><strong>.</strong>';
+                                    echo '<input type="text" class="form-control" name="IPgroupeD'.$i.'" id="IPgroupeD'.$i.'" size="2" maxlength="3" '.$infosIPgroupeD.'>';
                                     echo '</span></td>'; 
                                     
                                     echo '<td><input type="text" class="form-control" name="snmpCommunity'.$i.'" id="snmpCommunity'.$i.'" size="10" maxlength="12" '.$infosSNMP.'></td>';

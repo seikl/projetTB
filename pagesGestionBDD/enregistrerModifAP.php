@@ -21,14 +21,15 @@
                  <td class="informations">                     
                     <ol class="breadcrumb">
                         <li><a href="accueilGestionBDD.php">Accueil gestion de la BDD</a></li> 
-                        <li><a href="#" onClick="history.back()">Ajouter un ou plusieurs AP</a></li>
+                        <li><a href="selectModifAP.php">Choix des AP &agrave; modifier</a></li> 
+                        <li><a href="#" onClick="history.back();">Modifier des AP enregistr&eacute;s</a></li>                        
                         <li>R&eacute;sultat</li>
                     </ol>
                    <ol>
                         <?php
                             include '../includes/connexionBDD.php';
                             $boutonRetour = '<button class="btn btn-primary" onclick="history.back()">Revenir sur le formulaire</button>';
-                            $boutonReinit = '<button class="btn btn-default" onclick="window.location.href = \'ajoutAP.php\'">R&eacute;initialiser le formulaire</button>';
+                            $boutonReinit = '<button class="btn btn-default" onclick="window.location.href = \'selectModifAP.php\'">Revenir &agrave; la s&eacute;lection des AP</button>';
                             $boutonRetourSucces = '<button class="btn btn-success" onclick="window.location.href = \'../pagesGestionAP/accueilGestionAP.php\'">Afficher la liste des mod&egrave;les</button>';
 
                             
@@ -39,10 +40,11 @@
 
                                 
                                 //Rcéupération des valeurs
-                                for($i=0;$i<=$qtyAP;$i++){                                     
+                                for($i=0;$i<$qtyAP;$i++){                                     
                                     $adresseIPv4=$_POST['IPgroupeA'.$i].'.'.$_POST['IPgroupeB'.$i].'.'.$_POST['IPgroupeC'.$i].'.'.$_POST['IPgroupeD'.$i];
                                     if ($_POST['snmpCommunity'.$i]==""){ $snmpCommunity="public";}else{$snmpCommunity=$_POST['snmpCommunity'.$i];}                                    
-                                    $tabInfosAP[$i]= array("nomAP" =>$_POST['nomAP'.$i],
+                                    $tabInfosAP[$i]= array("noAP" =>$_POST['noAP'.$i],
+                                                    "nomAP" =>$_POST['nomAP'.$i],
                                                     "noModeleAP" =>$_POST['noModeleAP'.$i],
                                                     "adresseIPv4" =>$adresseIPv4,
                                                     "snmpCommunity" =>$snmpCommunity,
@@ -55,22 +57,22 @@
                                 echo "<tr><td>-----------------------------------------------------------------------</td></tr></table>";
                                 
                                     
-                                //Vérification si le une IP n'est pas déjà existante dnas la BDD sinon enregistrement des infos
+                                //Vérification si le une IP n'est pas déjà existante sinon enregistrement des infos
                                 try
                                 {                            
                                     $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
                                      
                                     $nbErreurs=0;
                                     foreach ($tabInfosAP as $AP){ 
-                                        $resultatsAP=$connexion->query("SELECT * FROM accessPoints a WHERE a.adresseIPv4 = '".$AP["adresseIPv4"]."';");
+                                        $resultatsAP=$connexion->query("SELECT * FROM accessPoints a WHERE a.adresseIPv4 = '".$AP["adresseIPv4"]."' AND a.noAP <> '".$AP["noAP"]."';");
                                         $resultatsAP->setFetchMode(PDO::FETCH_OBJ);                                    
                                         if ($resultatsAP->fetch()){
-                                            echo '<p><strong> L\'adresse IP de cet AP ('.$AP["nomAP"].' - '.$AP["adresseIPv4"].') existe d&eacute;j&agrave; pour un autre AP</strong>!<br>';
+                                            echo '<p><strong>L\'adresse IP de cet AP ('.$AP["noAP"].' - '.$AP["nomAP"].' - '.$AP["adresseIPv4"].') existe d&eacute;j&agrave; pour un autre AP</strong>!<br>';
                                             echo "Veuillez effectuer les modifications n&eacute;cessaires</p>";
                                             $nbErreurs++;
                                         }
                                         else{                                                 
-                                            $reqEnregistrement = $connexion->query("INSERT INTO accessPoints (nomAP, adresseIPv4,snmpCommunity,username,password,noModeleAP) VALUES ('".$AP["nomAP"]."','".$AP["adresseIPv4"]."','".$AP["snmpCommunity"]."','".$AP["username"]."','".$AP["password"]."','".$AP["noModeleAP"]."');");
+                                            $reqEnregistrement = $connexion->query("UPDATE ".$PARAM_nom_bd.".accessPoints SET nomAP='".$AP["nomAP"]."',adresseIPv4='".$AP["adresseIPv4"]."',snmpCommunity='".$AP["snmpCommunity"]."',username='".$AP["username"]."',password='".$AP["password"]."',noModeleAP='".$AP["noModeleAP"]."' WHERE noAP='".$AP["noAP"]."';");
 
                                             if (!$reqEnregistrement){
                                                 echo '<p><strong> Probl&egrave;me lors de l\'enregistrement pour '.$AP["nomAP"].' - '.$AP["adresseIPv4"].' </strong>!<br>';
