@@ -12,15 +12,15 @@
   </head>
     <body>
      
-        <form method="post" name="myform" id="myform">
+        <form method="post" name="selectionAP" id="selectionAP">
             <table>
                 <tr><td>
                		<label for='items'>Number of Items: (min: 1)</label><br>
 		<input type="text" name="items" ><bR>
                     </td>
 <td>
-		<label for='amount'>Amount: (min 10 max 100)</label><br>
-		<input type="text" name="amount" >
+		<label for='verification'>Amount: (min 10 max 100)</label><br>
+		<input type="text" name="verification" >
                 </td><td>
 		<label for='factor'>Factor: (Between 0.08 and 0.09)</label><br>
 		<input type="text" name="factor" >
@@ -31,42 +31,26 @@
             </table>
 
 </form>
-        
-    <script type="text/javascript">
+   <script language="JavaScript">
+        //Pour la validation de la sélection d'un modele
         $(function()
         {
-            
-            
-            $("#myform").validate(
-              {
+            $("#selectionAP").validate(
+              {                
                 rules: 
-                {
-                  items: 
+                {            
+                  verification:
                   {
                     required: true,
-                    min:1
-                  },
-                  amount: 
-                  {
-                    range:[10,100]
-                  },
-                  factor:
-                  {
-                    required: true,
-                    range:[0.08,0.09]  
-                  },
-                  dullness:
-                  {
-                    required: true,
-                    range:[-9.5,11.1]
-                  }
+                    range:[8,32]
+                  }    
                 },
-            errorElement: "divBelow",
-            errorPlacement: function(error, element) {
-                error.insertAfter(element);
-            }
-              });	
-        });
-    </script>         
+                errorElement: "divBelow",
+                errorPlacement: function(error, element) {
+                    error.insertAfter(element);                    
+                }                
+              });
+        });   
+    </script>       
     </body>
 </html>

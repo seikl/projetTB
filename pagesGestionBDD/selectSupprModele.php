@@ -17,39 +17,7 @@
         <table border="0" width="90%" align="center">
            <tbody>
               <tr>
-                 <td width="30%">                       
-                      &nbsp;
-                 </td>               
-                 <td>                           
-                    <ul class="nav nav-tabs nav-justified">
-                     <li><a href="../pagesGestionAP/accueilGestionAP.php">Gestion des AP</a></li>
-                     <li class="active"><a href="../pagesGestionBDD/accueilGestionBDD.php">Gestion des enregistrements de la BDD</a></li>
-                     <li><a href="#">Configuration syst&egrave;me</a></li>
-                    </ul>
-                    <br>           
-                 </td>
-              </tr>
-              <tr>
-                 <td width="30%" class="leftmenu">
-                        <p><b>G&eacute;rer les enregistrments des AP</b></p>
-                        <ul class="nav nav-pills nav-justified">                       
-                           <li><a href="ajoutAP.php">Ajouter</a></li>
-                           <li><a href="selectModifAP.php">Modifier</a></li>                       
-                           <li><a href="selectSupprAP.php">Supprimer</a></li>
-                        </ul>
-                         <p><b>G&eacute;rer les mod&egrave;les enregistr&eacute;s</b></p>
-                        <ul class="nav nav-pills nav-justified">                       
-                           <li><a href="ajoutModele.php">Ajouter</a></li>
-                           <li><a href="selectModifModele.php">Modifier</a></li>                       
-                           <li><a href="selectSupprModele.php">Supprimer</a></li>
-                        </ul>
-                         <p><b>G&eacute;rer les lignes de commandes (CLI)</b></p>
-                        <ul class="nav nav-pills nav-justified">                       
-                           <li><a href="ajoutCLI.php">Ajouter</a></li>
-                           <li><a href="selectModifCLI.php">Modifier</a></li>                       
-                           <li><a href="supprimerCLI.php">Supprimer</a></li>
-                        </ul>                      
-                 </td>                
+                <?php include '../includes/menus.php'; echo $menuPagesGestionBDD; ?>              
                  <td class="informations">
                      
                      <ol class="breadcrumb">
@@ -87,7 +55,7 @@
                                           $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
                                           $resultatsModelesAP=$connexion->query("SELECT * FROM modeles;");                                 
-                                          $resultatsModelesAP->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet                                                                          
+                                          $resultatsModelesAP->setFetchMode(PDO::FETCH_OBJ);                                                                           
                                           
                                           while( $ligne = $resultatsModelesAP->fetch() ) // on récupère la liste des membres
                                           {     

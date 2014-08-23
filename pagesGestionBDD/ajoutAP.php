@@ -17,39 +17,7 @@
         <table border="0" width="90%" align="center">
            <tbody>
               <tr>
-                 <td width="30%">                       
-                      &nbsp;
-                 </td>               
-                 <td>                           
-                    <ul class="nav nav-tabs nav-justified">
-                     <li><a href="../pagesGestionAP/accueilGestionAP.php">Gestion des AP</a></li>
-                     <li class="active"><a href="../pagesGestionBDD/accueilGestionBDD.php">Gestion des enregistrements de la BDD</a></li>
-                     <li><a href="#">Configuration syst&egrave;me</a></li>
-                    </ul>
-                    <br>           
-                 </td>
-              </tr>
-              <tr>
-                 <td width="30%" class="leftmenu">
-                        <p><b>G&eacute;rer les enregistrments des AP</b></p>
-                        <ul class="nav nav-pills nav-justified">                       
-                           <li><a href="ajoutAP.php">Ajouter</a></li>
-                           <li><a href="selectModifAP.php">Modifier</a></li>                       
-                           <li><a href="selectSupprAP.php">Supprimer</a></li>
-                        </ul>
-                         <p><b>G&eacute;rer les mod&egrave;les enregistr&eacute;s</b></p>
-                        <ul class="nav nav-pills nav-justified">                       
-                           <li><a href="ajoutModele.php">Ajouter</a></li>
-                           <li><a href="selectModifModele.php">Modifier</a></li>                       
-                           <li><a href="selectSupprModele.php">Supprimer</a></li>
-                        </ul>
-                         <p><b>G&eacute;rer les lignes de commandes (CLI)</b></p>
-                        <ul class="nav nav-pills nav-justified">                       
-                           <li><a href="ajoutCLI.php">Ajouter</a></li>
-                           <li><a href="selectModifCLI.php">Modifier</a></li>                       
-                           <li><a href="supprimerCLI.php">Supprimer</a></li>
-                        </ul>                      
-                 </td>                   
+                <?php include '../includes/menus.php'; echo $menuPagesGestionBDD; ?>                 
                  <td class="informations">
                      
                      <ol class="breadcrumb">
@@ -98,7 +66,7 @@
                                 $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
                                 $resultatsAP=$connexion->query("SELECT * FROM modeles;");                                 
-                                $resultatsAP->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet                                
+                                $resultatsAP->setFetchMode(PDO::FETCH_OBJ);                                 
                                 
                                 while( $ligne = $resultatsAP->fetch() ) // on récupère la liste des membres
                                 {     
@@ -195,11 +163,11 @@
                          </div>                             
                         </form>
                         <div>
-                           <table align="center" width="80%"><tr><td align="left" width="30%">                                    
+                           <table align="center" width="80%"><tr><td align="left" width="40%">&nbsp;                                    
                            <?php
                                 if ($qtyAP>0){                                       
                                     echo '<input type="button" class="btn btn-default" name="repliquerAP" id="repliquerAP" onclick="repliquerAP('.$qtyAP.')" value="Copier"/>&nbsp;R&eacute;pliquer la 1&egrave;re ligne';
-                                    echo '</td><td align="right">';
+                                    echo '</td><td align="right" width="40%">';
                                     echo '<form id="diminueQty" name="diminueQty" class="form-inline" role="form" action="ajoutAP.php" method="POST">';
                                     echo 'Retirer une ligne&nbsp;<input type="hidden" value="'.($qtyAP-1).'" name="qtyAP"/>';
                                     //pour mémoriser les saisies déjà effectuées
@@ -216,6 +184,8 @@
                                     }                                    
                                     echo '<input type="submit" class="btn btn-warning" name="retirerForm" onMouseOver="backupAP(this.form,'.$qtyAP.')" id="retirerForm" value="-"/></form>';
                                 }
+                                else {echo '</td><td align="right" width="40%">&nbsp;';}
+                                    
                             ?>  
                             </td><td align="left" >                                
                                     <?php 
