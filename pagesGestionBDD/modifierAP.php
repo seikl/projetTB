@@ -29,14 +29,7 @@
                         //connexion a la BDD et récupération de la liste des modèles
                         include '../includes/connexionBDD.php';                    
                         include '../includes/fonctionsUtiles.php';
-                        if ($_POST) {  
-                                $listeAP=$_POST['listeAP'];
-                        }
                         
-                        foreach ($listeAP as $AP){
-                            echo $AP["nomAP"];
-                        }
-                        /*
                         //Récupération nombre des AP à modifier dans un tableau
                         $tabValeursRecues=null;
                         if (!isset($_POST['listeAP'])){$qtyAP=0;} 
@@ -51,7 +44,7 @@
                                 $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
                                 $resultatsAP=$connexion->query("SELECT * FROM modeles;");                                 
-                                $resultatsAP->setFetchMode(PDO::FETCH_OBJ);                                 
+                                $resultatsAP->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet                                
                                 
                                 while( $ligne = $resultatsAP->fetch() ) // on récupère la liste des membres
                                 {     
@@ -138,9 +131,7 @@
                                     $i++;
                                 }
                                 
-                                echo '<td align="left">Nombre d\'AP &agrave; modfier: '.($qtyAP).'<input type="hidden" value="'.$qtyAP.'" name="qtyAP"/></td>';
-                         
-                         */                                
+                                echo '<td align="left">Nombre d\'AP &agrave; modfier: '.($qtyAP).'<input type="hidden" value="'.$qtyAP.'" name="qtyAP"/></td>';                                
                                 ?>
                                 <td colspan="5" align="right"><input type="submit" class="btn btn-primary" name="submit" id="submit" value="Enregistrer les modifications"/></td>
                             </tbody>
