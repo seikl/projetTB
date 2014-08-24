@@ -54,8 +54,7 @@
                             
                             $vendorMACLinux = $vendorMAC; //pour Linux 
                             //$vendorMACWindows = preg_replace("/:/", "-", $vendorMAC); //pour Windows
-                                                        
-                            echo "<br>Nombres d'entr&eacute;es ARP dans la table: ".count($tabARP);  
+                                                         
                             echo "<br>Temps d'ex&eacute;cution: ";
                             $end = microtime(true);
                             $time = number_format(($end - $start), 2);
@@ -63,6 +62,7 @@
                             $nombreAPTrouves=0;
                             $listeAPTrouves = null;
                             $tableARPComplete=null;
+                            $modeleTrouve=false;
                             $tableARP='';
                             //enregistrement des valeurs recues dans un tableau (listeARP)
                             $i=0;
@@ -84,7 +84,7 @@
                                 }                                 
                             }
                                                  
-                            echo '<table class="table table-bordered table-hover" align="left" width="75%">';                                 
+                            echo '<table class="table table-hover" align="left" width="75%">';                                 
                             echo '<caption>Nombre d\'AP trouv&eacutes: '.$nombreAPTrouves.'</caption>';  
                             //création d'un tableau pour afficher si AP trouvés ou non                                                          
                             if ($nombreAPTrouves==0){
@@ -119,23 +119,29 @@
                                                                 "password"=>"");                                    
                                     echo '</td><td><input type="checkbox" name="chkAPSelectionne'.$i.'"/></td></tr>';
                                 }
-                                echo '<tr><td align="left" valign="top">';
+                                $modeleTrouve=true;
+                            }    
+                            echo '<tr><td align="right">';                            
+                            $boutonTableARP= '<br><br><input type="button" id="afficherTableARP" class="btn btn-info" onclick="$(';
+                            $boutonTableARP.= "'#loading2'";
+                            $boutonTableARP.= ').show();" value="Afficher la table ARP"/>';                            
+                            echo $boutonTableARP; 
+
+                            echo '</td><td align="left" valign="top">';
+                            if($modeleTrouve){                                    
                                 $infoAPTrouve = base64_encode(serialize($infoAPTrouve));                                     
                                 echo '<input type="hidden" name="infoAPTrouve" id="infoAPTrouve" value="'.$infoAPTrouve.'"/>';
                                 echo '<input type="hidden" name="qtyAP" id="qtyAP" value="'.$nombreAPTrouves.'"/>';
                                 echo '<input type="submit" class="btn btn-primary" value="Enregistrer les AP s&eacute;lectionn&eacute;s"/></td>';
-                                echo '</div></form>';
-                                
+                                echo '</div></form>';   
                             }
-                            echo '<td align="right">';
-                            
-                            $boutonTableARP= '<br><br><input type="button" id="afficherTableARP" class="btn btn-info" onclick="$(';
-                            $boutonTableARP.= "'#loading2'";
-                            $boutonTableARP.= ').show();" value="Afficher la table ARP"/>';                            
+                            else{
+                                echo '<input type="button" class="btn btn-default" value="Revenir &agrave; la saisie de recherche" onClick="history.back()"/></td>';
+                            }
+                                    
 
-                            echo $boutonTableARP;                                
-                            echo '<div id="loading2" style="display:none;">'.$tableARP.'</div>';
-                            echo '</td></tr></table>';
+                            echo '<tr><td colspan="2" align="left"><div id="loading2" style="display:none;">'.$tableARP.'</div></td></tr>';
+                            echo '</table>';
                         ?>
   
                      </ol>

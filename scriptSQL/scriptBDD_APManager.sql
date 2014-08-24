@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS  modeles (
 
 CREATE TABLE IF NOT EXISTS accessPoints(
         noAP INT NOT NULL AUTO_INCREMENT,
-        nomAP VARCHAR(25),
+        nomAP VARCHAR(50),
         adresseIPv4 VARCHAR(15) NOT NULL,
         snmpCommunity VARCHAR(12) NOT NULL DEFAULT 'public',
         username VARCHAR(20),

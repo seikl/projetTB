@@ -32,7 +32,7 @@
                         
                         //Récupération nombre d'AP à ajouter et des valeurs saisies
                         $tabValeursSaisies=null;
-                        if (!isset($_POST['qtyAP'])){$qtyAP=0;} 
+                        if (!isset($_POST['qtyAP'])){$qtyAP=1;} 
                         else {                                                        
                             $qtyAP=$_POST['qtyAP']; 
                             //vérification si ajout depuis le résultat d'une recherche
@@ -133,7 +133,7 @@
                                 <?php
                                 
                                 //Affichage du formulaire
-                                for($i=0;$i<=$qtyAP;$i++){                                                                                                            
+                                for($i=0;$i<$qtyAP;$i++){                                                                                                            
                                     echo '<tr>';
                                     
                                     $infosNomAP='placeholder="AP-'.$i.'"';  
@@ -180,7 +180,7 @@
                                     echo '</tr>';
                                 }
                                 
-                                echo '<td align="left">Nombre d\'AP &agrave; enregistrer: '.($qtyAP+1).'<input type="hidden" value="'.$qtyAP.'" name="qtyAP"/></td>';                                
+                                echo '<td align="left">Nombre d\'AP &agrave; enregistrer: '.($qtyAP).'<input type="hidden" value="'.$qtyAP.'" name="qtyAP"/></td>';                                
                                 ?>
                                 <td colspan="5" align="right"><input type="submit" class="btn btn-primary" name="submit" id="submit" value="Enregistrer"/></td>
                             </tbody>

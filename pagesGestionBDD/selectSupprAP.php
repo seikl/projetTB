@@ -39,6 +39,7 @@
 
                            $infosRecues ='Le n&eacute;ant';
                            $initialisation=true;
+                           $infoAvertissement="";
 
                            //pour vérifier si valeurs déjà existantes dans le formulaire
                            if ($_POST) {                            
@@ -157,10 +158,9 @@
 
                                 $textInfos= "&nbsp;";
                                 if (!$initialisation){                                
-                                    $textInfos ='<br>';
+                                    $textInfos ='<br>';                                    
                                     //vérification des choix effectués
-                                    if ($listeAPactuels==null){
-                                        $infoAvertissement="";
+                                    if ($listeAPactuels==null){                                        
                                         $textInfos .='<br><strong>Aucun AP s&eacute;lectionn&eacute;.</strong>';
                                     }                            
                                     else {                                     

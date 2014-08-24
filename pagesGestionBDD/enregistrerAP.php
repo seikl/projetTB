@@ -39,7 +39,7 @@
 
                                 
                                 //Rcéupération des valeurs
-                                for($i=0;$i<=$qtyAP;$i++){                                     
+                                for($i=0;$i<$qtyAP;$i++){                                     
                                     $adresseIPv4=$_POST['IPgroupeA'.$i].'.'.$_POST['IPgroupeB'.$i].'.'.$_POST['IPgroupeC'.$i].'.'.$_POST['IPgroupeD'.$i];
                                     if ($_POST['snmpCommunity'.$i]==""){ $snmpCommunity="public";}else{$snmpCommunity=$_POST['snmpCommunity'.$i];}                                    
                                     $tabInfosAP[$i]= array("nomAP" =>$_POST['nomAP'.$i],
