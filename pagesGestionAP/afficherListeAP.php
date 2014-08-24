@@ -23,9 +23,7 @@
                         <li><a href="../pagesGestionAP/accueilGestionAP.php">Accueil gestion des AP</a></li>                     
                         <li>Afficher la liste  de tous les AP inscrits</li>
                     </ol>
-                    <?php   
-                        
-                    
+                    <?php                                             
                         echo '
                             <table class="table table-condensed table-hover" align="center">                            
                             <caption> Liste des acces points enregistr&eacute;s</caption>

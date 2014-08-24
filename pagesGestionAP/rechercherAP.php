@@ -31,7 +31,7 @@
                             
                             <label for="name">Veuillez s&eacute;lectionner le type de mat&eacute;riel &agrave; rechercher et saisir la plage d'adresses &agrave; scanner</label><br>
                             <select class="form-control" name="vendorMAC">
-                            <option value="null">S&eacute;lection...&nbsp;&nbsp;&nbsp;</option>
+                            <option value="0">S&eacute;lection...&nbsp;&nbsp;&nbsp;</option>
                      
                      <?php                                          
                         //connexion a la BDD et récupération de la liste des modèles
@@ -42,7 +42,7 @@
                         try
                         {
                             
-                                $i =0;
+                                $infoModele=null;
                                 $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
                                 $resultatsAP=$connexion->query("SELECT * FROM modeles;");                                 
@@ -50,11 +50,14 @@
                                 
                                 while( $ligne = $resultatsAP->fetch() ) // on récupère la liste des membres
                                 {     
+                                    $noModeleAP=(string)$ligne->noModeleAP;
                                     $nomModele=(string)$ligne->nomModele;
                                     $versionFirmware=(string)$ligne->versionFirmware;
                                     $nomFabricant=(string)$ligne->nomFabricant;
                                     $adrMACFabricant=(string)$ligne->adrMACFabricant; 
-                                    echo '<option value="'.$adrMACFabricant.'">'.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.' (MAC: '.$adrMACFabricant.')&nbsp;&nbsp;&nbsp;</option>';
+                                    $infoModele = array("adrMACFabricant"=>$adrMACFabricant,"noModeleAP"=>$noModeleAP);
+                                    $infoModele = base64_encode(serialize($infoModele));
+                                    echo '<option value="'.$infoModele.'">'.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.' (MAC: '.$adrMACFabricant.')&nbsp;&nbsp;&nbsp;</option>';
                                 }
                             $resultatsAP->closeCursor(); // on ferme le curseur des résultats
                                                 

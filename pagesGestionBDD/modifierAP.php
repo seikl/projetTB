@@ -108,7 +108,7 @@
                                     if ($AP["password"]==""){$infosPassword='placeholder="non indiqu&eacute;"';}                                      
                                     
                                     echo '<td><input type="hidden" class="form-control" name="noAP'.$i.'" id="noAP'.$i.'"'.$infosNoAP.'>';
-                                    echo '<input type="text" class="form-control" name="nomAP'.$i.'" id="nomAP'.$i.'" size="15" maxlength="25" '.$infosNomAP.'></td>';                                    
+                                    echo '<input type="text" class="form-control" name="nomAP'.$i.'" id="nomAP'.$i.'" size="18" maxlength="25" '.$infosNomAP.'></td>';                                    
                                     echo '<td><select class="form-control" id="noModeleAP'.$i.'" name="noModeleAP'.$i.'">';
                                     echo '<option value="">Choix du mod&egrave;le</option>';
                                     foreach ($tabListeModeles as $modele){
