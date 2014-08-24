@@ -30,14 +30,17 @@
                         <div class="form-group">       
                             
                             <label for="name">Veuillez s&eacute;lectionner le type de mat&eacute;riel &agrave; rechercher et saisir la plage d'adresses &agrave; scanner</label><br>
-                            <select class="form-control" name="vendorMAC">
-                            <option value="0">S&eacute;lection...&nbsp;&nbsp;&nbsp;</option>
+                            <select class="form-control" name="infosModele">
+                            
                      
                      <?php                                          
                         //connexion a la BDD et récupération de la liste des modèles
                         include '../includes/connexionBDD.php';                    
                         include '../includes/fonctionsUtiles.php';
                         
+                        $infoModele = array("adrMACFabricant"=>'non indiqué',"noModeleAP"=>'0');
+                        $infoModele = base64_encode(serialize($infoModele));
+                        echo '<option value="'.$infoModele.'">S&eacute;lection...&nbsp;&nbsp;&nbsp;</option>';
                         //récupération des infos enregistrées dans la BDD
                         try
                         {

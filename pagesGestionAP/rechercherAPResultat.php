@@ -34,13 +34,12 @@
                             
                             $ip = $_POST['groupeA'].".".$_POST['groupeB'].".".$_POST['groupeC'].".".$_POST['groupeD'];                            
                             $masque = (int)$_POST['masque'];
-                            $tabinfosRecues = unserialize(base64_decode($_POST['vendorMAC']));
+                            $tabinfosRecues = unserialize(base64_decode($_POST['infosModele']));
                             $vendorMAC = $tabinfosRecues["adrMACFabricant"];
                             $noModeleAP = $tabinfosRecues["noModeleAP"];
                             
                             $adrReseau = netmask($ip, $masque);
                             $adrBroadcast =cidr2broadcast($adrReseau, $masque);  
-                            
                             echo "<br>Adresse r&eacute;seau: ".$adrReseau." --- Masque: ".$masque."    --- Broadcast: ".$adrBroadcast;
   
                             $adresseDebut = long2ip(ip2long($adrReseau)+1);
@@ -53,8 +52,8 @@
                             
                             $tabARP = quick_ipmac_scan(ip2long($adresseDebut),ip2long($adresseFin)); 
                             
-                            $vendorMACLinux = preg_replace("/-/", ":", $vendorMAC); //pour Linux 
-                            $vendorMACWindows = preg_replace("/:/", "-", $vendorMAC); //pour Windows
+                            $vendorMACLinux = $vendorMAC; //pour Linux 
+                            //$vendorMACWindows = preg_replace("/:/", "-", $vendorMAC); //pour Windows
                                                         
                             echo "<br>Nombres d'entr&eacute;es ARP dans la table: ".count($tabARP);  
                             echo "<br>Temps d'ex&eacute;cution: ";
@@ -70,38 +69,38 @@
                             foreach($tabARP as $ligneTabARP) {
                                 $hostname=strstr($ligneTabARP, ' ', true);
                                 $adresseIP = strstr($ligneTabARP,'(');$adresseIP = substr($adresseIP,1);$adresseIP=strstr($adresseIP, ')', true);
-                                $adresseMAC = strstr($ligneTabARP,'at ');
+                                $adresseMAC = strstr($ligneTabARP,'at ');$adresseMAC = strstr($adresseMAC,' ');
                                 $tableARPComplete[$i]=array("hostname"=>$hostname,"adresseIP"=>$adresseIP,"adresseMAC"=>$adresseMAC);
                                 $i++;
                             }                               
-                            //parcours du tableau                          
+                            //parcours du tableau pour vérifier si des MAC correspondent au modèle recherché                         
                             foreach ($tableARPComplete as $host){
+                                
                                 //pour se débarraser des entrées inutiles (sans adresse MAC) de la table ARP 
-                                if ($host["adresseMAC"]!=")"){$tableARP .='>> '.$host["hostname"].' '.$host["adresseIP"].' '.$host["adresseMAC"].'<br>';}
-                                if(preg_match("/".$vendorMACLinux."/i", $host["adresseMAC"])) {
+                                if (preg_match("/ether/i", $host["adresseMAC"])){$tableARP .='>> '.$host["hostname"].' '.$host["adresseIP"].' '.$host["adresseMAC"].'<br>';}
+                                if(preg_match("/".$vendorMAC."/i", strstr($host["adresseMAC"],'on',true))) {
                                     $listeAPTrouves[$nombreAPTrouves] = array("adresseIP"=>$host["adresseIP"],"hostname"=>$host["hostname"],"adresseMAC"=>$host["adresseMAC"]);                                    
                                     $nombreAPTrouves++;                                    
-                                }
+                                }                                 
                             }
-                            //création d'un tableau pour afficher si AP trouvés ou non  
-                            echo '<table class="table table-condensed table-striped" align="left">';                                
+                                                 
+                            echo '<table class="table table-bordered table-hover" align="left" width="75%">';                                 
+                            echo '<caption>Nombre d\'AP trouv&eacutes: '.$nombreAPTrouves.'</caption>';  
+                            //création d'un tableau pour afficher si AP trouvés ou non                                                          
                             if ($nombreAPTrouves==0){
-                                echo '<thead><tr><th>';
-                                echo 'Aucun AP correspondant &agrave; ce mod&egrave;le n\'a &eacute;t&eacute; trouv&eacute.';
-                                echo '<br> Cliquez sur le bouton ci-dessous pour plus d\'informations.';
-                                echo '</th></tr></thead></table>';                                    
+                                echo '<thead><tr><th>Aucun AP correspondant &agrave; ce mod&egrave;le n\'a &eacute;t&eacute; trouv&eacute'; 
+                                echo '('.$vendorMACLinux.')</th></tr></thead>';                                 
                             }
                             else{
-                                echo '<form id="ajoutAP" name="ajoutAP" role="form" action="enregistrerAP.php" method="POST">';
-                                echo '<caption>Nombre d\'AP trouv&eacutes: '.$nombreAPTrouves.'</caption>';
-                                echo '<thead><tr><th>'; 
+                                echo '<form id="ajoutAPRecherche" name="ajoutAPRecherche" class="form-inline" role="form" action="../pagesGestionBDD/ajoutAP.php" method="POST">';
+                                echo '<div class="form-group">';                                   
+                                echo '<thead><tr><th>';
                                 echo 'Informations sur l\'AP';
                                 echo '</th><th>';
                                 echo 'Enregistrer?';
                                 echo '</th></tr></thead>';
-                                // création d'un formulaire pour proposer l'enregistrement à la volée des AP trouvés
-                                echo '<tbody>';                                                                
-                                for ($i=0;$i<count($listeAPTrouves);$i++){
+                                // création des champs pour effectuer l'enregistrement à la volée des AP trouvés                                                                                                
+                                for ($i=0;$i<$nombreAPTrouves;$i++){
                                     $adresseIPv4 = $listeAPTrouves[$i]["adresseIP"];
                                     $infosIPgroupeA=strstr($adresseIPv4, '.', true);$adresseIPv4 =strstr($adresseIPv4, '.');$adresseIPv4 =  substr($adresseIPv4,1);
                                     $infosIPgroupeB=strstr($adresseIPv4, '.', true);$adresseIPv4 =strstr($adresseIPv4, '.');$adresseIPv4 =  substr($adresseIPv4,1);
@@ -109,27 +108,34 @@
                                     $infosIPgroupeD=$adresseIPv4;
                                     echo '<tr><td>';
                                     echo $listeAPTrouves[$i]["hostname"].' '.$listeAPTrouves[$i]["adresseIP"];
-                                    echo '<input type="hidden" name="nomAP'.$i.'" id="nomAP'.$i.'" value="'.$listeAPTrouves[$i]["hostname"].'">';    
-                                    echo '<input type="hidden" name="noModeleAP'.$i.'" id="noModeleAP'.$i.'" value="'.$noModeleAP.'">';
-                                    echo '<input type="hidden" name="infosIPgroupeA'.$i.'" id="infosIPgroupeA'.$i.'" value="'.$infosIPgroupeA.'">';
-                                    echo '<input type="hidden" name="infosIPgroupeB'.$i.'" id="infosIPgroupeB'.$i.'" value="'.$infosIPgroupeB.'">';
-                                    echo '<input type="hidden" name="infosIPgroupeC'.$i.'" id="infosIPgroupeC'.$i.'" value="'.$infosIPgroupeC.'">';
-                                    echo '<input type="hidden" name="infosIPgroupeD'.$i.'" id="infosIPgroupeD'.$i.'" value="'.$infosIPgroupeD.'">';
-                                    echo '<input type="hidden" name="snmpCommunity'.$i.'" id="snmpCommunity'.$i.'" value="">';
-                                    echo '<input type="hidden" name="username'.$i.'" id="username'.$i.'" value="">';
-                                    echo '<input type="hidden" name="password'.$i.'" id="password'.$i.'" value="">';
-                                    echo '</td><td><input type="checkbox" name="APSelectionne'.$i.'"></td></tr>';
+                                    $infoAPTrouve[$i] = array("nomAP"=>$listeAPTrouves[$i]["hostname"],
+                                                                "noModeleAP"=>$noModeleAP,
+                                                                "IPgroupeA"=>$infosIPgroupeA,
+                                                                "IPgroupeB"=>$infosIPgroupeB,
+                                                                "IPgroupeC"=>$infosIPgroupeC,
+                                                                "IPgroupeD"=>$infosIPgroupeD,
+                                                                "snmpCommunity"=>"",
+                                                                "username"=>"",
+                                                                "password"=>"");                                    
+                                    echo '</td><td><input type="checkbox" name="chkAPSelectionne'.$i.'"/></td></tr>';
                                 }
-                                echo '<input type="hidden" name="qtyAP" id="qtyAP" value="'.count($listeAPTrouves).'"></form></tbody>';
+                                echo '<tr><td align="left" valign="top">';
+                                $infoAPTrouve = base64_encode(serialize($infoAPTrouve));                                     
+                                echo '<input type="hidden" name="infoAPTrouve" id="infoAPTrouve" value="'.$infoAPTrouve.'"/>';
+                                echo '<input type="hidden" name="qtyAP" id="qtyAP" value="'.$nombreAPTrouves.'"/>';
+                                echo '<input type="submit" class="btn btn-primary" value="Enregistrer les AP s&eacute;lectionn&eacute;s"/></td>';
+                                echo '</div></form>';
                                 
                             }
-                            echo '</table>';
-                            $boutonTableARP= '<br><br><button id="afficherTableARP" class="btn btn-info" onclick="$(';
+                            echo '<td align="right">';
+                            
+                            $boutonTableARP= '<br><br><input type="button" id="afficherTableARP" class="btn btn-info" onclick="$(';
                             $boutonTableARP.= "'#loading2'";
-                            $boutonTableARP.= ').show();">Afficher la table ARP compl&egrave;te</button>';                            
+                            $boutonTableARP.= ').show();" value="Afficher la table ARP"/>';                            
 
                             echo $boutonTableARP;                                
-                            echo '<div id="loading2" style="display:none;" >'.$tableARP.'</div>';
+                            echo '<div id="loading2" style="display:none;">'.$tableARP.'</div>';
+                            echo '</td></tr></table>';
                         ?>
   
                      </ol>
