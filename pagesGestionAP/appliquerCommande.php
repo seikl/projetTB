@@ -149,7 +149,7 @@
                                 }
                                 else{
                                     echo '<tr class="danger"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';
-                                    $erreur = 'Pas de r&eacute;ponse re&ccedil;ue ('.$info_erreur.')';
+                                    $erreur = 'Pas de r&eacute;ponse re&ccedil;ue';
                                     echo '</td><td>'.$erreur;                                       
                                     echo '</td><td><strong>Not OK</strong></td></tr>'; 
                                     file_put_contents($nomFichier, '<p><u><b>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</b></u><br>'.$erreur.'</p>', FILE_APPEND);

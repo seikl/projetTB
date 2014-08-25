@@ -182,12 +182,12 @@
                                $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
                                if ($noModele=='0'){
-                                   $resultatsCLI=$connexion->query("SELECT * FROM modeles m, typesCommandes tc, lignesCommande lc
-                                                                   WHERE lc.noTypesCommande = tc.noTypesCommande AND lc.noModeleAP = m.noModeleAP;");                                 
+                                   $resultatsCLI=$connexion->query("SELECT * FROM modeles m, typeCommandes tc, lignesCommande lc
+                                                                   WHERE lc.notypeCommande = tc.notypeCommande AND lc.noModeleAP = m.noModeleAP;");                                 
                                }
                                else{
-                                   $resultatsCLI=$connexion->query("SELECT * FROM modeles m, typesCommandes tc, lignesCommande lc
-                                                                   WHERE lc.noTypesCommande = tc.noTypesCommande AND lc.noModeleAP = m.noModeleAP AND lc.noModeleAP =".$noModele.";");
+                                   $resultatsCLI=$connexion->query("SELECT * FROM modeles m, typeCommandes tc, lignesCommande lc
+                                                                   WHERE lc.notypeCommande = tc.notypeCommande AND lc.noModeleAP = m.noModeleAP AND lc.noModeleAP =".$noModele.";");
                                }
 
                                $resultatsCLI->setFetchMode(PDO::FETCH_OBJ);                                 
@@ -195,7 +195,7 @@
                                
                                while( $ligne = $resultatsCLI->fetch() ) // on récupère la liste des membres
                                {     
-                                   $typesCommande=(string)$ligne->typesCommande;
+                                   $typeCommande=(string)$ligne->typeCommande;
                                    $description=(string)$ligne->description;
                                    $noCLI=(string)$ligne->noCLI;
                                    $ligneCommande=(string)$ligne->ligneCommande;
@@ -207,13 +207,13 @@
                                    $versionFirmware=(string)$ligne->versionFirmware;
 
                                    if ($noCommandeChoisie == $noCLI){                                
-                                       echo '<option value="'.$noCLI.'" selected>'.$typesCommande.' ( protocole ['.$protocole.':'.$portProtocole.'], mod&egrave;le concern&eacute;: '.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';
+                                       echo '<option value="'.$noCLI.'" selected>'.$typeCommande.' ( protocole ['.$protocole.':'.$portProtocole.'], mod&egrave;le concern&eacute;: '.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';
                                        $commandeTrouvee = true;
                                        $commandeChoisie=array("noCLI"=>$noCLI,"ligneCommande"=>$ligneCommande,"protocole"=>$protocole, "portProtocole"=>$portProtocole);
                                        $descriptionChoixCLI= $description;
                                    }
                                    else {
-                                       echo '<option value="'.$noCLI.'">'.$typesCommande.' ( protocole ['.$protocole.':'.$portProtocole.'], mod&egrave;le concern&eacute;: '.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';                             
+                                       echo '<option value="'.$noCLI.'">'.$typeCommande.' ( protocole ['.$protocole.':'.$portProtocole.'], mod&egrave;le concern&eacute;: '.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';                             
                                    }
 
                                }

@@ -41,21 +41,21 @@ CREATE TABLE IF NOT EXISTS  lignesCommande (
         protocole VARCHAR(10) NOT NULL,
         portProtocole  SMALLINT NOT NULL,
         noModeleAP INT NOT NULL,
-        noTypesCommande INT NOT NULL,
-     PRIMARY KEY (noCli,noModeleAP,noTypesCommande)
+        notypeCommande INT NOT NULL,
+     PRIMARY KEY (noCli,noModeleAP,notypeCommande)
 );
 
-CREATE TABLE IF NOT EXISTS  typesCommandes (
-        noTypesCommande INT NOT NULL AUTO_INCREMENT,
-        typesCommande VARCHAR(255) NOT NULL,
+CREATE TABLE IF NOT EXISTS  typeCommandes (
+        notypeCommande INT NOT NULL AUTO_INCREMENT,
+        typeCommande VARCHAR(100) NOT NULL,
         description VARCHAR(255),
-     PRIMARY KEY (noTypesCommande)
+     PRIMARY KEY (notypeCommande)
 );
 
 ALTER TABLE lignesCommande ADD FOREIGN KEY (noModeleAP)
 REFERENCES modeles(noModeleAP);
-ALTER TABLE lignesCommande ADD FOREIGN KEY (noTypesCommande)
-REFERENCES typesCommandes (noTypesCommande);
+ALTER TABLE lignesCommande ADD FOREIGN KEY (notypeCommande)
+REFERENCES typeCommandes (notypeCommande);
 
 
 /*Insertion de données pour les tests*/
@@ -72,16 +72,16 @@ insert into accessPoints (nomAP,adresseIPv4,noModeleAP) values('LNB-0068','172.1
 insert into accessPoints (nomAP,adresseIPv4,noModeleAP) values('LNB-0069 ','172.16.6.44',3);
 insert into accessPoints (nomAP,adresseIPv4,noModeleAP) values('LNB-0138','192.168.18.41',3);
 insert into accessPoints (nomAP,adresseIPv4,password,snmpCommunity,noModeleAP) values('APTOOL','127.0.0.1','aptool','public',4);
-insert into typesCommandes (typesCommande,description) values('Afficher infos système','Sert à afficher les informations systèmes via une commande TELNET');
-insert into typesCommandes (typesCommande,description) values('Afficher la page d\'accueil','Envoi d\'une requête GET / en HTTP');
-insert into typesCommandes (typesCommande,description) values('Afficher la page d\'informations','Envoi d\'une requête GET / en HTTP pour obtenir la page d\'informations d\'un AP');
-insert into typesCommandes (typesCommande,description) values('Afficher le nombre d\'impressions','Afficher le nombre d\'impressions via un OID SNMP');
-insert into typesCommandes (typesCommande,description) values('Parcourir toutes les OID SNMP','Effectue un snmpwalk à la racine');
-insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values('show system\r\nquit\r\n','telnet',23,1,1);
-insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values('uname -a\r\nquit\r\n','telnet',23,2,1);
-insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values('.1.3.6.1.2.1.43.10.2.1.4','snmp',161,3,4);
-insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values('.','snmp',161,4,5);
-insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values('GET / HTTP/1.1
+insert into typeCommandes (typeCommande,description) values('Afficher infos système','Sert à afficher les informations systèmes via une commande TELNET');
+insert into typeCommandes (typeCommande,description) values('Afficher la page d\'accueil','Envoi d\'une requête GET / en HTTP');
+insert into typeCommandes (typeCommande,description) values('Afficher la page d\'informations','Envoi d\'une requête GET / en HTTP pour obtenir la page d\'informations d\'un AP');
+insert into typeCommandes (typeCommande,description) values('Afficher le nombre d\'impressions','Afficher le nombre d\'impressions via un OID SNMP');
+insert into typeCommandes (typeCommande,description) values('Parcourir toutes les OID SNMP','Effectue un snmpwalk à la racine');
+insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('show system\r\nquit\r\n','telnet',23,1,1);
+insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('uname -a\r\nquit\r\n','telnet',23,2,1);
+insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('.1.3.6.1.2.1.43.10.2.1.4','snmp',161,3,4);
+insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('.','snmp',161,4,5);
+insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('GET / HTTP/1.1
 Host: 0.0.0.0
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
@@ -91,7 +91,7 @@ Referer: http://0.0.0.0/index.html
 Authorization: Basic OnJlcHVpcw==
 Connection: keep-alive
 ','http',80,1,2);
-insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,noTypesCommande) values('GET /printer/maininfo.html HTTP/1.1
+insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('GET /printer/maininfo.html HTTP/1.1
 Host: 172.16.6.63
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
