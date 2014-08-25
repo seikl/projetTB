@@ -85,7 +85,7 @@
                                 echo '<thead><tr><th>';
                                 echo 'Informations sur l\'AP';
                                 echo '</th><th>';
-                                echo 'Enregistrer?';
+                                echo 'Enregistrer? ( tous: <input type="checkbox" onClick="selectAll(this)"/> )';
                                 echo '</th></tr></thead>';
                                 // création des champs pour effectuer l'enregistrement à la volée des AP trouvés                                                                                                
                                 for ($i=0;$i<$nombreAPTrouves;$i++){
@@ -153,6 +153,14 @@
              d.getElementById('loading2').style.display = 'show';
            };
          }(document));
-     </script>    
+                  
+        function selectAll(all){
+          var checked = all.checked;
+          var chkBoxes = document.getElementsByTagName("input");
+          for (var counter=0;counter<chkBoxes.length;counter++) {
+          chkBoxes[counter].checked= checked;
+          }
+        }          
+    </script>    
   </body>
 </html>
