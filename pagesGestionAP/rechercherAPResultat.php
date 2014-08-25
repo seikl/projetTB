@@ -52,7 +52,6 @@
                             
                             $tabARP = quick_ipmac_scan(ip2long($adresseDebut),ip2long($adresseFin)); 
                             
-                            $vendorMACLinux = $vendorMAC; //pour Linux 
                             //$vendorMACWindows = preg_replace("/:/", "-", $vendorMAC); //pour Windows
                                                          
                             echo "<br>Temps d'ex&eacute;cution: ";
@@ -61,24 +60,13 @@
                             echo $time, ' secondes<br><br>';                            
                             $nombreAPTrouves=0;
                             $listeAPTrouves = null;
-                            $tableARPComplete=null;
                             $modeleTrouve=false;
-                            $tableARP='';
-                            //enregistrement des valeurs recues dans un tableau (listeARP)
-                            $i=0;
-                            foreach($tabARP as $ligneTabARP) {
-                                $hostname=strstr($ligneTabARP, ' ', true);
-                                $adresseIP = strstr($ligneTabARP,'(');$adresseIP = substr($adresseIP,1);$adresseIP=strstr($adresseIP, ')', true);
-                                $adresseMAC = strstr($ligneTabARP,'at ');$adresseMAC = strstr($adresseMAC,' ');
-                                $tableARPComplete[$i]=array("hostname"=>$hostname,"adresseIP"=>$adresseIP,"adresseMAC"=>$adresseMAC);
-                                $i++;
-                            }                               
+                            $tableARP='';                              
                             //parcours du tableau pour vérifier si des MAC correspondent au modèle recherché                         
-                            foreach ($tableARPComplete as $host){
-                                
+                            foreach ($tabARP as $host){                                
                                 //pour se débarraser des entrées inutiles (sans adresse MAC) de la table ARP 
-                                if (preg_match("/ether/i", $host["adresseMAC"])){$tableARP .='>> '.$host["hostname"].' '.$host["adresseIP"].' '.$host["adresseMAC"].'<br>';}
-                                if(preg_match("/".$vendorMAC."/i", strstr($host["adresseMAC"],'on',true))) {
+                                $tableARP .='>> '.$host["hostname"].' '.$host["adresseIP"].' '.$host["adresseMAC"].'<br>';
+                                if(preg_match("/".$vendorMAC."/i", $host["adresseMAC"])) {
                                     $listeAPTrouves[$nombreAPTrouves] = array("adresseIP"=>$host["adresseIP"],"hostname"=>$host["hostname"],"adresseMAC"=>$host["adresseMAC"]);                                    
                                     $nombreAPTrouves++;                                    
                                 }                                 
@@ -89,7 +77,7 @@
                             //création d'un tableau pour afficher si AP trouvés ou non                                                          
                             if ($nombreAPTrouves==0){
                                 echo '<thead><tr><th>Aucun AP correspondant &agrave; ce mod&egrave;le n\'a &eacute;t&eacute; trouv&eacute'; 
-                                echo '('.$vendorMACLinux.')</th></tr></thead>';                                 
+                                echo '('.$vendorMAC.')</th></tr></thead>';                                 
                             }
                             else{
                                 echo '<form id="ajoutAPRecherche" name="ajoutAPRecherche" class="form-inline" role="form" action="../pagesGestionBDD/ajoutAP.php" method="POST">';

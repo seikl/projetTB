@@ -182,7 +182,7 @@
                                 
                                 echo '<td align="left">Nombre d\'AP &agrave; enregistrer: '.($qtyAP).'<input type="hidden" value="'.$qtyAP.'" name="qtyAP"/></td>';                                
                                 ?>
-                                <td colspan="5" align="right"><input type="submit" class="btn btn-primary" name="submit" id="submit" value="Enregistrer"/></td>
+                                <td colspan="5" align="right"><?php if($qtyAP>0){echo '<input type="submit" class="btn btn-primary" name="submit" id="submit" value="Enregistrer"/></td>';}?>
                             </tbody>
                             </table>                                    
                          </div>                             
