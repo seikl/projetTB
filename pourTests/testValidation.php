@@ -12,45 +12,77 @@
   </head>
     <body>
      
-        <form method="post" name="selectionAP" id="selectionAP">
-            <table>
-                <tr><td>
-               		<label for='items'>Number of Items: (min: 1)</label><br>
-		<input type="text" name="items" ><bR>
-                    </td>
-<td>
-		<label for='verification'>Amount: (min 10 max 100)</label><br>
-		<input type="text" name="verification" >
-                </td><td>
-		<label for='factor'>Factor: (Between 0.08 and 0.09)</label><br>
-		<input type="text" name="factor" >
-                </td></tr>
-	   <tr><td>
-	<input type="submit" name='submit' value="Submit"> 
-               </td></tr> 
-            </table>
-
+<form id="myform" action="#">
+  
+ <p>
+   <label><input type='radio' name='subscribe' id='chksubscribe' />Subscribe to our Newsletter</label> 
+ </p>
+  <p class='container'>
+   <label for='email'> Email: </label>
+   <input type='text' name='email' id='email' class='skip'/>
+ </p>
+ 
+ 
+  <p>
+   <label><input type='radio' name='subscribe' id='chkCommande' />une Commande</label> 
+ </p>
+   <p class='container'>typeCommande: </label>
+   <input type='text' name='typeCommande' id='typeCommande' class="skip"/>
+ </p>
+<input type="submit" name="submit" value="Submit">
 </form>
+        
    <script language="JavaScript">
-        //Pour la validation de la sélection d'un modele
-        $(function()
+$(function()
+  {
+    var validator = $('#myform').validate(
+      {
+        ignore:'.skip',
+        rules:
+        { 
+          'email':{ required:true, email:true },
+        typeCommande: 
         {
-            $("#selectionAP").validate(
-              {                
-                rules: 
-                {            
-                  verification:
-                  {
-                    required: true,
-                    range:[8,32]
-                  }    
-                },
-                errorElement: "divBelow",
-                errorPlacement: function(error, element) {
-                    error.insertAfter(element);                    
-                }                
-              });
-        });   
+          required: true                   
+        } 
+        }      
+    });
+    
+    $('#chksubscribe').change(function() 
+    {
+      if($(this).is(":checked")) 
+      {
+        $('#email').removeClass('skip');
+        $('#typeCommande').addClass('skip');
+      }
+      else
+      {
+          alert('');
+        $('#typeCommande').removeClass('skip');
+        $('#email').addClass('skip');
+      }
+      validator.resetForm();
+    });
+    
+    $('#chkCommande').change(function() 
+    {
+      if($(this).is(":checked")) 
+      {
+          alert('');
+        $('#typeCommande').removeClass('skip');
+        $('#email').addClass('skip');          
+
+      }
+      else
+      {
+        $('#email').removeClass('skip');
+        $('#typeCommande').addClass('skip');
+      }
+      validator.resetForm();
+    });
+    
+    
+  });   
     </script>       
     </body>
 </html>

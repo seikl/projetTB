@@ -48,7 +48,7 @@
                             
                             while( $ligne = $resultatsDescription->fetch()){ // on récupère la liste des descriptions   
                                 $noTypeCommande= (string)$ligne->notypeCommande;$typeCommande =(string)$ligne->typeCommande;$description =(string)$ligne->description;
-                                $tabListedescrioptions[$i]=array("notypeCommande"=>$noTypeCommande,"typeCommande" =>$typeCommande, "description"=>$description);
+                                $tabListeDescriptions[$i]=array("notypeCommande"=>$noTypeCommande,"typeCommande" =>$typeCommande, "description"=>$description);
                                 $i++;
                             }
                             $resultatsAP->closeCursor(); // on ferme le curseur des résultats                            
@@ -64,7 +64,7 @@
                         
                     ?>
                        
-                    <form id="ajoutCLI" name="ajoutCLI" class="form-inline" role="form" action="ajoutCLI.php" method="POST">
+                       <form id="ajoutCLI" name="ajoutCLI" class="form-inline" role="form" action="enregistrerCLI.php" method="POST">
                         <div class="form-group">       
                             <table border="0" class="table">
                                 <tr><td colspan="2">
@@ -96,33 +96,37 @@
                                 </td></tr>  
                                 <tr><td colspan="2">                         
                                 <strong class="obligatoire">*&nbsp;</strong><label for='choixAjoutDescription'>Choix ou ajout d'une description pour la commande</label><br>  
-                                <input type="radio" name="choixAjoutDescription" id="choixDescription" class="form-control" value="choix" checked>    
+                                <input type="radio" name="choixAjoutDescription" id="choixDescription" value="selection" class="form-control" checked/>    
                                 <?php
-                                    echo '<select class="form-control" id="notypeCommande" name="notypeCommande" onChange="document.getElementById(\'choixDescription\').checked = true;">';
+                                    echo '<select class="form-control skip" id="choixTypeCommande" name="choixTypeCommande" onChange="document.getElementById(\'choixDescription\').checked=true;">';
                                     echo '<option value="">Choix de la description</option>';
-                                    foreach ($tabListedescrioptions as $description){
-                                        echo '<option value="'.$description["notypeCommande"].'">'.$description["typeCommande"].' ('.substr($description["description"],0,40).'...) &nbsp;&nbsp;&nbsp;</option>';                                                    
+                                    foreach ($tabListeDescriptions as $description){
+                                        $tabDescription=array("notypeCommande"=>$description["notypeCommande"],"typeCommande"=>$description["typeCommande"],"description"=>substr($description["description"],0,60));
+                                        $tabDescription= base64_encode(serialize($tabDescription));
+                                        echo '<option value="'.$tabDescription.'">'.$description["typeCommande"].' ('.substr($description["description"],0,40).'...) &nbsp;&nbsp;&nbsp;</option>';                                                    
                                     }
                                     echo '</select>';                                
                                 ?>  
                                 </td></tr>
                                 <tr><td colspan="2">       
-                                    <strong class="obligatoire">*&nbsp;</strong><label for='typeCommande'>Nouveau type de commande</label><br> 
+                                    <strong class="obligatoire">*&nbsp;</strong><label for='typeCommande'>OU  saisie d'un nouvel intitul&eacute; de commande</label><br> 
                                 </td></tr>
                                 <tr><td>
-                                    <input type="radio" name="choixAjoutDescription" id="ajoutDescription" class="form-control" value="ajout">
+                                    <input type="radio" name="choixAjoutDescription" id="ajoutDescription" value="ajout" class="form-control"/>
                                 </td><td>
-                                    <input type="text" name="typeCommande" id="typeCommande" size="41" maxlength="100" class="form-control" placeholder="Afficher les infos syst&egrave;me" onClick="document.getElementById('ajoutDescription').checked = true;">                                    
+                                    <input type="text" name="typeCommande" id="typeCommande" size="41" maxlength="100" class="form-control skip" placeholder="Afficher les infos syst&egrave;me" onClick="document.getElementById('ajoutDescription').checked=true;">                                    
                                 </td></tr>
                                 <tr><td>
-                                        
+                                       &nbsp; 
                                 </td><td>
-                                    <textarea name="description" rows="2" cols="37" maxlength="255" class="form-control" placeholder="Envoie une requ&ecirc;te TELNET pour obtenir le statut g&eacute;n&eacute;ral"></textarea>
+                                    <label for='typeCommande'>Description d&eacute;taill&eacute;e:</label><br>
+                                    <textarea name="description" rows="2" cols="40" maxlength="255" class="form-control" placeholder="Envoie une requ&ecirc;te TELNET pour obtenir le statut g&eacute;n&eacute;ral"></textarea>
                                 </td></tr>                               
                                 <tr><td align="right">
-                                    <input type="submit" id="submit" class="btn btn-primary" value="Enregistrer"/>                           
+                                        &nbsp;            
                                 </td><td>
-                                        Tous les champs marqu&eacute;s d'une <strong class="obligatoire">*&nbsp;</strong>sont obligatoires.
+                                        <input type="submit" id="submit" class="btn btn-primary" value="Enregistrer"/>
+                                        Tous les champs marqu&eacute;s d'une <strong class="obligatoire">*</strong>&nbsp;sont obligatoires.
                                 </td></tr>
                             </table>                                    
                          </div>                             
@@ -139,10 +143,9 @@
     <script type="text/javascript">
         $(function()
         {
-
-            if(document.getElementById('choixDescription').checked) {
             $("#ajoutCLI").validate(
-              {                
+              {         
+                ignore:'.skip',                          
                 rules: 
                 { 
                     ligneCommande: 
@@ -165,47 +168,50 @@
                     notypeCommande: 
                     {
                       required: true                   
-                    }  
+                    },
+                    typeCommande:
+                    {
+                      required: true                   
+                    }                            
                 },
                 errorElement: "divRight",
                 errorPlacement: function(error, element) {
                     error.insertAfter(element);                    
                 }                
               });
-            }else if(document.getElementById('ajoutDescription').checked) {
-            $("#ajoutCLI").validate(
-              {                
-                rules: 
-                { 
-                    ligneCommande: 
-                    {
-                      required: true                   
-                    },
-                    protocole: 
-                    {
-                      required: true
-                    },
-                    portProtocole: 
-                    {
-                      required: true,
-                      range:[1,65535]
-                    }, 
-                    noModeleAP: 
-                    {
-                      required: true
-                    },
-                    typeCommande: 
-                    {
-                      required: true                   
-                    }    
-                },
-                errorElement: "divRight",
-                errorPlacement: function(error, element) {
-                    error.insertAfter(element);                    
-                }                
-              });
-            }              
-        });        
+            //permet de décider quel formulaire (ajout d'une description ou choix d'une existante) sera obligatoire
+            $('#choixDescription').change(function() 
+            {
+              if($(this).is(":checked")) 
+              {
+                $('#choixTypeCommande').removeClass('skip');
+                $('#typeCommande').addClass('skip');
+              }
+              else
+              {
+                $('#typeCommande').removeClass('skip');
+                $('#choixTypeCommande').addClass('skip');
+              }
+              validator.resetForm();
+            });
+
+            $('#ajoutDescription').change(function() 
+            {
+              if($(this).is(":checked")) 
+              {
+                alert('');
+                $('#typeCommande').removeClass('skip');
+                $('#choixTypeCommande').addClass('skip');          
+
+              }
+              else
+              {
+                $('#choixTypeCommande').removeClass('skip');
+                $('#typeCommande').addClass('skip');
+              }
+              validator.resetForm();
+            });              
+        });
     </script>      
   </body>
 </html>
