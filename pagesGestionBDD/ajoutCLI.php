@@ -66,27 +66,25 @@
                        
                     <form id="ajoutCLI" name="ajoutCLI" class="form-inline" role="form" action="ajoutCLI.php" method="POST">
                         <div class="form-group">       
-
                             <table border="0" class="table">
                                 <tr><td colspan="2">
                                     <strong class="obligatoire">*&nbsp;</strong><label for='ligneCommande'>Ligne de commande &agrave; transmettre:</label><br>
-                                    <input type="textarea" class="form-control" name="ligneCommande" id="ligneCommande" placeholder="show system\r\n\quit\r\n">                                                                        
+                                    <textarea rows="4" cols="50" class="form-control" form="ajoutCLI" name="ligneCommande" id="ligneCommande" placeholder="show system\r\n\quit\r\n"></textarea>                                                                        
                                 </td></tr>
-                                <tr><td align="right">
-                                    <strong class="obligatoire">*&nbsp;</strong><label for='protocole'>Choix du protocole</label><br>
+                                <tr><td align="left" colspan="2"><p>
+                                    <strong class="obligatoire">*&nbsp;</strong><label for='protocole'>Choix du protocole et saisie du No de port</label><br>
                                     <select class="form-control" id="protocole" name="protocole"> 
-                                        <option value="">Choix du protocole</option>';
-                                        <option value="TELNET">TELNET</option>';
-                                        <option value="HTTP">HTTP</option>';
-                                        <option value="HTTPS">HTTPS</option>';
-                                        <option value="SNMP">SNMP</option>';                                        
-                                    </select>
-                                </td><td>
-                                    <strong class="obligatoire">*&nbsp;</strong><label for='portProtocole'>saisie du No de port</label><br>
+                                        <option value="">Choix du protocole &nbsp;&nbsp;&nbsp;</option>';
+                                        <option value="TELNET">TELNET&nbsp;&nbsp;&nbsp;</option>';
+                                        <option value="HTTP">HTTP&nbsp;&nbsp;&nbsp;</option>';
+                                        <option value="HTTPS">HTTPS&nbsp;&nbsp;&nbsp;</option>';
+                                        <option value="SNMP">SNMP&nbsp;&nbsp;&nbsp;</option>';                                        
+                                    </select><strong>:</strong>                                                                    
                                     <input type="text" class="form-control" name="portProtocole" id="ligneCommande" size="3" maxlength="5" placeholder="23">  
+                                        </p>
                                 </td></tr>
                                 <tr><td colspan="2">
-                                <strong class="obligatoire">*&nbsp;</strong><label for='noModeleAP'>Choix du mod&eagrave; auquel s'appliquera la commande</label><br>                                    
+                                <strong class="obligatoire">*&nbsp;</strong><label for='noModeleAP'>Choix du mod&egrave;le auquel s'appliquera la commande</label><br>                                    
                                 <?php
                                     echo '<select class="form-control" id="noModeleAP" name="noModeleAP">';
                                     echo '<option value="">Choix du mod&egrave;le</option>';
@@ -97,10 +95,10 @@
                                 ?>  
                                 </td></tr>  
                                 <tr><td colspan="2">                         
-                                <strong class="obligatoire">*&nbsp;</strong><label for='choixDescription'>Choix ou ajout d'une description pour la commande</label><br>  
-                                <input type="radio" name="choixDescription" value="on">    
+                                <strong class="obligatoire">*&nbsp;</strong><label for='choixAjoutDescription'>Choix ou ajout d'une description pour la commande</label><br>  
+                                <input type="radio" name="choixAjoutDescription" id="choixDescription" class="form-control" value="choix" checked>    
                                 <?php
-                                    echo '<select class="form-control" id="notypeCommande" name="notypeCommande">';
+                                    echo '<select class="form-control" id="notypeCommande" name="notypeCommande" onChange="document.getElementById(\'choixDescription\').checked = true;">';
                                     echo '<option value="">Choix de la description</option>';
                                     foreach ($tabListedescrioptions as $description){
                                         echo '<option value="'.$description["notypeCommande"].'">'.$description["typeCommande"].' ('.substr($description["description"],0,40).'...) &nbsp;&nbsp;&nbsp;</option>';                                                    
@@ -108,17 +106,18 @@
                                     echo '</select>';                                
                                 ?>  
                                 </td></tr>
-                                <tr><td>       
-                                        ----------------------------------------------<br>
-                                <input type="radio" name="ajoutDescription" value="off">    
-                                <input type="text" name="typeCommande" size="40" maxlength="100" placeholder="Afficher les infos syst&eagrave">
+                                <tr><td colspan="2">       
+                                    <strong class="obligatoire">*&nbsp;</strong><label for='typeCommande'>Nouveau type de commande</label><br> 
+                                </td></tr>
+                                <tr><td>
+                                    <input type="radio" name="choixAjoutDescription" id="ajoutDescription" class="form-control" value="ajout">
                                 </td><td>
-                                    <strong class="obligatoire">*&nbsp;</strong><label for='typeCommande'>Nouveau type de commande</label><br>  
-                                </td></tr>   
-                                <tr><td>                          
-                                <input type="text" name="description" size="40" maxlength="255" placeholder="Envoi un requ&circ;te TELNET pour obtenir le statut des Avaya AP-6">
+                                    <input type="text" name="typeCommande" id="typeCommande" size="41" maxlength="100" class="form-control" placeholder="Afficher les infos syst&egrave;me" onClick="document.getElementById('ajoutDescription').checked = true;">                                    
+                                </td></tr>
+                                <tr><td>
+                                        
                                 </td><td>
-                                    <label for='typeCommande'>Description d&eacute;aill&eacute;e de la nouvelle commande</label><br>  
+                                    <textarea name="description" rows="2" cols="37" maxlength="255" class="form-control" placeholder="Envoie une requ&ecirc;te TELNET pour obtenir le statut g&eacute;n&eacute;ral"></textarea>
                                 </td></tr>                               
                                 <tr><td align="right">
                                     <input type="submit" id="submit" class="btn btn-primary" value="Enregistrer"/>                           
@@ -132,50 +131,81 @@
                  </td>
               </tr>
            </tbody>
-        </table>
-        
-        
-
+        </table>        
       </div><!-- /container -->
 
-
     <!-- Bootstrap core JavaScrip ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    
+    <!-- Placed at the end of the document so the pages load faster -->    
     <script type="text/javascript">
         $(function()
         {
-            $("#ajoutModele").validate(
+
+            if(document.getElementById('choixDescription').checked) {
+            $("#ajoutCLI").validate(
               {                
                 rules: 
-                {            
-                  nomModele: 
-                  {
-                    required: true                   
-                  },
-                  versionFirmware: 
-                  {
-                    required: true
-                  },
-                  adrMACFabricant1: 
-                  {
-                    required: true
-                  },  
-                  adrMACFabricant2: 
-                  {
-                    required: true
-                  }, 
-                  adrMACFabricant3: 
-                  {
-                    required: true
-                  }                   
+                { 
+                    ligneCommande: 
+                    {
+                      required: true                   
+                    },
+                    protocole: 
+                    {
+                      required: true
+                    },
+                    portProtocole: 
+                    {
+                      required: true,
+                      range:[1,65535]
+                    }, 
+                    noModeleAP: 
+                    {
+                      required: true
+                    },
+                    notypeCommande: 
+                    {
+                      required: true                   
+                    }  
                 },
                 errorElement: "divRight",
                 errorPlacement: function(error, element) {
                     error.insertAfter(element);                    
                 }                
               });
-        });
+            }else if(document.getElementById('ajoutDescription').checked) {
+            $("#ajoutCLI").validate(
+              {                
+                rules: 
+                { 
+                    ligneCommande: 
+                    {
+                      required: true                   
+                    },
+                    protocole: 
+                    {
+                      required: true
+                    },
+                    portProtocole: 
+                    {
+                      required: true,
+                      range:[1,65535]
+                    }, 
+                    noModeleAP: 
+                    {
+                      required: true
+                    },
+                    typeCommande: 
+                    {
+                      required: true                   
+                    }    
+                },
+                errorElement: "divRight",
+                errorPlacement: function(error, element) {
+                    error.insertAfter(element);                    
+                }                
+              });
+            }              
+        });        
     </script>      
   </body>
 </html>

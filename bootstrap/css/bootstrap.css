@@ -202,6 +202,7 @@ legend {
 }
 textarea {
   overflow: auto;
+  white-space:pre;
 }
 optgroup {
   font-weight: bold;
