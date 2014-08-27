@@ -52,22 +52,19 @@
                                         $typeCommande=unserialize(base64_decode($_POST['choixTypeCommande'])); 
                                         $reqEnregistrement = $connexion->query("INSERT INTO lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) VALUES ('".$ligneCommande."','".$protocole."','".$portProtocole."','".$modeleAP["noModeleAP"]."','".$typeCommande["notypeCommande"]."');");
                                         $description=$typeCommande["description"];
-                                        $typeCommande=$typeCommande["typeCommande"];
-                                        
+                                        $typeCommande=$typeCommande["typeCommande"];                                        
                                     }
                                     else if((isset($_POST['typeCommande'])) && ($choixAjoutDescription =='ajout')){
-                                        $typeCommande=$_POST['typeCommande'];
-                                        $description=$_POST['description'];
-                                       
-                                        $reqAjoutDescription =  $connexion->query("INSERT INTO ".$PARAM_nom_bd.".typeCommandes (typeCommande,description) VALUES ('".$typeCommande."','".$description."');");                                        
-                                        $reqAjoutDescription->closeCursor();
+                                        $typeCommande=$_POST['typeCommande'];$typeCommande=preg_replace("/'/i", "\'", $typeCommande);
+                                        $description=$_POST['description']; $description=preg_replace("/'/i", "\'", $description);                                        
+                                        $reqAjoutDescription = $connexion->query("INSERT INTO ".$PARAM_nom_bd.".typeCommandes (typeCommande,description) VALUES ('".$typeCommande."','".$description."');");                                        
+                                        
                                         $reqChoixDescription = $connexion->query("SELECT MAX(notypeCommande) as notypeCommande FROM ".$PARAM_nom_bd.".typeCommandes;");
                                         $reqChoixDescription->setFetchMode(PDO::FETCH_OBJ);
-                                        while ($nouvelleCommande = $reqChoixDescription->fetch()){$notypeCommande=(string)$nouvelleCommande->notypeCommande;}
-                                        echo "Nouvea No de commande: ".$noTypeCommande;
+                                        while ($nouvelleCommande = $reqChoixDescription->fetch()){$notypeCommande=(string)$nouvelleCommande->notypeCommande;}                                       
                                         $reqChoixDescription->closeCursor();
-                                        
-                                        $reqEnregistrement = $connexion->query("INSERT INTO ".$PARAM_nom_bd.".lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) VALUES ('".$typeCommande."','".$protocole."','".$portProtocole."','".$noModeleAP."','".$notypeCommande."');");                                        
+                                        $reqAjoutDescription->closeCursor();                                          
+                                        $reqEnregistrement = $connexion->query("INSERT INTO lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) VALUES ('".$ligneCommande."','".$protocole."','".$portProtocole."','".$modeleAP["noModeleAP"]."','".$notypeCommande."');");                                                                              
                                     }                         
                                     else {
                                         echo "<strong>Erreur avec la description de la commande re&ccedil;ue. Veuillez corriger le formulaire.</strong><br>".$boutonRetour;
@@ -80,7 +77,7 @@
                                     echo "<tr><td>Mod&egrave;le d'AP:&nbsp;</td><td>".$modeleAP["nomFabricant"]." ".$modeleAP["nomModele"]."firmware  (v.".$modeleAP["versionFirmware"].")</td></tr>";
                                     echo "<tr><td>Type de commande:&nbsp;</td><td>".$typeCommande." ( ".substr($description,0,60)."...)</td></tr>";
                                     echo "<tr><td colspan='2'>-----------------------------------------------------------------------</td></tr></table>";                                    
-                                    $reqEnregistrement->closeCursor();
+                                    
 
                                     if (!$reqEnregistrement){                                                                                
                                         echo "<p><strong> Probl&egrave;me lors de l'enregistrement</strong>!<br>";
@@ -89,6 +86,7 @@
                                     else{
                                         echo "<p><strong> Enregistrement effect&eacute; avec succ&egrave;s</strong>!<br>";
                                         echo "<p>".$boutonRetourSucces."</p>";
+                                        $reqEnregistrement->closeCursor();
                                     }                                     
                                 }
                                 catch(Exception $e)

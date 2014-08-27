@@ -76,10 +76,11 @@
                                                 echo '<p><strong> Probl&egrave;me lors de l\'enregistrement pour '.$AP["nomAP"].' - '.$AP["adresseIPv4"].' </strong>!<br>';
                                             }
                                             else{
-                                                echo '<p> Enregistrement effect&eacute; avec succ&egrave;s pour '.$AP["nomAP"].' - '.$AP["adresseIPv4"].'<br>';                                          
+                                                echo '<p> Enregistrement effect&eacute; avec succ&egrave;s pour '.$AP["nomAP"].' - '.$AP["adresseIPv4"].'<br>'; 
+                                                $resultatsAP->closeCursor();
+                                                $reqEnregistrement->closeCursor();
                                             }                                                                                                                                    
-                                        }
-                                        $resultatsAP->closeCursor();
+                                        }                                        
                                     }
                                     if ($nbErreurs>0){
                                                 echo "<p><strong>".$nbErreurs." enregistrement(s)  n'ont pas pu &ecirc;tre effectu&eacute;(s)</strong>!<br>";

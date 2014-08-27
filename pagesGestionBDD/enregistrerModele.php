@@ -69,11 +69,11 @@
                                         }
                                         else{
                                             echo "<p><strong> Enregistrement effect&eacute; avec succ&egrave;s</strong>!<br>";
-                                            echo "<p>".$boutonRetourSucces."</p>";                                            
-                                        }  
-                                        $reqEnregistrement->closeCursor();
-                                    }
-                                    $resultatsModeles->closeCursor();
+                                            echo "<p>".$boutonRetourSucces."</p>";   
+                                            $reqEnregistrement->closeCursor();
+                                            $resultatsModeles->closeCursor();
+                                        }                                          
+                                    }                                    
                                 }
 
                                 catch(Exception $e)
