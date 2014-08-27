@@ -10,7 +10,7 @@
         
 // Initialize session and set URL.
 // must set $url first. Duh...
-$url="https://aptool";
+$url="https://10.0.0.10";
 $http = curl_init($url);
 // do your curl thing here
 $result = curl_exec($http);

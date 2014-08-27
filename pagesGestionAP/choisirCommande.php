@@ -194,7 +194,7 @@
                                $commandeTrouvee=false;
                                
                                while( $ligne = $resultatsCLI->fetch() ) // on récupère la liste des membres
-                               {     
+                               {                                        
                                    $typeCommande=(string)$ligne->typeCommande;
                                    $description=(string)$ligne->description;
                                    $noCLI=(string)$ligne->noCLI;
@@ -207,13 +207,13 @@
                                    $versionFirmware=(string)$ligne->versionFirmware;
 
                                    if ($noCommandeChoisie == $noCLI){                                
-                                       echo '<option value="'.$noCLI.'" selected>'.$typeCommande.' ( protocole ['.$protocole.':'.$portProtocole.'], mod&egrave;le concern&eacute;: '.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';
+                                       echo '<option value="'.$noCLI.'" selected>'.$noCLI.' - '.$typeCommande.' ( protocole ['.strtoupper($protocole).':'.$portProtocole.'], mod&egrave;le concern&eacute;: '.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';
                                        $commandeTrouvee = true;
                                        $commandeChoisie=array("noCLI"=>$noCLI,"ligneCommande"=>$ligneCommande,"protocole"=>$protocole, "portProtocole"=>$portProtocole);
                                        $descriptionChoixCLI= $description;
                                    }
                                    else {
-                                       echo '<option value="'.$noCLI.'">'.$typeCommande.' ( protocole ['.$protocole.':'.$portProtocole.'], mod&egrave;le concern&eacute;: '.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';                             
+                                       echo '<option value="'.$noCLI.'">'.$noCLI.' - '.$typeCommande.' ( protocole ['.strtoupper($protocole).':'.$portProtocole.'], mod&egrave;le concern&eacute;: '.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';                             
                                    }
 
                                }

@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS  lignesCommande (
         portProtocole  SMALLINT NOT NULL,
         noModeleAP INT NOT NULL,
         notypeCommande INT NOT NULL,
-     PRIMARY KEY (noCli,noModeleAP,notypeCommande)
+     PRIMARY KEY (noCli,noModeleAP)
 );
 
 CREATE TABLE IF NOT EXISTS  typeCommandes (

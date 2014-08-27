@@ -184,13 +184,11 @@
             //permet de décider quel formulaire (ajout d'une description ou choix d'une existante) sera obligatoire
             $('#choixDescription').change(function() 
             {
-              if($(this).is(":checked")) 
-              {
+              if($(this).is(":checked")) {
                 $('#choixTypeCommande').removeClass('skip');
                 $('#typeCommande').addClass('skip');
               }
-              else
-              {
+              else{
                 $('#typeCommande').removeClass('skip');
                 $('#choixTypeCommande').addClass('skip');
               }

@@ -29,7 +29,7 @@ $menuPagesGestionBDD='<td width="30%">
                         <ul class="nav nav-pills nav-justified">                       
                            <li><a href="ajoutCLI.php">Ajouter</a></li>
                            <li><a href="selectModifCLI.php">Modifier</a></li>                       
-                           <li><a href="supprimerCLI.php">Supprimer</a></li>
+                           <li><a href="selectSupprCLI.php">Supprimer</a></li>
                         </ul>                      
                  </td> ';
 

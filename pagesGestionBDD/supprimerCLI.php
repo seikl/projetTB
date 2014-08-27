@@ -21,19 +21,19 @@
                  <td class="informations">                     
                     <ol class="breadcrumb">
                         <li><a href="accueilGestionBDD.php">Accueil gestion de la BDD</a></li> 
-                        <li><a href="selectSupprAP.php">S&eacute;lection des AP &agrave; supprimer</a></li>                     
+                        <li><a href="selectSupprCLI.php">S&eacute;lection des commandes &agrave; supprimer</a></li>                     
                         <li>R&eacute;sultat</li>
                     </ol>
                    <ol>
                         <?php
                             include '../includes/connexionBDD.php';
                             $boutonRetour = '<button class="btn btn-primary" onclick="history.back()">Revenir sur le formulaire</button>';
-                            $boutonReinit = '<button class="btn btn-default" onclick="window.location.href = \'selectSupprAP.php\'">Revenir &agrave; la s&eacute;lection des AP</button>';
-                            $boutonRetourSucces = '<button class="btn btn-success" onclick="window.location.href = \'../pagesGestionAP/accueilGestionAP.php\'">Afficher la liste des mod&egrave;les</button>';
+                            $boutonReinit = '<button class="btn btn-default" onclick="window.location.href = \'selectSupprCLI.php\'">Revenir &agrave; la s&eacute;lection des AP</button>';
+                            $boutonRetourSucces = '<button class="btn btn-success" onclick="window.location.href = \'../pagesGestionAP/choisirCommande.php\'">Appliquer une commande</button>';
                            
                             //Récupération des informations
                             if ($_POST) {       
-                                $listeAP = unserialize(base64_decode($_POST['listeAP']));                                
+                                $listeCLI = unserialize(base64_decode($_POST['listeCLI']));                                
                                 
                                 //suppression des AP
                                 try
@@ -41,25 +41,26 @@
                                     $i =0;
                                     $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
                                     echo "<p>";
-                                    foreach ($listeAP as $AP){
-                                        $reqSuppressionAP = $connexion->query("DELETE FROM ".$PARAM_nom_bd.".accessPoints WHERE noAP='".$AP["noAP"]."';");                                   
+                                    foreach ($listeCLI as $CLI){
+                                        $reqSuppressionCLI = $connexion->query("DELETE FROM ".$PARAM_nom_bd.".lignesCommande WHERE noCLI='".$CLI["noCLI"]."';");  
+                                        
+                                        $infosCLI=$CLI["noCLI"].' - '.$CLI["ligneCommande"].'( protocole:'.strtoupper($CLI["protocole"]).'['.$CLI["portProtocole"].'], <br>'.$CLI["typeCommande"].' - '.$CLI["description"].')';
 
-                                        $infosAP=$AP["noAP"].' - '.$AP["nomAP"].' ('.$AP["adresseIPv4"].')';
-                                        if ((!$reqSuppressionAP) ){ echo '<strong>>> Probl&egrave;me lors de la suppression de l\'AP: '.$infosAP.'</strong>!<br>';}
+                                        if ((!$reqSuppressionCLI) ){ echo '<strong>>> Probl&egrave;me lors de la suppression de la commande: '.$infosCLI.'</strong>!<br><br>';}
                                         else{ 
-                                            echo '>>AP: '.$infosAP.' supprim&eacute; avec succ&egrave;s<br>';
+                                            echo '>>Commande: '.$infosCLI.' supprim&eacute;e avec succ&egrave;s<br><br>';
                                             $i++;
                                         }
                                     }
-                                    echo "</p><p><u>Nombre d'AP retir&eacute;(s): </u> <strong>".$i."</strong><br>";                                        
-                                    echo "<br>------------------------------------------------------</p>";
+                                    echo "</p><p><u>Nombre de commande(s) retir&eacute;e(s): </u> <strong>".$i."</strong><br>";                                        
+                                    echo "<br>------------------------------------------------------";
                                     echo "<p>".$boutonRetourSucces."&nbsp;&nbsp;&nbsp;&nbsp;".$boutonRetour."</p>";
-                                    $reqSuppressionAP->closeCursor();                                    
+                                    $reqSuppressionCLI->closeCursor();                                    
                                 }                               
                                 catch(Exception $e)
                                 {
-                                        echo '<tr><td>Erreur : '.$e->getMessage().'<br />';
-                                        echo 'N° : '.$e->getCode().'</td></tr>';
+                                        echo 'Erreur : '.$e->getMessage().'<br>';
+                                        echo 'N° : '.$e->getCode().'<br>';
                                 }                                 
                             }
                             else {echo " <strong>Aucune information reçue. Veuillez remplir le formulaire.</strong><br>";}
