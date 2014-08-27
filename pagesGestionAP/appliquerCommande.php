@@ -59,13 +59,15 @@
                             </thead>
                             <tbody>";                        
                         //parcours des AP
-                        foreach ($tabListeAP as $AP){  
-                                                        
+                        foreach ($tabListeAP as $AP){                                                          
                             //Ouverture d'un socket sur le port concerné
-                            $fp = fsockopen($AP["adresseIPv4"], $tabCommandeChoisie["portProtocole"], $errno, $errstr, $delaiTimeout);                                
-                            $erreur = $errno.' - '.$errstr;                                
+                            $fp=true;
                             $reponse = '';
                             $i=0;
+                            if (strtoupper($tabCommandeChoisie["protocole"])!= "SNMP") {                            
+                                $fp = fsockopen($AP["adresseIPv4"], $tabCommandeChoisie["portProtocole"], $errno, $errstr, $delaiTimeout);
+                                 $erreur = $errno.' - '.$errstr; 
+                            }                                                          
                             if ((!$fp) && ((strtoupper($tabCommandeChoisie["protocole"]))!= "SNMP")) {
                                 $texteErreur ='<tr class="danger"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';
                                 $texteErreur = $texteErreur.'</td><td>'.$erreur;

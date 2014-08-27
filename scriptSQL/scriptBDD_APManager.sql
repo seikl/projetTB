@@ -80,7 +80,7 @@ insert into typeCommandes (typeCommande,description) values('Parcourir toutes le
 insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('show system\r\nquit\r\n','telnet',23,1,1);
 insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('uname -a\r\nquit\r\n','telnet',23,2,1);
 insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('.1.3.6.1.2.1.43.10.2.1.4','snmp',161,3,4);
-insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('.','snmp',161,4,5);
+insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('.1.3.6.1.2.1','snmp',161,4,5);
 insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('GET / HTTP/1.1
 Host: 0.0.0.0
 User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0
