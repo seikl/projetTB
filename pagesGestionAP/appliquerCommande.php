@@ -40,7 +40,10 @@
                             $nomFichier='../fichiers/output.html';
                             
                             if (file_exists($nomFichier)){unlink ($nomFichier);}                            
-                            file_put_contents( $nomFichier, '<html><body>R&eacute;sultats des requ&ecirc;tes ('.date('d M Y @ H:i:s').')<br>==========================================<br>');
+                            file_put_contents( $nomFichier, '<html><body>R&eacute;sultats des requ&ecirc;tes ('.date('d M Y @ H:i:s').')<br>'.
+                                            'Commande transmise: '.$tabCommandeChoisie["ligneCommande"].
+                                            ' (protocole '.$tabCommandeChoisie["protocole"].':'.$tabCommandeChoisie["portProtocole"].')<br>'.
+                                            '==========================================<br>');
                         }
                         else {echo " <strong>Probl&egrave;me &agrave; la r&eacute;ception de la commande.</strong>";}
                         

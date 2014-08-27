@@ -33,25 +33,25 @@
                             $i=0;
                             $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
-                            $resultatsAP=$connexion->query("SELECT * FROM modeles;");                                 
-                            $resultatsAP->setFetchMode(PDO::FETCH_OBJ);                                 
+                            $resultatsModeles=$connexion->query("SELECT * FROM modeles;");                                 
+                            $resultatsModeles->setFetchMode(PDO::FETCH_OBJ);                                 
                             $resultatsDescription=$connexion->query("SELECT * FROM typeCommandes;");                                 
                             $resultatsDescription->setFetchMode(PDO::FETCH_OBJ);    
 
-                            while( $ligne = $resultatsAP->fetch()){ // on récupère la liste des modeles    
+                            while( $ligne = $resultatsModeles->fetch()){ // on récupère la liste des modeles    
                                 $noModeleAP =(string)$ligne->noModeleAP;$nomModele =(string)$ligne->nomModele;$versionFirmware=(string)$ligne->versionFirmware;
                                 $nomFabricant=(string)$ligne->nomFabricant;$adrMACFabricant=(string)$ligne->adrMACFabricant; 
                                 $tabListeModeles[$i]=array("noModeleAP" =>$noModeleAP, "nomModele"=>$nomModele, "versionFirmware"=>$versionFirmware,"nomFabricant"=>$nomFabricant, "adrMACFabricant"=>$adrMACFabricant);
                                 $i++;
                             }
-                            $resultatsAP->closeCursor(); // on ferme le curseur des résultats
+                            $resultatsModeles->closeCursor(); // on ferme le curseur des résultats
                             
                             while( $ligne = $resultatsDescription->fetch()){ // on récupère la liste des descriptions   
                                 $noTypeCommande= (string)$ligne->notypeCommande;$typeCommande =(string)$ligne->typeCommande;$description =(string)$ligne->description;
                                 $tabListeDescriptions[$i]=array("notypeCommande"=>$noTypeCommande,"typeCommande" =>$typeCommande, "description"=>$description);
                                 $i++;
                             }
-                            $resultatsAP->closeCursor(); // on ferme le curseur des résultats                            
+                            $resultatsModeles->closeCursor(); // on ferme le curseur des résultats                            
 
                         }                                                
                         catch(Exception $e)
@@ -84,12 +84,14 @@
                                         </p>
                                 </td></tr>
                                 <tr><td colspan="2">
-                                <strong class="obligatoire">*&nbsp;</strong><label for='noModeleAP'>Choix du mod&egrave;le auquel s'appliquera la commande</label><br>                                    
+                                <strong class="obligatoire">*&nbsp;</strong><label for='modeleAP'>Choix du mod&egrave;le auquel s'appliquera la commande</label><br>                                    
                                 <?php
-                                    echo '<select class="form-control" id="noModeleAP" name="noModeleAP">';
+                                    echo '<select class="form-control" id="modeleAP" name="modeleAP">';
                                     echo '<option value="">Choix du mod&egrave;le</option>';
                                     foreach ($tabListeModeles as $modele){
-                                        echo '<option value="'.$modele["noModeleAP"].'">'.$modele["nomFabricant"].' '.$modele["nomModele"].' v.'.$modele["versionFirmware"].'&nbsp;&nbsp;&nbsp;</option>';                                                    
+                                        $tabModele=array("noModeleAP"=>$modele["noModeleAP"],"nomFabricant"=>$modele["nomFabricant"],"nomModele"=>$modele["nomModele"],"versionFirmware"=>$modele["versionFirmware"]);
+                                        $tabModele= base64_encode(serialize($tabModele));
+                                        echo '<option value="'.$tabModele.'">'.$modele["nomFabricant"].' '.$modele["nomModele"].' v.'.$modele["versionFirmware"].'&nbsp;&nbsp;&nbsp;</option>';                                                    
                                     }
                                     echo '</select>';                                
                                 ?>  
@@ -119,7 +121,7 @@
                                 <tr><td>
                                        &nbsp; 
                                 </td><td>
-                                    <label for='typeCommande'>Description d&eacute;taill&eacute;e:</label><br>
+                                    <label for='description'>Description d&eacute;taill&eacute;e:</label><br>
                                     <textarea name="description" rows="2" cols="40" maxlength="255" class="form-control" placeholder="Envoie une requ&ecirc;te TELNET pour obtenir le statut g&eacute;n&eacute;ral"></textarea>
                                 </td></tr>                               
                                 <tr><td align="right">
@@ -161,7 +163,7 @@
                       required: true,
                       range:[1,65535]
                     }, 
-                    noModeleAP: 
+                    modeleAP: 
                     {
                       required: true
                     },

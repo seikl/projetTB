@@ -6,14 +6,21 @@
     </head>
     <body>
         <?php
-       
-        $request = new HTTP_Request2('https://someserver.com/somepath/something',
-    HTTP_Request2::METHOD_POST);
 
-$request->setConfig(array(
-    'ssl_verify_peer'   => FALSE,
-    'ssl_verify_host'   => FALSE
-))
+        
+// Initialize session and set URL.
+// must set $url first. Duh...
+$url="https://aptool";
+$http = curl_init($url);
+// do your curl thing here
+$result = curl_exec($http);
+$http_status = curl_getinfo($http, CURLINFO_HTTP_CODE);
+curl_close($http);
+
+
+echo "reponse: <br>";
+echo $http_status;;
+
 
         ?>
     </body>

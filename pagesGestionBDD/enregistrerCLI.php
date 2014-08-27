@@ -29,25 +29,74 @@
                             include '../includes/connexionBDD.php';
                             
                             $boutonRetour = '<button class="btn btn-primary" onclick="history.back()">Revenir sur le formulaire</button>';
-                            $boutonReinit = '<button class="btn btn-default" onclick="window.location.href = \'ajoutModele.php\'">R&eacute;initialiser le formulaire</button>';
-                            $boutonRetourSucces = '<button class="btn btn-success" onclick="window.location.href = \'../pagesGestionAP/accueilGestionAP.php\'">Afficher la liste des mod&egrave;les</button>';
+                            $boutonReinit = '<button class="btn btn-default" onclick="window.location.href = \'ajoutCLI.php\'">R&eacute;initialiser le formulaire</button>';
+                            $boutonRetourSucces = '<button class="btn btn-success" onclick="window.location.href = \'../pagesGestionAP/choisirCommande.php\'">Afficher la liste des commandes</button>';
 
                             //Récupération des informations
                             if ($_POST) {    
                                 $ligneCommande= $_POST['ligneCommande'];
                                 $protocole= $_POST['protocole'];
                                 $portProtocole= $_POST['portProtocole'];
-                                $noModeleAP= $_POST['noModeleAP'];
+                                $modeleAP= unserialize(base64_decode($_POST['modeleAP']));
                                 $choixAjoutDescription = $_POST['choixAjoutDescription'];
+                                $reqAjoutDescription=null;
                                 
-                                if ((isset($_POST['choixTypeCommande'])) && ($choixAjoutDescription == 'selection')){
-                                    $typeCommande=unserialize(base64_decode($_POST['choixTypeCommande'])); 
-                                    echo "commande selection";
+                                
+                                try
+                                {                            
+                                    $i =0;
+                                    $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
+                                    
+                                    //Bloc if pour vérifier si ajout ou sélection d'une commande
+                                    if ((isset($_POST['choixTypeCommande'])) && ($choixAjoutDescription == 'selection')){
+                                        $typeCommande=unserialize(base64_decode($_POST['choixTypeCommande'])); 
+                                        $reqEnregistrement = $connexion->query("INSERT INTO lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) VALUES ('".$ligneCommande."','".$protocole."','".$portProtocole."','".$modeleAP["noModeleAP"]."','".$typeCommande["notypeCommande"]."');");
+                                        $description=$typeCommande["description"];
+                                        $typeCommande=$typeCommande["typeCommande"];
+                                        
+                                    }
+                                    else if((isset($_POST['typeCommande'])) && ($choixAjoutDescription =='ajout')){
+                                        $typeCommande=$_POST['typeCommande'];
+                                        $description=$_POST['description'];
+                                       
+                                        $reqAjoutDescription =  $connexion->query("INSERT INTO ".$PARAM_nom_bd.".typeCommandes (typeCommande,description) VALUES ('".$typeCommande."','".$description."');");                                        
+                                        $reqAjoutDescription->closeCursor();
+                                        $reqChoixDescription = $connexion->query("SELECT MAX(notypeCommande) as notypeCommande FROM ".$PARAM_nom_bd.".typeCommandes;");
+                                        $reqChoixDescription->setFetchMode(PDO::FETCH_OBJ);
+                                        while ($nouvelleCommande = $reqChoixDescription->fetch()){$notypeCommande=(string)$nouvelleCommande->notypeCommande;}
+                                        echo "Nouvea No de commande: ".$noTypeCommande;
+                                        $reqChoixDescription->closeCursor();
+                                        
+                                        $reqEnregistrement = $connexion->query("INSERT INTO ".$PARAM_nom_bd.".lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) VALUES ('".$typeCommande."','".$protocole."','".$portProtocole."','".$noModeleAP."','".$notypeCommande."');");                                        
+                                    }                         
+                                    else {
+                                        echo "<strong>Erreur avec la description de la commande re&ccedil;ue. Veuillez corriger le formulaire.</strong><br>".$boutonRetour;
+                                        break;                                
+                                    }
+                                    
+                                    echo "<table class='table'><tr><th colspan='2'>Informations re&ccedil;ues:</th></tr>";
+                                    echo "<tr><td>Ligne de commande:&nbsp;</td><td>".$ligneCommande."</td></tr>";
+                                    echo "<tr><td>Protocole et no de port:&nbsp;</td><td>".$protocole.": ".$portProtocole."</td></tr>";
+                                    echo "<tr><td>Mod&egrave;le d'AP:&nbsp;</td><td>".$modeleAP["nomFabricant"]." ".$modeleAP["nomModele"]."firmware  (v.".$modeleAP["versionFirmware"].")</td></tr>";
+                                    echo "<tr><td>Type de commande:&nbsp;</td><td>".$typeCommande." ( ".substr($description,0,60)."...)</td></tr>";
+                                    echo "<tr><td colspan='2'>-----------------------------------------------------------------------</td></tr></table>";                                    
+                                    $reqEnregistrement->closeCursor();
+
+                                    if (!$reqEnregistrement){                                                                                
+                                        echo "<p><strong> Probl&egrave;me lors de l'enregistrement</strong>!<br>";
+                                        echo "<p>".$boutonRetour."&nbsp;&nbsp;&nbsp;&nbsp;".$boutonReinit."</p>";
+                                    }
+                                    else{
+                                        echo "<p><strong> Enregistrement effect&eacute; avec succ&egrave;s</strong>!<br>";
+                                        echo "<p>".$boutonRetourSucces."</p>";
+                                    }                                     
                                 }
-                                else if((isset($_POST['typeCommande'])) && ($choixAjoutDescription =='ajout')){
-                                    echo "commande ajout";                                                                        
-                                }                         
-                                else {" <strong>Erreur avec la description de la commande re&ccedil;ue. Veuillez corriger le formulaire.</strong><br>".$boutonRetour;}
+                                catch(Exception $e)
+                                {
+                                        echo 'Erreur : '.$e->getMessage().'<br>';
+                                        echo 'N° : '.$e->getCode().'';
+                                }                                 
+                                
                                 
                                 
                                 /*
