@@ -62,7 +62,7 @@
                         foreach ($tabListeAP as $AP){  
                                                         
                             //Ouverture d'un socket sur le port concerné
-                            $fp = @fsockopen($AP["adresseIPv4"], $tabCommandeChoisie["portProtocole"], $errno, $errstr, $delaiTimeout);                                
+                            $fp = fsockopen($AP["adresseIPv4"], $tabCommandeChoisie["portProtocole"], $errno, $errstr, $delaiTimeout);                                
                             $erreur = $errno.' - '.$errstr;                                
                             $reponse = '';
                             $i=0;
@@ -77,14 +77,21 @@
                             
                                 //Préparation et envoi de la requête à transmettre en fonction du protocole (TELNET, SSH, HTTP, HTTPS, SNMP ou AUTRE)
                                 switch (strtoupper($tabCommandeChoisie["protocole"])) {
-                                    case "TELNET":
-                                        $requete=requeteTELNET($AP["adresseIPv4"], $tabCommandeChoisie["ligneCommande"],$AP["username"],$AP["password"]);
-                                        fwrite($fp, $requete);
-                                        $taille=128;
+                                    case "TELNET":                                       
+                                        $taille=128;  
+                                        $nbTrames=50;
+                                        $reponse .= fgets($fp,$taille);
+                                        if ($AP["username"]!=""){fwrite($fp, $AP["username"]."\r\n");$reponse .= fgets($fp,$taille);}                                        
+                                        if ($AP["password"]!=""){fwrite($fp, $AP["password"]."\r\n");$reponse .= fgets($fp,$taille);}                                        
+                                        fwrite($fp, $tabCommandeChoisie["ligneCommande"]."\r\n");
                                         while (!feof($fp)) {
-                                            $reponse .= fgets($fp,$taille);
-                                            $i++; 
-                                        }        
+                                            $reponse .= fgets($fp,$taille);                                                                                    
+                                            fwrite($fp, "\r\n");
+                                            $nbTrames--;
+                                            if ($nbTrames==0){break;} 
+                                        } 
+                                        fwrite($fp, "quit\r\n");
+                                        
                                         $debutRep=50;
                                         $finRep=200;
                                         fclose($fp);

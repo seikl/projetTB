@@ -17,20 +17,27 @@
     }
     //--------------------------------------------    
     
-    //pour prépararer une requête TELNET
+    //pour prépararer une requête TELNET - OBSOLETE
     function requeteTELNET($adresseIP, $requete, $user, $mdp)
-    {               
+    {        
+        
+        /*
         $out="";
         
         if ($user!=""){$out=$out.$user."\r\n";}
         if ($mdp!=""){$out=$out.$mdp."\r\n";}
         
-        $tabRequete= explode("\n", $requete);        
+        /*
+        $tabRequete= explode("\r\n", $requete);        
         foreach($tabRequete as $ligneReq)
         {
             $checkCRLF=true;
             if ($checkCRLF){$out.=$ligneReq."\r\n";};            
         }
+         
+       
+        $out.=$requete."\r\n";
+        */
         return $out;
     }
     //--------------------------------------------    

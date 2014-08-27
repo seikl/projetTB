@@ -1,30 +1,55 @@
-<html><body>R&eacute;sultats des requ&ecirc;tes (27 Aug 2014 @ 13:49:37)<br>Comamnde transmise: show system
-quit
- (protocole telnet:23)==========================================<br><p><u><b>1-APADSSOL01 (IP: 172.16.1.29)</b></u><br>ÿûÿû
-
-[APADSSOL01]> Please enter password: 
-
-	** Welcome to Command Line Interface - Version 2.4.11(821) **
-	Please type help for a description on commands and parameters.
-
-[APADSSOL01]> show system
-System Parameters
-=================
-
-sysname			:	APADSSOL01
-sysloc			:	unAutreTest
-sysctname		:	
-sysctemail		:	sinfi@lerepuis.ch
-sysctphone		:	
-sysuptime (DD:HH:MM:SS)	:	92: 2:45:57
-sysoid			:	1.3.6.1.4.1.11898.2.4.10
-sysdescr		:	Avaya AP4-AP5-AP6 v2.4.11(821)  SN-04AT08580182 v3.0.4
-sysservices		:	2
-sysflashupdate		:	0	
-sysflashbckint		:	120
-sysresettodefaults	:	0
-syscountrycode		:	
+<html><body>R&eacute;sultats des requ&ecirc;tes (27 Aug 2014 @ 16:08:00)<br>Commande transmise: disp curr
+ (protocole TELNET:23)<br>==========================================<br><p><u><b>10-SQI-0079 (IP: 172.16.1.3)</b></u><br>ÿûÿûÿûÿûÿýÿý
+******************************************************************************
+* Copyright (c) 2004-2009 Hangzhou H3C Tech. Co., Ltd. All rights reserved.  *
+* Without the owner's prior written consent,                                 *
+* no decompiling or reverse-engineering shall be allowed.                    *
+******************************************************************************
 
 
-[APADSSOL01]> 
-[APADSSOL01]> quit</p><input type="button" value="Imprimer..." onClick="window.print()"></body></html>
+Login authentication
+
+
+Username:admin
+Password:
+disp curr
+#
+ version 5.20, Release 1109P01
+#
+ sysname SWI-0079
+#
+ clock timezone Switzerland add 01:00:00
+#
+ ftp server enable
+#
+ irf mac-address persistent timer
+ irf auto-update enable
+ undo irf link-delay
+#
+ domain default enable system
+#
+ telnet server enable
+#
+vlan 1
+#
+vlan 10
+ description repuis@172.16.0.0/16
+#
+vlan 20
+  ---- More ----[16D                [16D description voice@172.17.0.0/16
+  ---- More ----[16D                [16D#
+  ---- More ----[16D                [16Dvlan 30
+  ---- More ----[16D                [16D description guest@172.18.0.0/16
+  ---- More ----[16D                [16D#
+  ---- More ----[16D                [16Dvlan 50
+  ---- More ----[16D                [16D description voice_yverdon@172.20.0.0/16
+  ---- More ----[16D                [16D#
+  ---- More ----[16D                [16Dvlan 60
+  ---- More ----[16D                [16D description storage@172.21.0.0/16
+  ---- More ----[16D                [16D#
+  ---- More ----[16D                [16Dvlan 90
+  ---- More ----[16D                [16D description LAB
+  ---- More ----[16D                [16D#
+  ---- More ----[16D                [16Dvlan 100
+  ---- More ----[16D                [16D description DMZ
+</p><input type="button" value="Imprimer..." onClick="window.print()"></body></html>

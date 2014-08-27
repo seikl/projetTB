@@ -201,7 +201,6 @@
             {
               if($(this).is(":checked")) 
               {
-                alert('');
                 $('#typeCommande').removeClass('skip');
                 $('#choixTypeCommande').addClass('skip');          
 
