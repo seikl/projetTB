@@ -59,14 +59,15 @@
                             </thead>
                             <tbody>";                        
                         //parcours des AP
-                        foreach ($tabListeAP as $AP){                                                          
+                        foreach ($tabListeAP as $AP){  
+                                                        
                             //Ouverture d'un socket sur le port concerné
                             $fp=true;
                             $reponse = '';
                             $i=0;
                             if (strtoupper($tabCommandeChoisie["protocole"])!= "SNMP") {                            
-                                $fp = fsockopen($AP["adresseIPv4"], $tabCommandeChoisie["portProtocole"], $errno, $errstr, $delaiTimeout);
-                                 $erreur = $errno.' - '.$errstr; 
+                                $fp = @fsockopen($AP["adresseIPv4"], $tabCommandeChoisie["portProtocole"], $errno, $errstr, $delaiTimeout);
+                                $erreur = $errno.' - '.$errstr; 
                             }                                                          
                             if ((!$fp) && ((strtoupper($tabCommandeChoisie["protocole"]))!= "SNMP")) {
                                 $texteErreur ='<tr class="danger"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';
@@ -82,7 +83,9 @@
                                     case "TELNET":                                       
                                         $taille=128;  
                                         $nbTrames=50;
-                                        $reponse .= fgets($fp,$taille);
+                                        sleep(1);
+                                        //$reponse .= fgets($fp,$taille);
+                                        
                                         if ($AP["username"]!=""){fwrite($fp, $AP["username"]."\r\n");$reponse .= fgets($fp,$taille);}                                        
                                         if ($AP["password"]!=""){fwrite($fp, $AP["password"]."\r\n");$reponse .= fgets($fp,$taille);}                                        
                                         fwrite($fp, $tabCommandeChoisie["ligneCommande"]."\r\n");
