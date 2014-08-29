@@ -24,7 +24,7 @@
         //préparation de la req. HTTP
         curl_setopt_array($curl, array(
             CURLOPT_FRESH_CONNECT=>true,
-            CURLOPT_RETURNTRANSFER => false,    
+            CURLOPT_RETURNTRANSFER => true,    
             CURLOPT_UNRESTRICTED_AUTH=>true,
             CURLOPT_FOLLOWLOCATION=>true,
             CURLOPT_HEADER=>true,
@@ -37,23 +37,18 @@
         if ($boolReqPOST){
             curl_setopt($curl,CURLOPT_POST,true);
             curl_setopt($curl,CURLOPT_POSTFIELDS,$valeurs);
-        }
-        echo "<br>URL: ".$url;
-        echo "<br>BoolReqPOST: ".$boolReqPOST;
-
-        echo "<br>VALEURS: ".$valeurs;
-        echo "<br>USER PASSWORD: ".$userPassword;
-        
+        }      
+        $out = curl_exec($curl);
         //test de l'envoi
-        if(!curl_exec($curl)){
+        if(empty($out)){
             $out = curl_getinfo($curl);
             $out = "Erreur: ".curl_error($curl) . " - Code: ". curl_errno($curl);
+            curl_close($curl);
             return $out;
         }
-        else{
-            //$info = curl_getinfo($curl);
-            //$out= $resultat;       
-            //foreach ($resultat as $ligneResutat){$out.=$ligneResutat;}        
+        else{            
+            $info = curl_getinfo($curl);
+            $out = "<strong>".$info["http_code"]."</strong>-".$out;
             $out = strip_tags($out,'<br>|<p>|<i>|</i>|<input>');
             curl_close($curl);
             return $out;             

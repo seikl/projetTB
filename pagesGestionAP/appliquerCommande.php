@@ -63,7 +63,8 @@
                         foreach ($tabListeAP as $AP){                                                                                      
                             $fp=true;
                             $reponse = '';
-                            $erreur='erreur inconnue';
+                            $erreur='';
+                            $erreurDetectee=false;
                             $i=0;                                                        
 
                             //Préparation et envoi de la requête à transmettre en fonction du protocole (TELNET, HTTP, HTTPS, SNMP ou AUTRE)
@@ -71,15 +72,11 @@
                                 case "TELNET":                                       
                                     $taille=1500;  
                                     //Ouverture d'un socket sur le port concerné
-                                    $fp = @fsockopen($AP["adresseIPv4"], $tabCommandeChoisie["portProtocole"], $errno, $errstr, $delaiTimeout);
-                                    $erreur = $errno.' - '.$errstr;                                         
-                                    sleep(1);                                    
-                                    if (!$fp) {
-                                        $texteErreur ='<tr class="danger"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';
-                                        $texteErreur = $texteErreur.'</td><td>'.$erreur;
-                                        $texteErreur= $texteErreur. '</td><td><strong>Not OK</strong></td></tr>';
-                                        echo $texteErreur;
-                                        file_put_contents($nomFichier, '<p><u><b>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</b></u><br>'.$erreur.'</p>', FILE_APPEND);                                        
+                                    $fp = @fsockopen($AP["adresseIPv4"], $tabCommandeChoisie["portProtocole"], $errno, $errstr, $delaiTimeout);                                      
+                                    sleep(1); 
+                                    $erreur .= $errno.' - '.$errstr;
+                                    if (!$fp) {     
+                                        $erreurDetectee=true;
                                     } 
                                     else{
                                         //Envoi de la requête
@@ -96,7 +93,11 @@
                                     break;
 
                                 case "HTTP":
-                                    $reponse = requeteHTTP($AP["adresseIPv4"], $tabCommandeChoisie["ligneCommande"], $AP["username"], $AP["password"]); 
+                                    $reponse = requeteHTTP($AP["adresseIPv4"], $tabCommandeChoisie["ligneCommande"], $AP["username"], $AP["password"]);
+                                    if(preg_match("/Erreur/i", $reponse)){$erreur=$reponse; $reponse='';$erreurDetectee=false;}
+                                    //pour traiter les erreurs HTTP recues
+                                    if((preg_match("/40/i", substr($reponse,0,3))) || (preg_match("/50/i", substr($reponse,0,3)))){$erreur=$reponse; $reponse='';$erreurDetectee=true;}                                    
+                                    
                                     $debutExtraitRep=0;
                                     $finExtraitRep=200;
                                     break;                                        
@@ -107,12 +108,13 @@
                                 case "SNMP":
                                     try {      
                                         $timeout=1000000;
-                                        $requete =  snmprealwalk($AP["adresseIPv4"], $AP["snmpCommunity"],$tabCommandeChoisie["ligneCommande"],$timeout);
+                                        $requete = snmprealwalk($AP["adresseIPv4"], $AP["snmpCommunity"],$tabCommandeChoisie["ligneCommande"],$timeout);
                                         $reponse = implode($requete);
                                     }
                                     catch(ErrorException $e)
                                     {        
                                         $reponse='';
+                                        $erreurDetectee=true;
                                         $erreur= $e->getMessage();
                                     }   
 
@@ -129,14 +131,20 @@
 
                             $extraitReponse = substr($reponse,$debutExtraitRep,$finExtraitRep);                              
 
-                            if ($reponse != ''){
+                            if ($reponse != '' && !$erreurDetectee){
                                 echo '<tr class="success"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';
                                 echo '</td><td>'.$extraitReponse;                                          
                                 echo '</td><td><strong>OK</strong></td></tr>';
                                 file_put_contents($nomFichier, '<p><u><b>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</b></u><br>'.$reponse.'</p>', FILE_APPEND);
 
                             }
-                            else{
+                            else if ($erreur != '' && $erreurDetectee){
+                                echo '<tr class="warning"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';                                
+                                echo '</td><td>'.$erreur;                                       
+                                echo '</td><td><strong>OK</strong></td></tr>'; 
+                                file_put_contents($nomFichier, '<p><u><b>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</b></u><br>'.$erreur.'</p>', FILE_APPEND);                                
+                            }                                
+                            else {
                                 echo '<tr class="danger"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';
                                 $erreur .= '<br>( pas de r&eacute;ponse re&ccedil;ue)';
                                 echo '</td><td>'.$erreur;                                       

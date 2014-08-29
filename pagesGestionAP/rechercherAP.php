@@ -38,7 +38,7 @@
                         include '../includes/connexionBDD.php';                    
                         include '../includes/fonctionsUtiles.php';
                         
-                        $infoModele = array("adrMACFabricant"=>'non indiqué',"noModeleAP"=>'0');
+                        $infoModele = array("adrMACFabricant"=>'non indiqu&eacute;',"noModeleAP"=>'0');
                         $infoModele = base64_encode(serialize($infoModele));
                         echo '<option value="'.$infoModele.'">S&eacute;lection...&nbsp;&nbsp;&nbsp;</option>';
                         //récupération des infos enregistrées dans la BDD
