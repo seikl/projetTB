@@ -60,10 +60,10 @@
                                         //vérification si une description similaire existe déjà
                                         
                                         $reqVerifDescription = $connexion->query("SELECT *  FROM ".$PARAM_nom_bd.".typeCommandes WHERE typeCommande LIKE '".$typeCommande."' AND description LIKE '".$description."';");
-                                        if ($reqVerifDescription->rowCount()>0){
+                                        if ($reqVerifDescription){
                                             echo "<p><strong> Cette description de commande existe d&eacute;j&eagrave; <br>";
                                             echo "Veuillez modifier le formulaire ou en choisir une existante.</strong>!<br>";   
-                                            $reqVerifDescription;
+                                            $reqVerifDescription->closeCursor();
                                             
                                         }
                                         else {

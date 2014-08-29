@@ -211,6 +211,7 @@
                                        $commandeTrouvee = true;
                                        $commandeChoisie=array("noCLI"=>$noCLI,"ligneCommande"=>$ligneCommande,"protocole"=>$protocole, "portProtocole"=>$portProtocole);
                                        $descriptionChoixCLI= $description;
+                                       $ligneCommandeChoisie=$ligneCommande;
                                    }
                                    else {
                                        echo '<option value="'.$noCLI.'">'.$noCLI.' - '.$typeCommande.' ( protocole ['.strtoupper($protocole).':'.$portProtocole.'], mod&egrave;le concern&eacute;: '.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';                             
@@ -255,16 +256,23 @@
                                 if ($noCommandeChoisie!='0' && $listeAPactuels!=null){ 
                                 $listeAP=base64_encode(serialize($listeAPactuels));
                                 $commandeChoisie=base64_encode(serialize($commandeChoisie));
-                                $textValidation.='<br><br><u>Description de la commande: </u>'.$descriptionChoixCLI;
+                                $textValidation.='<br><br><u>Description de la commande:</u> '.$descriptionChoixCLI;
+                                $textValidation.='<br><br><u>Ligne de commande:</u><br>';
+                                $tabCommandes= explode("\n", $ligneCommandeChoisie);      
+                                foreach($tabCommandes as $ligneReq){$textValidation.='>> '.$ligneReq.'<br>';}
                                 $textValidation.='<input type="hidden" value="'.$listeAP.'" name="listeAP"/>';                                
                                 $textValidation.='<input type="hidden" value="'.$commandeChoisie.'" name="commandeChoisie"/>';
-                                $textValidation.='<br><br><input type="submit" id="envoiRequete" class="btn btn-warning" onclick="$(';
+                                $textValidation.= '<div id="envoiRequete" style="display:block;">Nombre de trames &agrave; r&eacute;cu&eacute;rer:&nbsp;';
+                                $textValidation.='<select class="form-control" id="nbTrames" name="nbTrames">';
+                                for ($i=0;$i<=500;$i+=10){$textValidation.='<option value="'.$i.'" ';if($i==50){$textValidation.='selected';} $textValidation.= '>'.$i.'&nbsp;&nbsp;&nbsp;</option>';}
+                                $textValidation.= '</select>';
+                                $textValidation.='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" id="submitrequete" class="btn btn-warning" onclick="$(';
                                 $textValidation.="'#loading2'";
-                                $textValidation.=').show();" value="Appliquer la commande"/>';
+                                $textValidation.=').show();" value="Appliquer la commande"/></div>';
                                 }
                             }
                             
-                            echo '<tr><td align="right">';  
+                            echo '<tr><td align="left">';  
                             echo '<div class="form-group" id="validation">'; 
                             echo '<form id="appliquerCommande" class="form-inline" role="form" action="appliquerCommande.php" method="POST">';                                                                                
                                  

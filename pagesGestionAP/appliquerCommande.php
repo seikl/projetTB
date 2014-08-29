@@ -27,9 +27,9 @@
                     <?php       
                     
                         //pour autoriser le script à s'exécuter au-delà de 10 secondes
-                        set_time_limit(10);                    
+                        set_time_limit(30);                    
                         date_default_timezone_set('Europe/Zurich');
-                        include '../includes/preperationRequete.php'; 
+                        include '../includes/envoiRequete.php'; 
                         include '../includes/fonctionsUtiles.php';
                         $delaiTimeout = 5;
                         
@@ -37,7 +37,8 @@
                         if ($_POST) {                            
                             $tabCommandeChoisie= unserialize(base64_decode($_POST['commandeChoisie']));
                             $tabListeAP = unserialize(base64_decode($_POST['listeAP']));
-                            $nomFichier='../fichiers/output.html';
+                            $nbTrames=$_POST['nbTrames'];
+                            $nomFichier='../fichiers/output.html';                            
                             
                             if (file_exists($nomFichier)){unlink ($nomFichier);}                            
                             file_put_contents( $nomFichier, '<html><body>R&eacute;sultats des requ&ecirc;tes ('.date('d M Y @ H:i:s').')<br>'.
@@ -59,117 +60,104 @@
                             </thead>
                             <tbody>";                        
                         //parcours des AP
-                        foreach ($tabListeAP as $AP){  
-                                                        
-                            //Ouverture d'un socket sur le port concerné
+                        foreach ($tabListeAP as $AP){                                                                                      
                             $fp=true;
                             $reponse = '';
-                            $i=0;
-                            if (strtoupper($tabCommandeChoisie["protocole"])!= "SNMP") {                            
-                                $fp = @fsockopen($AP["adresseIPv4"], $tabCommandeChoisie["portProtocole"], $errno, $errstr, $delaiTimeout);
-                                $erreur = $errno.' - '.$errstr; 
-                            }                                                          
-                            if ((!$fp) && ((strtoupper($tabCommandeChoisie["protocole"]))!= "SNMP")) {
-                                $texteErreur ='<tr class="danger"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';
-                                $texteErreur = $texteErreur.'</td><td>'.$erreur;
-                                $texteErreur= $texteErreur. '</td><td><strong>Not OK</strong></td></tr>';
-                                echo $texteErreur;
-                                file_put_contents($nomFichier, '<p><u><b>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</b></u><br>'.$erreur.'</p>', FILE_APPEND); 
-                            } 
-                            else {                            
-                            
-                                //Préparation et envoi de la requête à transmettre en fonction du protocole (TELNET, SSH, HTTP, HTTPS, SNMP ou AUTRE)
-                                switch (strtoupper($tabCommandeChoisie["protocole"])) {
-                                    case "TELNET":                                       
-                                        $taille=128;  
-                                        $nbTrames=50;
-                                        sleep(1);
-                                        //$reponse .= fgets($fp,$taille);
-                                        
-                                        if ($AP["username"]!=""){fwrite($fp, $AP["username"]."\r\n");$reponse .= fgets($fp,$taille);}                                        
-                                        if ($AP["password"]!=""){fwrite($fp, $AP["password"]."\r\n");$reponse .= fgets($fp,$taille);}                                        
-                                        fwrite($fp, $tabCommandeChoisie["ligneCommande"]."\r\n");
-                                        while (!feof($fp)) {
-                                            $reponse .= fgets($fp,$taille);                                                                                    
-                                            fwrite($fp, "\r\n");
-                                            $nbTrames--;
-                                            if ($nbTrames==0){break;} 
-                                        } 
-                                        fwrite($fp, "quit\r\n");
-                                        
-                                        $debutRep=50;
-                                        $finRep=200;
-                                        fclose($fp);
-                                        break;
-                                        
-                                    case "SSH":
-                                        echo "requ&ecirc;te SSH";
-                                        break;
-                                    
-                                    case "HTTP":
-                                        $requete=requeteHTTP($AP["adresseIPv4"], $tabCommandeChoisie["ligneCommande"]);
-                                        fwrite($fp, $requete);
-                                        $reponse .= fgets($fp);                                         
-                                        $nbTrames=500;
-                                        $taille=1500;
-                                        //Vérification du code de réponse
-                                        if (!preg_match('/20/', substr($reponse,9,3))){$nbTrames=5;}             
-                                        
-                                        while(!feof($fp)){
-                                            $reponse .= fgets($fp,$taille);                                         
-                                            $nbTrames--;
-                                            if ($nbTrames==0){break;}                                              
-                                        }                                              
-                                        $debutRep=0;
-                                        $finRep=128; 
-                                        fclose($fp);
-                                        break;                                        
-                                        
-                                    case "HTTPS":
-                                        echo "requ&ecirc;te HTTPS";;
-                                        break;
-                                    case "SNMP":
-                                        try {      
-                                            $timeout=1000000;
-                                            $requete = snmprealwalk($AP["adresseIPv4"], $AP["snmpCommunity"],$tabCommandeChoisie["ligneCommande"],$timeout);
-                                            $reponse = implode($requete);
-                                        }
-                                        catch(ErrorException $e)
-                                        {        
-                                            $reponse='';
-                                            $info_erreur= $e->getMessage();
-                                        }   
-                                        
-                                        $debutRep=0;
-                                        $finRep=128;                                         
-                                        break;      
-                                    case "AUTRE":
-                                        echo "requ&ecirc;te AUTRE";
-                                        break;  
-                                    default:
-                                        $requete=$tabCommandeChoisie["ligneCommande"];
-                                        break;
-                                }                                                                                                           
+                            $erreur='erreur inconnue';
+                            $i=0;                                                        
 
-                                $extraitReponse = substr($reponse,$debutRep,$finRep);  
-                                $reponse = strip_tags($reponse,'<br>|<p>|<i>|</i>|<input>');
-                                
+                            //Préparation et envoi de la requête à transmettre en fonction du protocole (TELNET, HTTP, HTTPS, SNMP ou AUTRE)
+                            switch (strtoupper($tabCommandeChoisie["protocole"])) {
+                                case "TELNET":                                       
+                                    $taille=1500;  
+                                    //Ouverture d'un socket sur le port concerné
+                                    $fp = @fsockopen($AP["adresseIPv4"], $tabCommandeChoisie["portProtocole"], $errno, $errstr, $delaiTimeout);
+                                    $erreur = $errno.' - '.$errstr;                                         
+                                    sleep(1);                                    
+                                    if (!$fp) {
+                                        $texteErreur ='<tr class="danger"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';
+                                        $texteErreur = $texteErreur.'</td><td>'.$erreur;
+                                        $texteErreur= $texteErreur. '</td><td><strong>Not OK</strong></td></tr>';
+                                        echo $texteErreur;
+                                        file_put_contents($nomFichier, '<p><u><b>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</b></u><br>'.$erreur.'</p>', FILE_APPEND);                                        
+                                    } 
+                                    else{
+                                        //Envoi de la requête
+                                        $reponse = requeteTELNET($AP["adresseIPv4"], $tabCommandeChoisie["ligneCommande"], $AP["username"], $AP["password"], $fp,$taille,$nbTrames);
+                                        fclose($fp);                                                    
+                                    }
+                                    //pour déterminer la partie de réponse qu'on récupère
+                                    $debutRep=50;
+                                    $finRep=200;                                    
+                                    break;
 
-                                if ($reponse != ''){
-                                    echo '<tr class="success"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';
-                                    echo '</td><td>'.$extraitReponse;                                          
-                                    echo '</td><td><strong>OK</strong></td></tr>';
-                                    file_put_contents($nomFichier, '<p><u><b>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</b></u><br>'.$reponse.'</p>', FILE_APPEND);
-                                    
-                                }
-                                else{
-                                    echo '<tr class="danger"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';
-                                    $erreur = 'Pas de r&eacute;ponse re&ccedil;ue';
-                                    echo '</td><td>'.$erreur;                                       
-                                    echo '</td><td><strong>Not OK</strong></td></tr>'; 
-                                    file_put_contents($nomFichier, '<p><u><b>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</b></u><br>'.$erreur.'</p>', FILE_APPEND);
-                                }                           
-                            }                                
+                                case "SSH":
+                                    echo "requ&ecirc;te SSH";
+                                    break;
+
+                                case "HTTP":
+                                    $requete=requeteHTTP($AP["adresseIPv4"], $tabCommandeChoisie["ligneCommande"]);
+                                    fwrite($fp, $requete);
+                                    $reponse .= fgets($fp);                                         
+                                    $nbTrames=500;
+                                    $taille=1500;
+                                    //Vérification du code de réponse
+                                    if (!preg_match('/20/', substr($reponse,9,3))){$nbTrames=5;}             
+
+                                    while(!feof($fp)){
+                                        $reponse .= fgets($fp,$taille);                                         
+                                        $nbTrames--;
+                                        if ($nbTrames==0){break;}                                              
+                                    }                                              
+                                    $debutRep=0;
+                                    $finRep=128; 
+                                    fclose($fp);
+                                    break;                                        
+
+                                case "HTTPS":
+                                    echo "requ&ecirc;te HTTPS";;
+                                    break;
+                                case "SNMP":
+                                    try {      
+                                        $timeout=1000000;
+                                        $requete = snmprealwalk($AP["adresseIPv4"], $AP["snmpCommunity"],$tabCommandeChoisie["ligneCommande"],$timeout);
+                                        $reponse = implode($requete);
+                                    }
+                                    catch(ErrorException $e)
+                                    {        
+                                        $reponse='';
+                                        $erreur= $e->getMessage();
+                                    }   
+
+                                    $debutRep=0;
+                                    $finRep=128;                                         
+                                    break;      
+                                case "AUTRE":
+                                    echo "requ&ecirc;te AUTRE";
+                                    break;  
+                                default:
+                                    $requete=$tabCommandeChoisie["ligneCommande"];
+                                    break;
+                            }//fin du switchCase                                                                                                                                         
+
+                            $extraitReponse = substr($reponse,$debutRep,$finRep);  
+                            $reponse = strip_tags($reponse,'<br>|<p>|<i>|</i>|<input>');
+
+
+                            if ($reponse != ''){
+                                echo '<tr class="success"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';
+                                echo '</td><td>'.$extraitReponse;                                          
+                                echo '</td><td><strong>OK</strong></td></tr>';
+                                file_put_contents($nomFichier, '<p><u><b>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</b></u><br>'.$reponse.'</p>', FILE_APPEND);
+
+                            }
+                            else{
+                                echo '<tr class="danger"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';
+                                $erreur .= '<br>( pas de r&eacute;ponse re&ccedil;ue)';
+                                echo '</td><td>'.$erreur;                                       
+                                echo '</td><td><strong>Not OK</strong></td></tr>'; 
+                                file_put_contents($nomFichier, '<p><u><b>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</b></u><br>'.$erreur.'</p>', FILE_APPEND);
+                            }                                                                                       
                         }                             
                                                     
                         echo '</tbody></table>'; 
