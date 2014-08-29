@@ -262,7 +262,7 @@
                                 foreach($tabCommandes as $ligneReq){$textValidation.='>> '.$ligneReq.'<br>';}
                                 $textValidation.='<input type="hidden" value="'.$listeAP.'" name="listeAP"/>';                                
                                 $textValidation.='<input type="hidden" value="'.$commandeChoisie.'" name="commandeChoisie"/>';
-                                $textValidation.= '<div id="envoiRequete" style="display:block;">Nombre de trames &agrave; r&eacute;cu&eacute;rer:&nbsp;';
+                                $textValidation.= '<div id="envoiRequete" style="display:block;">Nombre de trames &agrave; r&eacute;cu&eacute;p&eacute;rer:&nbsp;';
                                 $textValidation.='<select class="form-control" id="nbTrames" name="nbTrames">';
                                 for ($i=0;$i<=500;$i+=10){$textValidation.='<option value="'.$i.'" ';if($i==50){$textValidation.='selected';} $textValidation.= '>'.$i.'&nbsp;&nbsp;&nbsp;</option>';}
                                 $textValidation.= '</select>';

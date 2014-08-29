@@ -50,8 +50,8 @@ curl_setopt_array($curl, array(
     CURLOPT_CONNECTTIMEOUT=>10,
     CURLOPT_URL => $url,
     CURLOPT_POST => false,
-            CURLOPT_POST => false,
-            CURLOPT_POSTFIELDS => false   
+            CURLOPT_POST => $boolReqPOST,
+            CURLOPT_POSTFIELDS => $valeurs   
 ));
 ;
 

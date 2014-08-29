@@ -76,7 +76,7 @@
                                     sleep(1); 
                                     $erreur .= $errno.' - '.$errstr;
                                     if (!$fp) {     
-                                        $erreurDetectee=true;
+                                        $erreurDetectee=false;
                                     } 
                                     else{
                                         //Envoi de la requête

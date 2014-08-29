@@ -59,7 +59,7 @@
                                         $description=$_POST['description'];
                                         //vérification si une description similaire existe déjà
                                         
-                                        $reqVerifDescription = $connexion->query("SELECT COUNT(*) as nbDescriptionsExistantes  FROM ".$PARAM_nom_bd.".typeCommandes WHERE typeCommande LIKE '".$typeCommande."' AND description LIKE '".$description."';");                                     
+                                        $reqVerifDescription = $connexion->query('SELECT COUNT(*) as nbDescriptionsExistantes FROM '.$PARAM_nom_bd.'.typeCommandes WHERE typeCommande LIKE "'.$typeCommande.'" AND description LIKE "'.$description.'";');
                                         if (!$reqVerifDescription){  
                                             $reqVerifDescription->setFetchMode(PDO::FETCH_OBJ);
                                             while ($verifCommande = $reqVerifDescription->fetch()){$nbDescriptionsExistantes=(string)$verifCommande->nbDescriptionsExistantes;} 
