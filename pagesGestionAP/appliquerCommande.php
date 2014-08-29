@@ -27,7 +27,7 @@
                     <?php       
                     
                         //pour autoriser le script à s'exécuter au-delà de 10 secondes
-                        set_time_limit(30);                    
+                        set_time_limit(10);                    
                         date_default_timezone_set('Europe/Zurich');
                         include '../includes/envoiRequete.php'; 
                         include '../includes/fonctionsUtiles.php';
@@ -87,8 +87,8 @@
                                         fclose($fp);                                                    
                                     }
                                     //pour déterminer la partie de réponse qu'on récupère
-                                    $debutRep=50;
-                                    $finRep=200;                                    
+                                    $debutExtraitRep=50;
+                                    $finExtraitRep=200;                                    
                                     break;
 
                                 case "SSH":
@@ -96,22 +96,9 @@
                                     break;
 
                                 case "HTTP":
-                                    $requete=requeteHTTP($AP["adresseIPv4"], $tabCommandeChoisie["ligneCommande"]);
-                                    fwrite($fp, $requete);
-                                    $reponse .= fgets($fp);                                         
-                                    $nbTrames=500;
-                                    $taille=1500;
-                                    //Vérification du code de réponse
-                                    if (!preg_match('/20/', substr($reponse,9,3))){$nbTrames=5;}             
-
-                                    while(!feof($fp)){
-                                        $reponse .= fgets($fp,$taille);                                         
-                                        $nbTrames--;
-                                        if ($nbTrames==0){break;}                                              
-                                    }                                              
-                                    $debutRep=0;
-                                    $finRep=128; 
-                                    fclose($fp);
+                                    $reponse = requeteHTTP($AP["adresseIPv4"], $tabCommandeChoisie["ligneCommande"], $AP["username"], $AP["password"]); 
+                                    $debutExtraitRep=0;
+                                    $finExtraitRep=200;
                                     break;                                        
 
                                 case "HTTPS":
@@ -129,8 +116,8 @@
                                         $erreur= $e->getMessage();
                                     }   
 
-                                    $debutRep=0;
-                                    $finRep=128;                                         
+                                    $debutExtraitRep=0;
+                                    $finExtraitRep=128;                                         
                                     break;      
                                 case "AUTRE":
                                     echo "requ&ecirc;te AUTRE";
@@ -140,9 +127,7 @@
                                     break;
                             }//fin du switchCase                                                                                                                                         
 
-                            $extraitReponse = substr($reponse,$debutRep,$finRep);  
-                            $reponse = strip_tags($reponse,'<br>|<p>|<i>|</i>|<input>');
-
+                            $extraitReponse = substr($reponse,$debutExtraitRep,$finExtraitRep);                              
 
                             if ($reponse != ''){
                                 echo '<tr class="success"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';

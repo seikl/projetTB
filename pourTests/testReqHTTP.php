@@ -35,17 +35,6 @@ Content-Length: 154
 
 EmWeb_ns%3Asnmp%3A233=APADSSOL01&EmWeb_ns%3Asnmp%3A234=unAutreTest&EmWeb_ns%3Asnmp%3A235=&EmWeb_ns%3Asnmp%3A236=sinfi%40lerepuis.ch&EmWeb_ns%3Asnmp%3A237=";
 
-
-$requete="GET / HTTP/1.1
-Host: 172.16.1.29
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0
-Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Accept-Language: en-US,en;q=0.5
-Accept-Encoding: gzip, deflate
-Referer: http://172.16.1.29/index.html
-Authorization: Basic OnJlcHVpcw==
-Connection: keep-alive
-";
    
    
         $out="";
