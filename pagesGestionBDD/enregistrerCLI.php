@@ -52,31 +52,34 @@
                                         $typeCommande=unserialize(base64_decode($_POST['choixTypeCommande'])); 
                                         $reqEnregistrement = $connexion->query("INSERT INTO lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) VALUES ('".$ligneCommande."','".$protocole."','".$portProtocole."','".$modeleAP["noModeleAP"]."','".$typeCommande["notypeCommande"]."');");
                                         $description=$typeCommande["description"];
-                                        $typeCommande=$typeCommande["typeCommande"];                                        
+                                        $typeCommande=$typeCommande["typeCommande"];                                           
                                     }
                                     else if((isset($_POST['typeCommande'])) && ($choixAjoutDescription =='ajout')){
                                         $typeCommande=$_POST['typeCommande'];
                                         $description=$_POST['description'];
                                         //vérification si une description similaire existe déjà
                                         
-                                        $reqVerifDescription = $connexion->query("SELECT *  FROM ".$PARAM_nom_bd.".typeCommandes WHERE typeCommande LIKE '".$typeCommande."' AND description LIKE '".$description."';");
-                                        if ($reqVerifDescription){
-                                            echo "<p><strong> Cette description de commande existe d&eacute;j&eagrave; <br>";
-                                            echo "Veuillez modifier le formulaire ou en choisir une existante.</strong>!<br>";   
-                                            $reqVerifDescription->closeCursor();
-                                            
+                                        $reqVerifDescription = $connexion->query("SELECT COUNT(*) as nbDescriptionsExistantes  FROM ".$PARAM_nom_bd.".typeCommandes WHERE typeCommande LIKE '".$typeCommande."' AND description LIKE '".$description."';");                                     
+                                        if (!$reqVerifDescription){  
+                                            $reqVerifDescription->setFetchMode(PDO::FETCH_OBJ);
+                                            while ($verifCommande = $reqVerifDescription->fetch()){$nbDescriptionsExistantes=(string)$verifCommande->nbDescriptionsExistantes;} 
+                                            if ($nbDescriptionsExistantes>0){
+                                                echo "<p><strong> Cette description de commande existe d&eacute;j&agrave; <br>";
+                                                echo "Veuillez modifier le formulaire ou en choisir une existante.</strong>!<br>"; 
+                                                $reqVerifDescription->closeCursor(); 
+                                                $reqEnregistrement=FALSE;                                                                                                
+                                            }
                                         }
                                         else {
                                             $typeCommande=preg_replace("/'/i", "\'", $typeCommande);
                                             $description=preg_replace("/'/i", "\'", $description);                                        
-                                            $reqAjoutDescription = $connexion->query("INSERT INTO ".$PARAM_nom_bd.".typeCommandes (typeCommande,description) VALUES ('".$typeCommande."','".$description."');");                                        
-
+                                            $reqAjoutDescription = $connexion->query("INSERT INTO ".$PARAM_nom_bd.".typeCommandes (typeCommande,description) VALUES ('".$typeCommande."','".$description."');");                                            
                                             $reqChoixDescription = $connexion->query("SELECT MAX(notypeCommande) as notypeCommande FROM ".$PARAM_nom_bd.".typeCommandes;");
                                             $reqChoixDescription->setFetchMode(PDO::FETCH_OBJ);
                                             while ($nouvelleCommande = $reqChoixDescription->fetch()){$notypeCommande=(string)$nouvelleCommande->notypeCommande;}                                       
                                             $reqChoixDescription->closeCursor();
-                                            $reqAjoutDescription->closeCursor();                                          
-                                            $reqEnregistrement = $connexion->query("INSERT INTO lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) VALUES ('".$ligneCommande."','".$protocole."','".$portProtocole."','".$modeleAP["noModeleAP"]."','".$notypeCommande."');");                                                                              
+                                            $reqAjoutDescription->closeCursor();                                
+                                            $reqEnregistrement = $connexion->query("INSERT INTO ".$PARAM_nom_bd.".lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) VALUES ('".$ligneCommande."','".$protocole."','".$portProtocole."','".$modeleAP["noModeleAP"]."','".$notypeCommande."');");                                                                              
                                         }
                                     }                         
                                     else {
@@ -86,13 +89,12 @@
                                     echo "<table class='table'><tr><th colspan='2'>Informations re&ccedil;ues:</th></tr>";
                                     echo "<tr><td>Ligne de commande:&nbsp;</td><td>".$ligneCommande."</td></tr>";
                                     echo "<tr><td>Protocole et no de port:&nbsp;</td><td>".$protocole.": ".$portProtocole."</td></tr>";
-                                    echo "<tr><td>Mod&egrave;le d'AP:&nbsp;</td><td>".$modeleAP["nomFabricant"]." ".$modeleAP["nomModele"]."firmware  (v.".$modeleAP["versionFirmware"].")</td></tr>";
-                                    echo "<tr><td>Type de commande:&nbsp;</td><td>".$typeCommande." ( ".substr($description,0,60)."...)</td></tr>";
+                                    echo "<tr><td>Mod&egrave;le d'AP:&nbsp;</td><td>".$modeleAP["nomFabricant"]." ".$modeleAP["nomModele"]."firmware  (v.".$modeleAP["versionFirmware"].")</td></tr>";                                    
+                                    echo "<tr><td>Type de commande:&nbsp;</td><td>".$typeCommande." ( ".substr($description,0,60)."...)</td></tr><br>";
                                     echo "<tr><td colspan='2'>-----------------------------------------------------------------------</td></tr></table>";                                    
                                     
-
                                     if (!$reqEnregistrement){                                                                                
-                                        echo "<p><strong> Probl&egrave;me lors de l'enregistrement</strong>!<br>";
+                                        echo "<br><p><strong> Probl&egrave;me lors de l'enregistrement</strong>!<br>";
                                         echo $boutonRetour."&nbsp;&nbsp;&nbsp;&nbsp;".$boutonReinit."</p>";
                                     }
                                     else{

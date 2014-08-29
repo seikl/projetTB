@@ -120,7 +120,7 @@
                                 case "SNMP":
                                     try {      
                                         $timeout=1000000;
-                                        $requete = snmprealwalk($AP["adresseIPv4"], $AP["snmpCommunity"],$tabCommandeChoisie["ligneCommande"],$timeout);
+                                        $requete =  snmprealwalk($AP["adresseIPv4"], $AP["snmpCommunity"],$tabCommandeChoisie["ligneCommande"],$timeout);
                                         $reponse = implode($requete);
                                     }
                                     catch(ErrorException $e)
