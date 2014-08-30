@@ -17,7 +17,29 @@
         <table border="0" width="90%" align="center">
            <tbody>
               <tr>
-                <?php include '../includes/menus.php'; echo $menuPagesGestionBDD; ?>                  
+                <?php include '../includes/menus.php'; echo $menuPagesGestionBDD; ?>
+              <tr>
+                 <td width="30%" class="leftmenu">
+                        <p><b>G&eacute;rer les enregistrments des AP</b></p>
+                        <ul class="nav nav-pills nav-justified">                       
+                           <li><a href="ajoutAP.php">Ajouter</a></li>
+                           <li><a href="selectModifAP.php">Modifier</a></li>                       
+                           <li><a href="selectSupprAP.php">Supprimer</a></li>
+                        </ul>
+                         <p><b>G&eacute;rer les mod&egrave;les enregistr&eacute;s</b></p>
+                        <ul class="nav nav-pills nav-justified">                       
+                           <li><a href="ajoutModele.php">Ajouter</a></li>
+                           <li><a href="selectModifModele.php">Modifier</a></li>                       
+                           <li><a href="selectSupprModele.php">Supprimer</a></li>
+                        </ul>
+                         <p><b>G&eacute;rer les lignes de commandes (CLI)</b></p>
+                        <ul class="nav nav-pills nav-justified">                       
+                           <li class="active"><a href="ajoutCLI.php">Ajouter</a></li>
+                           <li><a href="selectModifCLI.php">Modifier</a></li>                       
+                           <li><a href="selectSupprCLI.php">Supprimer</a></li>
+                        </ul>                      
+                 </td>
+                 
                  <td class="informations">                     
                     <ol class="breadcrumb">
                         <li><a href="accueilGestionBDD.php">Accueil gestion de la BDD</a></li> 
@@ -59,8 +81,8 @@
                                         $description=$_POST['description'];
                                         //vérification si une description similaire existe déjà
                                         
-                                        $reqVerifDescription = $connexion->query('SELECT COUNT(*) as nbDescriptionsExistantes FROM '.$PARAM_nom_bd.'.typeCommandes WHERE typeCommande LIKE "'.$typeCommande.'" AND description LIKE "'.$description.'";');
-                                        if (!$reqVerifDescription){  
+                                        $reqVerifDescription = $connexion->query('SELECT COUNT(notypeCommande) as nbDescriptionsExistantes FROM '.$PARAM_nom_bd.'.typeCommandes WHERE typeCommande LIKE "'.$typeCommande.'" AND description LIKE "'.$description.'";');
+                                        if ($reqVerifDescription!=false){  
                                             $reqVerifDescription->setFetchMode(PDO::FETCH_OBJ);
                                             while ($verifCommande = $reqVerifDescription->fetch()){$nbDescriptionsExistantes=(string)$verifCommande->nbDescriptionsExistantes;} 
                                             if ($nbDescriptionsExistantes>0){

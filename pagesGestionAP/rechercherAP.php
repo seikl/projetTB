@@ -18,6 +18,18 @@
            <tbody>
               <tr>
                 <?php include '../includes/menus.php'; echo $menuPagesGestionAP; ?>  
+              <tr>
+                 <td width="30%" class="leftmenu">
+                        <p><b>Informations sur les AP</b></p>
+                             <ul class="nav nav-pills nav-stacked">                       
+                            <li><a href="afficherListeAP.php">Afficher la liste  de tous les AP inscrits</a></li>
+                           <li class="active"><a href="rechercherAP.php">Rechercher des AP sur le r&eacute;seau</a></li>                      
+                        </ul>
+                        <p><b>Configurer les AP</b></p>
+                        <ul class="nav nav-pills nav-stacked">                       
+                           <li><a href="choisirCommande.php">Appliquer une commande &agrave; un ou plusieurs AP</a></li>    
+                        </ul> 
+                 </td>                   
             
                  <td class="informations">
                     <ol class="breadcrumb">

@@ -15,7 +15,19 @@
         <table border="0" width="90%" align="center">
            <tbody>
               <tr>
-                <?php include '../includes/menus.php'; echo $menuPagesGestionAP; ?>  
+                <?php include '../includes/menus.php'; echo $menuPagesGestionAP; ?> 
+              <tr>
+                 <td width="30%" class="leftmenu">
+                        <p><b>Informations sur les AP</b></p>
+                             <ul class="nav nav-pills nav-stacked">                       
+                            <li class="active"><a href="afficherListeAP.php">Afficher la liste  de tous les AP inscrits</a></li>
+                           <li><a href="rechercherAP.php">Rechercher des AP sur le r&eacute;seau</a></li>                      
+                        </ul>
+                        <p><b>Configurer les AP</b></p>
+                        <ul class="nav nav-pills nav-stacked">                       
+                           <li><a href="choisirCommande.php">Appliquer une commande &agrave; un ou plusieurs AP</a></li>    
+                        </ul> 
+                 </td>                 
             
                  <td class="informations">
                      
@@ -110,5 +122,6 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
+        <!-- Placed at the end of the document so the pages load faster -->    
   </body>
 </html>

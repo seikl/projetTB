@@ -17,9 +17,30 @@
         <table border="0" width="90%" align="center">
            <tbody>
               <tr>
-                <?php include '../includes/menus.php'; echo $menuPagesGestionBDD; ?>                  
-                 <td class="informations">
-                     
+                <?php include '../includes/menus.php'; echo $menuPagesGestionBDD; ?>
+              <tr>
+                 <td width="30%" class="leftmenu">
+                        <p><b>G&eacute;rer les enregistrments des AP</b></p>
+                        <ul class="nav nav-pills nav-justified">                       
+                           <li><a href="ajoutAP.php">Ajouter</a></li>
+                           <li><a href="selectModifAP.php">Modifier</a></li>                       
+                           <li><a href="selectSupprAP.php">Supprimer</a></li>
+                        </ul>
+                         <p><b>G&eacute;rer les mod&egrave;les enregistr&eacute;s</b></p>
+                        <ul class="nav nav-pills nav-justified">                       
+                           <li><a href="ajoutModele.php">Ajouter</a></li>
+                           <li><a href="selectModifModele.php">Modifier</a></li>                       
+                           <li><a href="selectSupprModele.php">Supprimer</a></li>
+                        </ul>
+                         <p><b>G&eacute;rer les lignes de commandes (CLI)</b></p>
+                        <ul class="nav nav-pills nav-justified">                       
+                           <li class="active"><a href="ajoutCLI.php">Ajouter</a></li>
+                           <li><a href="selectModifCLI.php">Modifier</a></li>                       
+                           <li><a href="selectSupprCLI.php">Supprimer</a></li>
+                        </ul>                      
+                 </td>
+                 
+                 <td class="informations">                     
                      <ol class="breadcrumb">
                         <li><a href="accueilGestionBDD.php">Accueil gestion de la BDD</a></li> 
                         <li>Ajouter une ligne de commande</li>
@@ -73,14 +94,14 @@
                                 </td></tr>
                                 <tr><td align="left" colspan="2"><p>
                                     <strong class="obligatoire">*&nbsp;</strong><label for='protocole'>Choix du protocole et saisie du No de port</label><br>
-                                    <select class="form-control" id="protocole" name="protocole"> 
+                                    <select class="form-control" id="protocole" name="protocole" onclick="setNoPort()" > 
                                         <option value="">Choix du protocole &nbsp;&nbsp;&nbsp;</option>';
                                         <option value="TELNET">TELNET&nbsp;&nbsp;&nbsp;</option>';
                                         <option value="HTTP">HTTP&nbsp;&nbsp;&nbsp;</option>';
                                         <option value="HTTPS">HTTPS&nbsp;&nbsp;&nbsp;</option>';
                                         <option value="SNMP">SNMP&nbsp;&nbsp;&nbsp;</option>';                                        
                                     </select><strong>:</strong>                                                                    
-                                    <input type="text" class="form-control" name="portProtocole" id="ligneCommande" size="3" maxlength="5" placeholder="23">  
+                                    <input type="text" class="form-control" name="portProtocole" id="portProtocole" size="3" maxlength="5" placeholder="23">  
                                         </p>
                                 </td></tr>
                                 <tr><td colspan="2">
@@ -143,6 +164,18 @@
     <!-- Bootstrap core JavaScrip ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->    
     <script type="text/javascript">
+    //pour remplir automatiquement le No de port par défaut   
+    function setNoPort()
+     {        
+        var e = document.getElementById('protocole');
+        var strNoPort = e.options[e.selectedIndex].value;
+        if (strNoPort==="TELNET"){document.getElementById("ajoutCLI").elements['portProtocole'].value="23";}
+        if (strNoPort==="HTTP"){document.getElementById("ajoutCLI").elements['portProtocole'].value="80";}
+        if (strNoPort==="HTTPS"){document.getElementById("ajoutCLI").elements['portProtocole'].value="443";}
+        if (strNoPort==="SNMP"){document.getElementById("ajoutCLI").elements['portProtocole'].value="161";}
+     }
+     
+        //pour valider les saisies
         $(function()
         {
             $("#ajoutCLI").validate(
