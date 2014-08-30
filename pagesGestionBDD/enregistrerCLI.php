@@ -62,6 +62,7 @@
                                 $modeleAP= unserialize(base64_decode($_POST['modeleAP']));
                                 $choixAjoutDescription = $_POST['choixAjoutDescription'];
                                 $reqAjoutDescription=null;
+                                $reqEnregistrement=true;
                                 
                                 
                                 try
@@ -92,7 +93,7 @@
                                                 $reqEnregistrement=FALSE;                                                                                                
                                             }
                                         }
-                                        else {
+                                        if ($reqEnregistrement){
                                             $typeCommande=preg_replace("/'/i", "\'", $typeCommande);
                                             $description=preg_replace("/'/i", "\'", $description);                                        
                                             $reqAjoutDescription = $connexion->query("INSERT INTO ".$PARAM_nom_bd.".typeCommandes (typeCommande,description) VALUES ('".$typeCommande."','".$description."');");                                            
@@ -115,8 +116,8 @@
                                     echo "<tr><td>Type de commande:&nbsp;</td><td>".$typeCommande." ( ".substr($description,0,60)."...)</td></tr><br>";
                                     echo "<tr><td colspan='2'>-----------------------------------------------------------------------</td></tr></table>";                                    
                                     
-                                    if (!$reqEnregistrement){                                                                                
-                                        echo "<br><p><strong> Probl&egrave;me lors de l'enregistrement</strong>!<br>";
+                                    if (!$reqEnregistrement){                                                                                                                        
+                                        echo "<br><p><strong> Probl&egrave;me lors de l'enregistrement</strong>!<br><br>";                                        
                                         echo $boutonRetour."&nbsp;&nbsp;&nbsp;&nbsp;".$boutonReinit."</p>";
                                     }
                                     else{

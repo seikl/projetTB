@@ -34,27 +34,32 @@ $url='http://firewall/B22CA16978AD7FC4E093954E805C59FE8EA3B4B/list_hidden_form.h
  */
 
 //CHange le nom d'un Avaya AP-6
-$valeurs="EmWeb_ns%3Asnmp%3A233=APADSL01&EmWeb_ns%3Asnmp%3A234.0*s=pas+de+lieu&EmWeb_ns%3Asnmp%3A235=&EmWeb_ns%3Asnmp%3A236=sinfi%40lerepuis.ch&EmWeb_ns%3Asnmp%3A237=";    
+$valeurs="EmWeb_ns%3Asnmp%3A233=testAPMaison&EmWeb_ns%3Asnmp%3A234=test&EmWeb_ns%3Asnmp%3A235=Contact+Name&EmWeb_ns%3Asnmp%3A236.0*s=aptool%40maison.com&EmWeb_ns%3Asnmp%3A237=Contact+Phone+Number";
 $referer="http://172.16.1.29/";
-$url='http://172.16.1.29/';     
-     
+$url='https://10.0.0.62/cfg/system.html';  
+$userPassword=":public";
+https://10.0.0.62/cfg/system.html?EmWeb_ns%3Asnmp%3A233=testAPMaison&EmWeb_ns%3Asnmp%3A234=test&EmWeb_ns%3Asnmp%3A235=Contact%20Name&EmWeb_ns%3Asnmp%3A236.0*s=aptool%40maison.com&EmWeb_ns%3Asnmp%3A237=Contact%20Phone%20Number
 
+        //préparation de la req. HTTP
+        curl_setopt_array($curl, array(
+            CURLOPT_FRESH_CONNECT=>true,
+            CURLOPT_RETURNTRANSFER => true,    
+            CURLOPT_UNRESTRICTED_AUTH=>true,
+            CURLOPT_FOLLOWLOCATION=>true,
+            CURLOPT_HEADER=>true,
+            CURLOPT_PORT=>443,
+            CURLOPT_USERPWD=>$userPassword,
+            CURLOPT_AUTOREFERER => true,
+            CURLOPT_CONNECTTIMEOUT=>5,  
+            CURLOPT_SSL_VERIFYPEER=>false,
+            CURLOPT_SSL_VERIFYHOST=>2,
+            CURLOPT_URL => $url,
+            
+        ));
 
-curl_setopt_array($curl, array(    
-    CURLOPT_FRESH_CONNECT=>true,
-    CURLOPT_RETURNTRANSFER => false,    
-    CURLOPT_UNRESTRICTED_AUTH=>true,    
-    CURLOPT_FOLLOWLOCATION=>true,
-    CURLOPT_HEADER=>true,
-    CURLOPT_USERPWD=>":repuis",
-    CURLOPT_CONNECTTIMEOUT=>10,
-    CURLOPT_URL => $url,
-    CURLOPT_POST => false,
-            CURLOPT_POST => $boolReqPOST,
-            CURLOPT_POSTFIELDS => $valeurs   
-));
-;
-
+                    curl_setopt($curl,CURLOPT_POST,true);
+            curl_setopt($curl,CURLOPT_POSTFIELDS,$valeurs);
+        
 if(!$result = curl_exec($curl)){
     die('Error: "' . curl_error($curl) . '" - Code: ' . curl_errno($curl));
 }

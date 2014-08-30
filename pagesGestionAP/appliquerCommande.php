@@ -108,14 +108,27 @@
                                     $reponse = requeteHTTP($AP["adresseIPv4"], $tabCommandeChoisie["ligneCommande"], $tabCommandeChoisie["portProtocole"] ,$AP["username"], $AP["password"]);
                                     if(preg_match("/Erreur/i", $reponse)){$erreur=$reponse; $reponse='';$erreurDetectee=false;}
                                     //pour traiter les erreurs HTTP recues
-                                    if((preg_match("/40/i", substr($reponse,0,3))) || (preg_match("/50/i", substr($reponse,0,3)))){$erreur=$reponse; $reponse='';$erreurDetectee=true;}                                    
-                                    
+                                        if((preg_match("/40/i", substr($reponse,0,3))) || 
+                                            (preg_match("/50/i", substr($reponse,0,3))) ||
+                                            (preg_match("/0/i", substr($reponse,0,1)))){
+                                            $erreur=$reponse; $reponse='';$erreurDetectee=true;                                            
+                                        }
                                     $debutExtraitRep=0;
                                     $finExtraitRep=200;
                                     break;                                        
 
                                 case "HTTPS":
-                                    echo "requ&ecirc;te HTTPS";;
+                                    $reponse = requeteHTTPS($AP["adresseIPv4"], $tabCommandeChoisie["ligneCommande"], $tabCommandeChoisie["portProtocole"] ,$AP["username"], $AP["password"]);
+                                        if(preg_match("/Erreur/i", $reponse)){$erreur=$reponse; $reponse='';$erreurDetectee=false;}
+                                        //pour traiter les erreurs HTTP recues
+                                        if((preg_match("/40/i", substr($reponse,0,3))) || 
+                                            (preg_match("/50/i", substr($reponse,0,3))) ||
+                                            (preg_match("/0/i", substr($reponse,0,1)))){
+                                            $erreur=$reponse; $reponse='';$erreurDetectee=true;                                            
+                                        }
+
+                                        $debutExtraitRep=0;
+                                        $finExtraitRep=200;  
                                     break;
                                 case "SNMP":
                                     try {      
