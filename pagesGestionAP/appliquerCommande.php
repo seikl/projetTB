@@ -93,7 +93,7 @@
                                     break;
 
                                 case "HTTP":
-                                    $reponse = requeteHTTP($AP["adresseIPv4"], $tabCommandeChoisie["ligneCommande"], $AP["username"], $AP["password"]);
+                                    $reponse = requeteHTTP($AP["adresseIPv4"], $tabCommandeChoisie["ligneCommande"], $tabCommandeChoisie["portProtocole"] ,$AP["username"], $AP["password"]);
                                     if(preg_match("/Erreur/i", $reponse)){$erreur=$reponse; $reponse='';$erreurDetectee=false;}
                                     //pour traiter les erreurs HTTP recues
                                     if((preg_match("/40/i", substr($reponse,0,3))) || (preg_match("/50/i", substr($reponse,0,3)))){$erreur=$reponse; $reponse='';$erreurDetectee=true;}                                    

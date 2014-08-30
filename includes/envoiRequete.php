@@ -7,7 +7,7 @@
     }
 
     //*************pour envoyer une requête HTTP (utilise cURL)
-    function requeteHTTP($adresseIP, $requete, $user, $mdp)
+    function requeteHTTP($adresseIP, $requete,$noPort, $user, $mdp)
     {               
         $out="";
         $boolReqPOST=false;
@@ -28,6 +28,7 @@
             CURLOPT_UNRESTRICTED_AUTH=>true,
             CURLOPT_FOLLOWLOCATION=>true,
             CURLOPT_HEADER=>true,
+            CURLOPT_PORT=>$noPort,
             CURLOPT_USERPWD=>$userPassword,
             CURLOPT_AUTOREFERER => true,
             CURLOPT_CONNECTTIMEOUT=>5,            
