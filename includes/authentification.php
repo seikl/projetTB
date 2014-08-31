@@ -3,8 +3,10 @@
 //script pour l'authentificaton:
 //récupéré sur http://php.net/manual/en/features.http-auth.php, consulté le 30.08.2014
 
+$ini_array = parse_ini_file("logininfo.ini");
+
 $_user_ = '';
-$_password_ = 'admin';
+$_password_ = $ini_array["mdp"];
 
 $_pageHTML_='<!DOCTYPE html>
 <html lang="fr"><head>

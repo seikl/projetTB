@@ -21,9 +21,7 @@
                  <td width="30%" class="leftmenu">
                      <p><b>Gestion de l'acc&egrave;s</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
-                            <li><a href="#">Modifier le mot de passe</a></li>
-                            <li><a href="#">R&eacute;initialiser le mot de passe</a></li>
-                   
+                            <li><a href="modifPassword.php">Modifier le mot de passe</a></li>                  
                         </ul>
                         <p><b>Gestion de la BDD</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
@@ -40,9 +38,7 @@
 
                         <?php                                          
                       
-                            $boutonRetour = '<button class="btn btn-primary" onclick="history.back()">Retour</button>';
-                            echo "<strong>En construction...</strong><br><br>";
-                            echo $boutonRetour;
+                            echo '<input type="button" class="btn btn-primary" onclick="window.location=\'modifPassword.php\'" value="Modifer le mot de passe"/><br><br>';
                                    
                          ?>      
                     </ol>
