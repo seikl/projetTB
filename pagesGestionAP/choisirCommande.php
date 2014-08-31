@@ -117,70 +117,16 @@
 
                            catch(Exception $e)
                            {
-                                   echo '</select></div></form></td></tr></table><li>Erreur lors du chargement</li></ol>';
+                                   echo '</select></div></form></td></tr></table><li>Erreur lors du chargement des mod&egrave; AP</li></ol>';
                                    echo 'Erreur : '.$e->getMessage().'<br />';
                                    echo 'N° : '.$e->getCode();
-                                   break;
                            }                        
 
-                           echo '</select><br><br></td></tr>';                                      
-                           echo '<tr><td width="auto">';
-                           echo '<label for="name">Choix des AP &agrave; contacter:</label><br>
-                               <select multiple size="10" class="form-control" name="APAchoisir[]">';                    
-
-                           //Pour afifcher la liste des AP à sélectionner
-                           try
-                           {
-
-                               $i =0;
-                               $listeAPactuels=null;
-                               $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
-
-                               if ($noModele=='0'){
-                                   $resultatsListeAP=$connexion->query("SELECT * FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP;");                                 
-                               }
-                               else{
-                                   $resultatsListeAP=$connexion->query("SELECT * FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP AND a.noModeleAP =".$noModele.";");
-                               }                                    
-
-                               $resultatsListeAP->setFetchMode(PDO::FETCH_OBJ);                                 
-
-                               while($ligne = $resultatsListeAP->fetch() ) // on récupère la liste des membres
-                               {     
-                                   $noAP=(string)$ligne->noAP;
-                                   $nomAP=(string)$ligne->nomAP;
-                                   $ip=(string)$ligne->adresseIPv4;
-                                   $username=(string)$ligne->username;
-                                   $password=(string)$ligne->password;
-                                   $snmpCommunity=(string)$ligne->snmpCommunity;
-                                   $nomFabricant=(string)$ligne->nomFabricant;
-                                   $nomModele=(string)$ligne->nomModele;
-                                   $versionFirmware=(string)$ligne->versionFirmware;   
-                                   $adrMACFabricant =(string)$ligne->adrMACFabricant;
-                                   //$noModeleAP =(string)$ligne->noModeleAP;
-
-                                   if (in_array($noAP, $APChoisis)){
-                                       echo '<option value="'.$noAP.'" selected>'.$noAP.' - '.$nomAP.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.', IP: '.$ip.')&nbsp;&nbsp;&nbsp;</option>';                                       
-                                       $listeAPactuels[$i]=array("noAP" =>$noAP, "nomAP"=>$nomAP, "adresseIPv4"=>$ip,"snmpCommunity"=>$snmpCommunity, "username"=>$username, "password"=>$password);       
-                                       $i++;
-                                   }
-                                   else {
-                                       echo '<option value="'.$noAP.'">'.$noAP.' - '.$nomAP.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.', IP: '.$ip.')&nbsp;&nbsp;&nbsp;</option>';  
-                                   }
-                               }
-                               $resultatsListeAP->closeCursor(); // on ferme le curseur des résultats                                                                            
-                           }
-
-                           catch(Exception $e)
-                           {
-                                   echo '</select></div></form></td></tr></table><li>Erreur lors du chargement</li></ol>';
-                                   echo 'Erreur : '.$e->getMessage().'<br />';
-                                   echo 'N° : '.$e->getCode();
-                           }                                                
-                           echo '</select><br></td></tr>';
-                           echo '<tr><td width="auto">';
+                           echo '</select><br><br></td></tr>'; 
+                           
+ echo '<tr><td width="auto">';
                            echo '<label for="commande">Choix de la commande &agrave; appliquer:</label><br>
-                               <select class="form-control" name="commande">';     
+                               <select class="form-control" name="commande" onChange="this.form.submit()">';     
 
                             if ($noCommandeChoisie == '0'){                                
                                 echo '<option value="0" selected>Liste des commandes disponibles...&nbsp;&nbsp;&nbsp;</option>'; 
@@ -237,11 +183,72 @@
 
                            catch(Exception $e)
                            {
-                                   echo '</select></div></form></td></tr></table><li>Erreur lors du chargement</li></ol>';
+                                   echo '</select></div></form></td></tr></table><li>Erreur lors du chargement des commandes</li></ol>';
                                    echo 'Erreur : '.$e->getMessage().'<br/>';
                                    echo 'N° : '.$e->getCode();
                            }                                                                                                   
-                           echo '</select><br></td></tr></div></form>'; 
+                           echo '</select><br></td></tr>';
+                               
+                           echo '<tr><td width="auto">';
+                           echo '<label for="name">Choix des AP &agrave; contacter:</label><br>
+                               <select multiple size="10" class="form-control" name="APAchoisir[]">';                    
+
+                           //Pour afifcher la liste des AP à sélectionner
+                           try
+                           {
+
+                               $i =0;
+                               $listeAPactuels=null;
+                               $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
+
+                               if (($noModele=='0') && ($noCommandeChoisie=='0')){
+                                   $resultatsListeAP=$connexion->query("SELECT * FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP;");                                 
+                               }
+                               else if (($noModele=='0') && ($noCommandeChoisie!='0')){                                   
+                                    $resultatsListeAP=$connexion->query("SELECT * FROM lignesCommande l1, accessPoints a, modeles m
+                                                                WHERE l1.ligneCommande IN (SELECT l2.ligneCommande from lignesCommande l2 where l2.noCLI=".$noCommandeChoisie.")
+                                                                AND a.noModeleAP=l1.noModeleAP AND a.noModeleAP=m.noModeleAP;");                                                                      
+                               }
+                               else {
+                                    $resultatsListeAP=$connexion->query("SELECT * FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP AND a.noModeleAP =".$noModele.";");                                   
+                               }
+
+                               $resultatsListeAP->setFetchMode(PDO::FETCH_OBJ);                                 
+
+                               while($ligne = $resultatsListeAP->fetch() )
+                               {     
+                                   $noAP=(string)$ligne->noAP;
+                                   $nomAP=(string)$ligne->nomAP;
+                                   $ip=(string)$ligne->adresseIPv4;
+                                   $username=(string)$ligne->username;
+                                   $password=(string)$ligne->password;
+                                   $snmpCommunity=(string)$ligne->snmpCommunity;
+                                   $nomFabricant=(string)$ligne->nomFabricant;
+                                   $nomModele=(string)$ligne->nomModele;
+                                   $versionFirmware=(string)$ligne->versionFirmware;   
+                                   $adrMACFabricant =(string)$ligne->adrMACFabricant;
+                                   //$noModeleAP =(string)$ligne->noModeleAP;
+
+                                   if (in_array($noAP, $APChoisis)){
+                                       echo '<option value="'.$noAP.'" selected>'.$noAP.' - '.$nomAP.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.', IP: '.$ip.')&nbsp;&nbsp;&nbsp;</option>';                                       
+                                       $listeAPactuels[$i]=array("noAP" =>$noAP, "nomAP"=>$nomAP, "adresseIPv4"=>$ip,"snmpCommunity"=>$snmpCommunity, "username"=>$username, "password"=>$password);       
+                                       $i++;
+                                   }
+                                   else {
+                                       echo '<option value="'.$noAP.'">'.$noAP.' - '.$nomAP.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.', IP: '.$ip.')&nbsp;&nbsp;&nbsp;</option>';  
+                                   }
+                               }
+                               $resultatsListeAP->closeCursor(); // on ferme le curseur des résultats                                                                            
+                           }
+
+                           catch(Exception $e)
+                           {
+                                   echo '</select></div></form></td></tr></table><li>Erreur lors du chargement des AP</li>';
+                                   echo 'Erreur : '.$e->getMessage().'<br />';
+                                   echo 'N° : '.$e->getCode();
+                           }                                                
+                           echo '</select><br></td></tr>';
+                          echo '</div></form>'; 
                            
                            
                             
@@ -263,25 +270,22 @@
                                 if ($noCommandeChoisie=='0'){
                                     $textValidation.='<br><strong>Aucune commande s&eacute;lectionn&eacute;e.</strong>';
                                 }
-                                if ($noCommandeChoisie!='0' && $noModele=='0'){                                    
-                                    $textValidation.='<br><strong>Attention au choix de la commande si les AP choisis sont de mod&egrave;les diff&eacute;rents.</strong>';
-                                }
                                 if ($noCommandeChoisie!='0' && $listeAPactuels!=null){ 
-                                $listeAP=base64_encode(serialize($listeAPactuels));
-                                $commandeChoisie=base64_encode(serialize($commandeChoisie));
-                                $textValidation.='<br><br><u>Description de la commande:</u> '.$descriptionChoixCLI;
-                                $textValidation.='<br><br><u>Ligne de commande:</u><br>';
-                                $tabCommandes= explode("\n", $ligneCommandeChoisie);      
-                                foreach($tabCommandes as $ligneReq){$textValidation.='>> '.$ligneReq.'<br>';}
-                                $textValidation.='<input type="hidden" value="'.$listeAP.'" name="listeAP"/>';                                
-                                $textValidation.='<input type="hidden" value="'.$commandeChoisie.'" name="commandeChoisie"/>';
-                                $textValidation.= '<div id="envoiRequete" style="display:block;">Nombre de trames &agrave; r&eacute;cu&eacute;p&eacute;rer:&nbsp;';
-                                $textValidation.='<select class="form-control" id="nbTrames" name="nbTrames">';
-                                for ($i=0;$i<=500;$i+=10){$textValidation.='<option value="'.$i.'" ';if($i==50){$textValidation.='selected';} $textValidation.= '>'.$i.'&nbsp;&nbsp;&nbsp;</option>';}
-                                $textValidation.= '</select>';
-                                $textValidation.='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" id="submitrequete" class="btn btn-warning" onclick="$(';
-                                $textValidation.="'#loading2'";
-                                $textValidation.=').show();" value="Appliquer la commande"/></div>';
+                                    $listeAP=base64_encode(serialize($listeAPactuels));
+                                    $commandeChoisie=base64_encode(serialize($commandeChoisie));
+                                    $textValidation.='<br><br><u>Description de la commande:</u> '.$descriptionChoixCLI;
+                                    $textValidation.='<br><br><u>Ligne de commande:</u><br>';
+                                    $tabCommandes= explode("\n", $ligneCommandeChoisie);      
+                                    foreach($tabCommandes as $ligneReq){$textValidation.='>> '.$ligneReq.'<br>';}
+                                    $textValidation.='<input type="hidden" value="'.$listeAP.'" name="listeAP"/>';                                
+                                    $textValidation.='<input type="hidden" value="'.$commandeChoisie.'" name="commandeChoisie"/>';
+                                    $textValidation.= '<div id="envoiRequete" style="display:block;">Nombre de trames &agrave; r&eacute;cu&eacute;p&eacute;rer:&nbsp;';
+                                    $textValidation.='<select class="form-control" id="nbTrames" name="nbTrames">';
+                                    for ($i=0;$i<=500;$i+=10){$textValidation.='<option value="'.$i.'" ';if($i==50){$textValidation.='selected';} $textValidation.= '>'.$i.'&nbsp;&nbsp;&nbsp;</option>';}
+                                    $textValidation.= '</select>';
+                                    $textValidation.='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" id="submitrequete" class="btn btn-warning" onclick="$(';
+                                    $textValidation.="'#loading2'";
+                                    $textValidation.=').show();" value="Appliquer la commande"/></div>';
                                 }
                             }
                             

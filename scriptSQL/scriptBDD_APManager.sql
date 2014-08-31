@@ -77,27 +77,16 @@ insert into typeCommandes (typeCommande,description) values('Afficher la page d\
 insert into typeCommandes (typeCommande,description) values('Afficher la page d\'informations','Envoi d\'une requête GET / en HTTP pour obtenir la page d\'informations d\'un AP');
 insert into typeCommandes (typeCommande,description) values('Afficher le nombre d\'impressions','Afficher le nombre d\'impressions via un OID SNMP');
 insert into typeCommandes (typeCommande,description) values('Parcourir toutes les OID SNMP','Effectue un snmpwalk à la racine');
+INSERT INTO apmanagerdb.typecommandes (typeCommande, description) VALUES ('modife les informations de contact', 'spécifie aptool@maison.com comme info de contact dans la config système');
 insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('show system\r\nquit\r\n','telnet',23,1,1);
 insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('uname -a\r\nquit\r\n','telnet',23,2,1);
 insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('.1.3.6.1.2.1.43.10.2.1.4','snmp',161,3,4);
 insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('.1.3.6.1.2.1','snmp',161,4,5);
-insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('GET / HTTP/1.1
-Host: 0.0.0.0
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0
-Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Accept-Language: en-US,en;q=0.5
-Accept-Encoding: gzip, deflate
-Referer: http://0.0.0.0/index.html
-Authorization: Basic OnJlcHVpcw==
-Connection: keep-alive
-','http',80,1,2);
-insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('GET /printer/maininfo.html HTTP/1.1
-Host: 172.16.6.63
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0
-Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Accept-Language: en-US,en;q=0.5
-Accept-Encoding: gzip, deflate
-Cookie: AutoRefresh=off
-Connection: keep-alive
-','http',80,3,3);
+insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('GET / HTTP/1.1','http',80,1,2);
+insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('GET / HTTP/1.1','http',80,3,2);
+insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('GET /printer/maininfo.html HTTP/1.1','http',80,3,3);
+INSERT INTO apmanagerdb.lignescommande (ligneCommande, protocole, portProtocole, noModeleAP, notypeCommande) VALUES ('POST /cfg/system.html HTTP/1.1
+Host: 10.0.0.62
+
+EmWeb_ns%3Asnmp%3A233=testAPMaison&EmWeb_ns%3Asnmp%3A234=test&EmWeb_ns%3Asnmp%3A235=Contact%20Name&EmWeb_ns%3Asnmp%3A236.0*s=aptool%40maison.com&EmWeb_ns%3Asnmp%3A237=Contact%20Phone%20Number', 'HTTPS', 443, 1, 6);
 

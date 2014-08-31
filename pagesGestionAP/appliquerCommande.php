@@ -161,7 +161,7 @@
                                 echo '<tr class="success"><td>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')';
                                 echo '</td><td>'.$extraitReponse;                                          
                                 echo '</td><td><strong>OK</strong></td></tr>';
-                                file_put_contents($nomFichier, '<p><u><b>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</b></u><br>'.$reponse.'</p>', FILE_APPEND);
+                                file_put_contents($nomFichier, '<p><u><b>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</b></u><br>'.substr($reponse,0,($nbTrames*$finExtraitRep)).'</p>', FILE_APPEND);
 
                             }
                             else if ($erreur != '' && $erreurDetectee){

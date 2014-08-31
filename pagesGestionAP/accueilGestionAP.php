@@ -52,28 +52,25 @@
                         include '../includes/connexionBDD.php';
                         $actionOnClick="$('#selectionmodele').submit();";
                         try
-                        {
-                            
-                                $i =0;
-                                $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
+                        {                            
+                            $i =0;
+                            $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
-                                $resultatsModeles=$connexion->query("SELECT m.noModeleAP, m.nomModele, m.nomFabricant, COUNT(a.noModeleAP)  as nombreAP, m.versionFirmware FROM modeles m LEFT OUTER JOIN accessPoints a ON a.noModeleAP=m.noModeleAP GROUP BY m.noModeleAP;"); // on va chercher tous les membres de la table qu'on trie par ordre croissant
-                                $resultatsModeles->setFetchMode(PDO::FETCH_OBJ); 
-                                
-                                
-                                while( $ligne = $resultatsModeles->fetch() ) // on récupère la liste des membres
-                                {        
-                                    
-                                        $noModeleAP=(string)$ligne->noModeleAP;
-                                        $radioChecked="document.getElementById('radio".$noModeleAP."').checked = true";
-                                        $textCellule= (string)$ligne->nombreAP.'x '.(string)$ligne->nomFabricant.' '.(string)$ligne->nomModele.' (firmware '. (string)$ligne->versionFirmware.')';
-      
-                                        echo '<tr><td onmouseover="'.$radioChecked.'" onclick="'.$actionOnClick.'">';
-                                        echo '<input id="radio'.$noModeleAP.'" type="radio" class="hidden" value="'.$noModeleAP.'" name="noModele">'.$textCellule;
-                                        echo '</td></tr>';
-                                }
-                                $resultatsModeles->closeCursor(); // on ferme le curseur des résultats
-                                }
+                            $resultatsModeles=$connexion->query("SELECT m.noModeleAP, m.nomModele, m.nomFabricant, COUNT(a.noModeleAP)  as nombreAP, m.versionFirmware FROM modeles m LEFT OUTER JOIN accessPoints a ON a.noModeleAP=m.noModeleAP GROUP BY m.noModeleAP;");
+                            $resultatsModeles->setFetchMode(PDO::FETCH_OBJ);                                 
+
+                            while( $ligne = $resultatsModeles->fetch() )
+                            {                                            
+                                    $noModeleAP=(string)$ligne->noModeleAP;
+                                    $radioChecked="document.getElementById('radio".$noModeleAP."').checked = true";
+                                    $textCellule= (string)$ligne->nombreAP.'x '.(string)$ligne->nomFabricant.' '.(string)$ligne->nomModele.' (firmware '. (string)$ligne->versionFirmware.')';
+
+                                    echo '<tr><td onmouseover="'.$radioChecked.'" onclick="'.$actionOnClick.'">';
+                                    echo '<input id="radio'.$noModeleAP.'" type="radio" class="hidden" value="'.$noModeleAP.'" name="noModele">'.$textCellule;
+                                    echo '</td></tr>';
+                            }
+                            $resultatsModeles->closeCursor(); // on ferme le curseur des résultats
+                            }
 
                         catch(Exception $e)
                         {
