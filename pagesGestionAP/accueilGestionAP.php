@@ -1,3 +1,4 @@
+<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -9,7 +10,8 @@
   </head>
 
   <body>
-      <br><br>
+      <p align="right"><br><a href="?action=logOut">LOGOUT</a>&nbsp;&nbsp;&nbsp;</p>
+      <br>
     <div class="container-fluid">        
 
         <table border="0" width="90%" align="center">

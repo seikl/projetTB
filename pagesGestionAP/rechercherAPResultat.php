@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
 <html lang="en">
     <title>AP Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -7,7 +7,8 @@
     <link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
   </head>
   <body>
-      <br><br>
+      <p align="right"><br><a href="?action=logOut">LOGOUT</a>&nbsp;&nbsp;&nbsp;</p>
+      <br>
     <div class="container-fluid">        
 
         <table border="0" width="90%" align="center">

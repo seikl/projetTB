@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
 <html>
     <head>
   <head>

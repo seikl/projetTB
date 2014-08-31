@@ -1,230 +1,47 @@
-<html><body>R&eacute;sultats des requ&ecirc;tes (31 Aug 2014 @ 01:08:06)<br>Commande transmise: POST /cfg/system.html HTTP/1.1
-Host: 10.0.0.62
-
-EmWeb_ns%3Asnmp%3A233=testAPMaison&EmWeb_ns%3Asnmp%3A234=test&EmWeb_ns%3Asnmp%3A235=Contact%20Name&EmWeb_ns%3Asnmp%3A236.0*s=aptool%40maison.com&EmWeb_ns%3Asnmp%3A237=Contact%20Phone%20Number (protocole HTTPS:443)<br>==========================================<br><p><u><b>3-testAPMaison (IP: 10.0.0.62)</b></u><br>200-HTTP/1.1 303 See Other
-Server: Virata-EmWeb/R5_3_0
-Location: https://10.0.0.62:443/cfg/system.html
-Content-Type: text/html
-Content-Length: 105
-
-HTTP/1.1 200 OK
-Server: Virata-EmWeb/R5_3_0
-Transfer-Encoding: chunked
-Content-Type: text/html
-Cache-Control: no-store
-Pragma: no-cache
-
-
-
-	System Configuration
-	
+<html><body>R&eacute;sultats des requ&ecirc;tes (31 Aug 2014 @ 03:04:47)<br>Commande transmise: GET / HTTP/1.1
+Host: 0.0.0.0
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: http://0.0.0.0/index.html
+Authorization: Basic OnJlcHVpcw==
+Connection: keep-alive
+ (protocole http:80)<br>==========================================<br><p><u><b>9-APTOOL (IP: 127.0.0.1)</b></u><br>200-HTTP/1.1 200 OK
+Date: Sun, 31 Aug 2014 01:04:47 GMT
+Server: Apache/2.2.26 (Unix) DAV/2 PHP/5.3.28 with Suhosin-Patch
+Content-Length: 4667
+Content-Type: text/html;charset=UTF-8
 
 
 
+ 
+  Index of /
+ 
+ 
+Index of /
+NameLast modifiedSizeDescription
+ExsPDR/                27-May-2013 18:28    - &nbsp;
+PresentationXML/       19-May-2013 19:39    - &nbsp;
+ProjetIFC/             05-Jul-2013 18:06    - &nbsp;
+Projet_PEP/            12-Jun-2013 19:18    - &nbsp;
+SRC/                   31-Jan-2013 20:24    - &nbsp;
+TESTS/                 01-Aug-2014 13:30    - &nbsp;
+WSnusoap.php           22-Feb-2013 15:39  603 &nbsp;
+clientNusoap.php       22-Feb-2013 16:06  582 &nbsp;
+clientPHP.php          17-Jan-2013 15:37  277 &nbsp;
+index.html.en_OLD      21-Jul-2011 18:09   44 &nbsp;
+index.html_OLD         25-Jan-2014 15:08   98 &nbsp;
+indexTest.html         25-Jan-2013 10:30  495 &nbsp;
+monClientSK.php        31-Jan-2013 21:26  910 &nbsp;
+monTestSK.html         31-Jan-2013 21:24  441 &nbsp;
+nusoap.php             26-Apr-2010 17:38  291K&nbsp;
+postgresql/            14-Jun-2011 00:01    - &nbsp;
+projetTB/              16-Aug-2014 04:07    - &nbsp;
+testClient.php         31-Jan-2013 19:42  1.2K&nbsp;
+verifTimeZone.php      26-Jan-2013 00:07  384 &nbsp;
 
 
-
-
-	grp_live = 1;
-	subgrp_live = 0;
-
-
-
-
-
-
-
-	
-		
-			
-			
-			
-			
-			
-			&nbsp;
-			
-			
-		
-		
-			 
-				
-				
-					
-						
-							
-		                            		var ProductId  = "1.3.6.1.4.1.11898.2.4.10";													
-                                                                var slotA = '6 ';
-		                            		        var slotB = ' ';
-		                            		        var secModeA = '5';  
-		                            		        var secModeB = '';  
-								InitMenu(ProductId, slotA, slotB, secModeA, secModeB);
-								var nbrTabs = subNumArray[grp_live];
-								if(nbrTabs>5)
-								{
-									var start,finish;
-									var nbrTabsDivbyTwo = (nbrTabs - (nbrTabs%2))/2;
-									if(subgrp_live >= (nbrTabsDivbyTwo + (nbrTabs%2)) )
-									{
-										start = 0;
-										finish = nbrTabsDivbyTwo -1;
-									}
-									else
-									{
-										if ((nbrTabs %2)==0)
-										{
-											start = nbrTabsDivbyTwo;
-											finish = nbrTabs-1;
-										}
-										else
-										{
-											start = nbrTabsDivbyTwo+1;
-										finish = nbrTabs-1;
-									}
-										
-									}
-									drawTabRow(subgrpArray[grp_live],grp_live,subgrp_live,start,finish,1,1);
-									document.write('&nbsp;');
-									document.write('');
-									document.write('');
-									document.write('');
-									
-									document.write('');
-									document.write('');
-									document.write('');
-									if(subgrp_live >= (nbrTabsDivbyTwo+ (nbrTabs%2)))
-									{
-										start = nbrTabsDivbyTwo;
-										finish = nbrTabs-1;
-									}
-									else
-									{
-										if ((nbrTabs %2)==0)
-										{
-											start = 0;
-											finish = nbrTabsDivbyTwo-1;
-										}
-										else
-										{
-										start = 0;
-											finish = nbrTabsDivbyTwo;
-										}
-									}
-									drawTabRow(subgrpArray[grp_live],grp_live,subgrp_live,start,finish,2,0);
-									document.write('&nbsp;');
-								}
-								else
-								{
-									drawTabRow(subgrpArray[grp_live],grp_live,subgrp_live,0,nbrTabs-1,0,0);
-									document.write('&nbsp;');
-								}
-							
-						
-					
-				
-			
-		
-	
-
-	
-	
-		
-			
-				
-					drawButtons(grp,grp_live);
-				
-			
-		
-
-
-
-
-
-	
-		
-			
-		
-		
-			
-				<p>This tab allows for configuration of system unique parameters and contact information.</p>
-				<p><i>Note: Changes to these parameters require access point reboot in order to take effect.</i></p>
-				<p><i>Note: Name is also used as Dynamic DNS hostname</i></p> 
-				<p><i>Note: Name can only contain alphanumeric characters. Hypen is the only special character allowed.No spaces are allowed. Fisrt character can't be a numeric.</i></p>
-			
-				
-		
-		
-			&nbsp;
-		
-		
-			
-				
-					
-						Name
-						<INPUT onChange="modifys(this)" class="formtext" type="text" name="EmWeb_ns:snmp:233" VALUE="testAPMaison">
-					
-					
-						Location
-						<INPUT onChange="modifys(this)" class="formtext" type="text" name="EmWeb_ns:snmp:234" VALUE="test">
-					
-					
-						Contact Name
-						<INPUT onChange="modifys(this)" class="formtext" type="text" name="EmWeb_ns:snmp:235" VALUE="Contact Name">
-					
-					
-						Contact Email
-						<INPUT onChange="modifys(this)" class="formtext" type="text" name="EmWeb_ns:snmp:236" VALUE="aptool@maison.com">
-					
-					
-						Contact Phone
-						<INPUT onChange="modifys(this)" class="formtext" type="text" name="EmWeb_ns:snmp:237" VALUE="Contact Phone Number">
-					
-					
-						Object ID
-						1.3.6.1.4.1.11898.2.4.10
-					
-					
-						Ethernet MAC Address
-						00:20:A6:55:89:93
-					
-					
-						Descriptor
-						Avaya AP4-AP5-AP6 v2.4.11(821)  SN-04AT08620305 v3.0.4
-					
-					
-						Up Time (DD:HH:MM:SS)
-						
-							
-								timeDisplay(289000)
-							
-						
-					
-				
-			
-		
-		
-			
-				
-					
-						
-						
-					
-				
-			
-		
-	
-
-
-
-
-
-	
-
-
-
-
-
-
-
-
+Apache/2.2.26 (Unix) DAV/2 PHP/5.3.28 with Suhosin-Patch Server at 127.0.0.1 Port 80
 
 </p><input type="button" value="Imprimer..." onClick="window.print()"></body></html>
