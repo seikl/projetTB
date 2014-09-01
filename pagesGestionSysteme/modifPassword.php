@@ -42,7 +42,7 @@
                            //pour vérifier si valeurs déjà existantes dans le formulaire
                            if ($_POST) {                            
                                $ancienmdp= $_POST['ancienmdp'];
-                               $nouveaumdp= $_POST['nouveaumdp'];
+                               $nouveaumdp= $_POST['nouveaumdp1'];
                                $initialisation=false;                               
                            }
                            
@@ -71,21 +71,9 @@
                                     echo $boutonRetour;
                                 }
                                 else {
-                                    //$ini = fopen("../includes/logininfo.ini","w+");           
-
-                                    $i = 0;
-                                    while($Content = fgets($ini))
-                                    {
-                                        echo "<bR>lign: ".$Content;
-                                        if(preg_match("/mdp/", $Content)) {
-                                            echo "MDP TROUVE";
-                                            fwrite($ini, "mdp=".$nouveaumdp);
-                                            $i = 1;
-                                        } else {
-                                            fwrite($ini, $Content);
-                                        }               
-                                    }                  
-                                    fclose($ini);                                    
+                                    $nouveaumdp=preg_replace("/'/i", "\'", $nouveaumdp);
+                                    $modification='sed -i -e \'s/mdp = "'.$ancienpassword.'"/mdp = "'.$nouveaumdp.'" /g\' loginInfo.ini';
+                                    shell_exec($modification);                                   
                                     
                                     echo "<strong> Mot de passe modifi&eacute; avec succ&egrave;s.</strong>";
                                     echo '<p align="left"><br><a href="?action=logOut">Se d&eacute;connecter</a>&nbsp;&nbsp;&nbsp;</p>';
