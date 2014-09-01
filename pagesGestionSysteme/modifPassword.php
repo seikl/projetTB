@@ -35,23 +35,29 @@
                         <li><a href="accueilGestionSysteme.php">Accueil gestion du syst&egrave;mes</a></li>                            
                     </ol>  
                      <ol>
-                        <?php               
+                        <?php      
+                        
+                            include("../includes/class.iniparser.php");
+
                             $boutonRetour = '<button class="btn btn-primary" onclick="history.back()">Revenir sur le formulaire</button>';
                             
                             $initialisation=true;
                            //pour vérifier si valeurs déjà existantes dans le formulaire
                            if ($_POST) {                            
                                $ancienmdp= $_POST['ancienmdp'];
-                               $nouveaumdp= $_POST['nouveaumdp1'];
-                               $initialisation=false;                               
+                               $nouveaumdp2= $_POST['nouveaumdp2'];
+                               $nouveaumdp1= $_POST['nouveaumdp1'];
+                               $initialisation=false;    
+                               $textErreur="";
+                               $erreurDetectee=false;
                            }
                            
-                            if ($initialisation){
+                            if ($initialisation){                                                                
                                 echo ' 
                                 <form id="modifPassword" name="modifPassword" class="form-inline" role="form" action="modifPassword.php" method="POST">
                                     <div class="form-group">     
                                         <label for="ancienmdp">Ancien mot de passe (admin par d&eacute;faut:)</label><br>
-                                        <input type="password" class="form-control" name="ancienmdp" id="ancienmdp" size="15" maxlength="20" value="admin"><br>
+                                        <input type="password" class="form-control" name="ancienmdp" id="ancienmdp" size="15" maxlength="20" placeholder="admin"><br>
                                         -------------------------------------------------<bR>
                                         <label for="nouveaumdp1">Nouveau mot de passe:</label><br>
                                         <input type="password" class="form-control" name="nouveaumdp1" id="nouveaumdp1" size="15" maxlength="20"><br>
@@ -67,14 +73,24 @@
 
                                 $ancienpassword = $ini_array["mdp"];                                
                                 if ($ancienmdp != $ancienpassword){
-                                    echo "<strong> ancien mot de passe erron&eacute;.<br>veuillez effectuer la correction n&eacutecessaire.</strong><br><bR>";
-                                    echo $boutonRetour;
+                                    $textErreur .= "<strong> Ancien mot de passe erron&eacute;.</strong><br><bR>";
+                                    $erreurDetectee = true;
                                 }
-                                else {
-                                    $nouveaumdp=preg_replace("/'/i", "\'", $nouveaumdp);
-                                    $modification='sed -i -e \'s/mdp = "'.$ancienpassword.'"/mdp = "'.$nouveaumdp.'" /g\' loginInfo.ini';
-                                    shell_exec($modification);                                   
-                                    
+                                if ($nouveaumdp2 != $nouveaumdp1){                                    
+                                    $textErreur .= "<strong> Les 2 champs pour le nouveau mot de passe ne correspondent pas!</strong><br><br>";
+                                    $erreurDetectee = true;
+                                }
+                                
+                                if ($erreurDetectee){
+                                    echo $textErreur;
+                                    echo "Veuillez effectuer la correction n&eacutecessaire.</strong><br><bR>";
+                                    echo $boutonRetour; 
+                                }                                
+                                else {                                                                       
+                                    $cfg = new iniParser("../includes/loginInfo.ini");                                    
+                                    $cfg->setValue("info_login", "mdp", "'".$nouveaumdp1."'");
+                                    $cfg->save("../includes/loginInfo.ini");
+                                                                       
                                     echo "<strong> Mot de passe modifi&eacute; avec succ&egrave;s.</strong>";
                                     echo '<p align="left"><br><a href="?action=logOut">Se d&eacute;connecter</a>&nbsp;&nbsp;&nbsp;</p>';
                                     //safefilerewrite($file, implode("\r\n", $res));
@@ -91,6 +107,6 @@
       </div><!-- /container -->     
     <!-- Bootstrap core JavaScript
     ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->    
+    <!-- Placed at the end of the document so the pages load faster -->  
   </body>
 </html>
