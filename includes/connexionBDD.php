@@ -1,5 +1,5 @@
 <?php
-$ini_array = parse_ini_file("logininfo.ini");
+$ini_array = parse_ini_file("loginInfo.ini");
 
 $_user_ = '';
 $_password_ = $ini_array["mdp"];

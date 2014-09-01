@@ -63,7 +63,7 @@
                             } 
                             else {
                                 
-                                $ini_array = parse_ini_file("../includes/logininfo.ini");
+                                $ini_array = parse_ini_file("../includes/loginInfo.ini");
 
                                 $ancienpassword = $ini_array["mdp"];                                
                                 if ($ancienmdp != $ancienpassword){
