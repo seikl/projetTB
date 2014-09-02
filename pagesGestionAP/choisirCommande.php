@@ -77,17 +77,17 @@
 
                            //pour récupérer la commande choisis
                            if (!isset($_POST['commande'])){                                                        
-                               $noCommandeChoisie=('0');
+                               $noTypeCommandeChoisie=('0');
                                $commandeSelectionnee=false;
                            }
                            else {
-                               $noCommandeChoisie=$_POST['commande'];
+                               $noTypeCommandeChoisie=$_POST['commande'];
                                $commandeSelectionnee=true;
                                $initialisation=FALSE;
                            }
                            
                            //définir si état d'initialisation ou non
-                           if (($APChoisis[0]==('0')) && $noCommandeChoisie==0){$initialisation=true;}                                                                                       
+                           if (($APChoisis[0]==('0')) && $noTypeCommandeChoisie==0){$initialisation=true;}                                                                                       
 
                            //Récupération de la liste des modèles
                            try
@@ -128,7 +128,7 @@
                            echo '<label for="commande">Choix de la commande &agrave; appliquer:</label><br>
                                <select class="form-control" name="commande" onChange="this.form.submit()">';     
 
-                            if ($noCommandeChoisie == '0'){                                
+                            if ($noTypeCommandeChoisie == '0'){                                
                                 echo '<option value="0" selected>Liste des commandes disponibles...&nbsp;&nbsp;&nbsp;</option>'; 
                             }
                             else {
@@ -141,49 +141,64 @@
                                $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
                                if ($noModele=='0'){
-                                   $resultatsCLI=$connexion->query("SELECT * FROM modeles m, typeCommandes tc, lignesCommande lc
-                                                                   WHERE lc.notypeCommande = tc.notypeCommande AND lc.noModeleAP = m.noModeleAP;");                                 
+                                   $resutatsTypeCommande=$connexion->query("SELECT tc.notypeCommande, tc.typeCommande, tc.description FROM modeles m, typeCommandes tc, lignesCommande lc
+                                                                   WHERE lc.notypeCommande = tc.notypeCommande AND lc.noModeleAP = m.noModeleAP GROUP BY tc.notypeCommande;");                                 
                                }
                                else{
-                                   $resultatsCLI=$connexion->query("SELECT * FROM modeles m, typeCommandes tc, lignesCommande lc
-                                                                   WHERE lc.notypeCommande = tc.notypeCommande AND lc.noModeleAP = m.noModeleAP AND lc.noModeleAP =".$noModele.";");
+                                   $resutatsTypeCommande=$connexion->query("SELECT * FROM modeles m, typeCommandes tc, lignesCommande lc
+                                                                   WHERE lc.notypeCommande = tc.notypeCommande AND lc.noModeleAP = m.noModeleAP AND lc.noModeleAP =".$noModele."
+                                                                    GROUP BY tc.notypeCommande;");
                                }
 
-                               $resultatsCLI->setFetchMode(PDO::FETCH_OBJ);                                 
+                               $resutatsTypeCommande->setFetchMode(PDO::FETCH_OBJ);                                 
                                $commandeTrouvee=false;
                                
-                               while( $ligne = $resultatsCLI->fetch() ) // on récupère la liste des membres
-                               {                                        
+                               //pour afficher les types de commandes disponibles
+                               while( $ligne = $resutatsTypeCommande->fetch() ) // on récupère la liste des membres
+                               {         
+                                   $notypeCommande=(string)$ligne->notypeCommande;
                                    $typeCommande=(string)$ligne->typeCommande;
                                    $description=(string)$ligne->description;
-                                   $noCLI=(string)$ligne->noCLI;
-                                   $ligneCommande=(string)$ligne->ligneCommande;
-                                   $protocole=(string)$ligne->protocole;
-                                   $portProtocole=(string)$ligne->portProtocole;
-                                   $noModeleAP=(string)$ligne->noModeleAP;
-                                   $nomModele=(string)$ligne->nomModele;
-                                   $nomFabricant=(string)$ligne->nomFabricant;
-                                   $versionFirmware=(string)$ligne->versionFirmware;
 
-                                   if ($noCommandeChoisie == $noCLI){                                
-                                       echo '<option value="'.$noCLI.'" selected>'.$noCLI.' - '.$typeCommande.' ( protocole ['.strtoupper($protocole).':'.$portProtocole.'], mod&egrave;le concern&eacute;: '.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';
-                                       $commandeTrouvee = true;
-                                       $commandeChoisie=array("noCLI"=>$noCLI,"ligneCommande"=>$ligneCommande,"protocole"=>$protocole, "portProtocole"=>$portProtocole);
-                                       $descriptionChoixCLI= $description;
-                                       $ligneCommandeChoisie=$ligneCommande;
+                                   //si un type de commande a été choisi, on recherche toutes les lignes de commandes y correspondant 
+                                   if ($noTypeCommandeChoisie == $notypeCommande){                                
+                                        echo '<option value="'.$notypeCommande.'" selected> '.$notypeCommande.' - '.$typeCommande.' ( description: '.substr($description,0,40).')&nbsp;&nbsp;&nbsp;</option>';
+                                        $commandeTrouvee = true;
+                                        $descriptionChoixCLI=$description;
                                    }
                                    else {
-                                       echo '<option value="'.$noCLI.'">'.$noCLI.' - '.$typeCommande.' ( protocole ['.strtoupper($protocole).':'.$portProtocole.'], mod&egrave;le concern&eacute;: '.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.')&nbsp;&nbsp;&nbsp;</option>';                             
+                                       if (strlen($description)>60){$resumeDescription=substr($description,0,30).' .. '.substr($description, (strlen($description)-30),strlen($description));}
+                                       else {$resumeDescription=substr($description,0,60);}
+                                       echo '<option value="'.$notypeCommande.'"> '.$notypeCommande.' - '.$typeCommande.' ( description: '.$resumeDescription.')&nbsp;&nbsp;&nbsp;</option>';
                                    }
 
                                }
-                               $resultatsCLI->closeCursor(); // on ferme le curseur des résultats    
-                               if ($commandeSelectionnee && !$commandeTrouvee){$noCommandeChoisie=('0');} //pour déterminer si command sélectionnée est cohérente
-                           }
+                               
+                               $resutatsTypeCommande->closeCursor(); // on ferme le curseur des résultats    
+                               
+                               if ($commandeTrouvee == true){
+                                    //pour enregistrer chaque ligne de commande correspondant à cette descption et au modèle d'AP
+                                    $resutatsCLI=$connexion->query("SELECT lc.noCLI, lc.ligneCommande,lc.protocole, lc.portProtocole, m.noModeleAP,m.nomModele, m.nomFabricant, m.versionFirmware FROM modeles m, lignesCommande lc WHERE lc.notypeCommande=".$noTypeCommandeChoisie." AND lc.noModeleAP = m.noModeleAP;");                                        
+                                    $resutatsCLI->setFetchMode(PDO::FETCH_OBJ); 
+                                    while( $ligneCLI = $resutatsCLI->fetch()){
+                                        $noCLI=(string)$ligneCLI->noCLI;
+                                        $ligneCommande=(string)$ligneCLI->ligneCommande;
+                                        $protocole=(string)$ligneCLI->protocole;
+                                        $portProtocole=(string)$ligneCLI->portProtocole;
+                                        $noModeleAP=(string)$ligneCLI->noModeleAP;
+                                        $nomModele=(string)$ligneCLI->nomModele;
+                                        $nomFabricant=(string)$ligneCLI->nomFabricant;
+                                        $versionFirmware=(string)$ligneCLI->versionFirmware; 
 
+                                        $commandesChoisies[$noModeleAP]=array("noCLI"=>$noCLI,"nomModele"=>$nomModele,"nomFabricant"=>$nomFabricant,"versionFirmware"=>$versionFirmware,"ligneCommande"=>$ligneCommande,"protocole"=>$protocole, "portProtocole"=>$portProtocole);
+                                    }
+                                    $resutatsCLI->closeCursor();
+                               }
+                               if ($commandeSelectionnee && !$commandeTrouvee){$noTypeCommandeChoisie=('0');} //pour déterminer si command sélectionnée est cohérente
+                           }
                            catch(Exception $e)
                            {
-                                   echo '</select></div></form></td></tr></table><li>Erreur lors du chargement des commandes</li></ol>';
+                                   echo '</select></div></form></td></tr></table><li>Erreur lors du chargement des descriptions de commandes</li></ol>';
                                    echo 'Erreur : '.$e->getMessage().'<br/>';
                                    echo 'N° : '.$e->getCode();
                            }                                                                                                   
@@ -201,12 +216,12 @@
                                $listeAPactuels=null;
                                $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
-                               if (($noModele=='0') && ($noCommandeChoisie=='0')){
+                               if (($noModele=='0') && ($noTypeCommandeChoisie=='0')){
                                    $resultatsListeAP=$connexion->query("SELECT * FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP;");                                 
                                }
-                               else if (($noModele=='0') && ($noCommandeChoisie!='0')){                                   
+                               else if (($noModele=='0') && ($noTypeCommandeChoisie!='0')){                                                                            
                                     $resultatsListeAP=$connexion->query("SELECT * FROM lignesCommande l1, accessPoints a, modeles m
-                                                                WHERE l1.ligneCommande IN (SELECT l2.ligneCommande from lignesCommande l2 where l2.noCLI=".$noCommandeChoisie.")
+                                                                WHERE l1.ligneCommande IN (SELECT l2.ligneCommande from lignesCommande l2 where l2.notypeCommande=".$noTypeCommandeChoisie.")
                                                                 AND a.noModeleAP=l1.noModeleAP AND a.noModeleAP=m.noModeleAP;");                                                                      
                                }
                                else {
@@ -214,7 +229,6 @@
                                }
 
                                $resultatsListeAP->setFetchMode(PDO::FETCH_OBJ);                                 
-
                                while($ligne = $resultatsListeAP->fetch() )
                                {     
                                    $noAP=(string)$ligne->noAP;
@@ -223,15 +237,15 @@
                                    $username=(string)$ligne->username;
                                    $password=(string)$ligne->password;
                                    $snmpCommunity=(string)$ligne->snmpCommunity;
+                                   $noModeleAP=(string)$ligne->noModeleAP;
                                    $nomFabricant=(string)$ligne->nomFabricant;
                                    $nomModele=(string)$ligne->nomModele;
                                    $versionFirmware=(string)$ligne->versionFirmware;   
                                    $adrMACFabricant =(string)$ligne->adrMACFabricant;
-                                   //$noModeleAP =(string)$ligne->noModeleAP;
 
                                    if (in_array($noAP, $APChoisis)){
                                        echo '<option value="'.$noAP.'" selected>'.$noAP.' - '.$nomAP.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.', IP: '.$ip.')&nbsp;&nbsp;&nbsp;</option>';                                       
-                                       $listeAPactuels[$i]=array("noAP" =>$noAP, "nomAP"=>$nomAP, "adresseIPv4"=>$ip,"snmpCommunity"=>$snmpCommunity, "username"=>$username, "password"=>$password);       
+                                       $listeAPactuels[$i]=array("noAP" =>$noAP, "nomAP"=>$nomAP,"noModeleAP"=>$noModeleAP,"adresseIPv4"=>$ip,"snmpCommunity"=>$snmpCommunity, "username"=>$username, "password"=>$password);       
                                        $i++;
                                    }
                                    else {
@@ -249,58 +263,65 @@
                            }                                                
                            echo '</select><br></td></tr>';
                           echo '</div></form>'; 
-                           
-                           
-                            
-                            echo '<tr><td valign="bottom">';                            
-                            $actionOnClick="$('#selectioncommande').submit();";
-                            $actionReset="location='choisirCommande.php'";
-                            echo '<table width="100%"><tr><td align="left"><button class="btn btn-primary" onclick="'.$actionOnClick.'">V&eacute;rifier les choix</button></td>';
-                            echo '<td align="right"><button class="btn  btn-default" onclick="'.$actionReset.'">R&eacute;initialiser</button></td></tr></table>';
-                            echo '</td></tr>';
 
-                            $textValidation= "&nbsp;";
-                            
-                            if (!$initialisation){                                
-                                $textValidation.='<br><br>----------------------------------------------------';
-                                //vérification des choix effectués
-                                if ($listeAPactuels==null){
-                                    $textValidation.='<br><strong>Aucun AP s&eacute;lectionn&eacute;.</strong>';
-                                }                            
-                                if ($noCommandeChoisie=='0'){
-                                    $textValidation.='<br><strong>Aucune commande s&eacute;lectionn&eacute;e.</strong>';
-                                }
-                                if ($noCommandeChoisie!='0' && $listeAPactuels!=null){ 
-                                    $listeAP=base64_encode(serialize($listeAPactuels));
-                                    $commandeChoisie=base64_encode(serialize($commandeChoisie));
-                                    $textValidation.='<br><br><u>Description de la commande:</u> '.$descriptionChoixCLI;
-                                    $textValidation.='<br><br><u>Ligne de commande:</u><br>';
-                                    $tabCommandes= explode("\n", $ligneCommandeChoisie);      
-                                    foreach($tabCommandes as $ligneReq){$textValidation.='>> '.$ligneReq.'<br>';}
-                                    $textValidation.='<input type="hidden" value="'.$listeAP.'" name="listeAP"/>';                                
-                                    $textValidation.='<input type="hidden" value="'.$commandeChoisie.'" name="commandeChoisie"/>';
-                                    $textValidation.= '<div id="envoiRequete" style="display:block;">Nombre de trames &agrave; r&eacute;cu&eacute;p&eacute;rer:&nbsp;';
-                                    $textValidation.='<select class="form-control" id="nbTrames" name="nbTrames">';
-                                    for ($i=0;$i<=500;$i+=10){$textValidation.='<option value="'.$i.'" ';if($i==50){$textValidation.='selected';} $textValidation.= '>'.$i.'&nbsp;&nbsp;&nbsp;</option>';}
-                                    $textValidation.= '</select>';
-                                    $textValidation.='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" id="submitrequete" class="btn btn-warning" onclick="$(';
-                                    $textValidation.="'#loading2'";
-                                    $textValidation.=').show();" value="Appliquer la commande"/></div>';
-                                }
+
+
+                        echo '<tr><td valign="bottom">';                            
+                        $actionOnClick="$('#selectioncommande').submit();";
+                        $actionReset="location='choisirCommande.php'";
+                        echo '<table width="100%"><tr><td align="left"><button class="btn btn-primary" onclick="'.$actionOnClick.'">V&eacute;rifier les choix</button></td>';
+                        echo '<td align="right"><button class="btn  btn-default" onclick="'.$actionReset.'">R&eacute;initialiser</button></td></tr></table>';
+                        echo '</td></tr>';
+
+                        $textValidation= "&nbsp;";
+
+                        if (!$initialisation){                                
+                            $textValidation.='<br><br>----------------------------------------------------';
+                            //vérification des choix effectués
+                            if ($listeAPactuels==null){
+                                $textValidation.='<br><strong>Aucun AP s&eacute;lectionn&eacute;.</strong>';
+                            }                            
+                            if ($noTypeCommandeChoisie=='0'){
+                                $textValidation.='<br><strong>Aucune commande s&eacute;lectionn&eacute;e.</strong>';
                             }
-                            
-                            echo '<tr><td align="left">';  
-                            echo '<div class="form-group" id="validation">'; 
-                            echo '<form id="appliquerCommande" class="form-inline" role="form" action="appliquerCommande.php" method="POST">';                                                                                
-                                 
-                            echo $textValidation;
+                            if ($noTypeCommandeChoisie!='0' && $listeAPactuels!=null){ 
+                                $listeAP=base64_encode(serialize($listeAPactuels));
+                                $tabCommandesChoisies=base64_encode(serialize($commandesChoisies));
+                                $textValidation.='<br><br><u>Description de la commande choisie:</u> '.$descriptionChoixCLI;
+                                $textValidation.='<br><br><u>Lignes de commande correspondantes &agrave; cette description:</u><br>';
+                                $textValidation.='<table class="table table-striped"><tr><th>Mod&egrave;le: </th><th>Ligne de commande</th><th>protocole:NoPort</th></tr>';
+                                foreach ($commandesChoisies as $commande){ 
+                                    $textValidation.= '<tr><td valign="top">'.$commande["nomFabricant"].' '.$commande["nomModele"].' (Firmware v'.$versionFirmware.'</td>';
+                                    $textValidation.= '<td>';
+                                    $tabCommande= explode("\n", $commande["ligneCommande"]);      
+                                    foreach($tabCommande as $ligneReq){$textValidation.='#'.$ligneReq.'<br>';}
+                                    $textValidation.= '</td><td>'.$commande["protocole"].':'.$commande["portProtocole"];
+                                    $textValidation.= '</tr>';
+                                }
+                                $textValidation.='</table><br><br>';
+                                $textValidation.='<input type="hidden" value="'.$listeAP.'" name="listeAP"/>';                                
+                                $textValidation.='<input type="hidden" value="'.$tabCommandesChoisies.'" name="commandesChoisies"/>';
+                                $textValidation.= '<div id="envoiRequete" style="display:block;">Nombre de trames &agrave; r&eacute;cu&eacute;p&eacute;rer:&nbsp;';
+                                $textValidation.='<select class="form-control" id="nbTrames" name="nbTrames">';
+                                for ($i=0;$i<=500;$i+=10){$textValidation.='<option value="'.$i.'" ';if($i==50){$textValidation.='selected';} $textValidation.= '>'.$i.'&nbsp;&nbsp;&nbsp;</option>';}
+                                $textValidation.= '</select>';
+                                $textValidation.='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" id="submitrequete" class="btn btn-warning" onclick="$(';
+                                $textValidation.="'#loading2'";
+                                $textValidation.=').show();" value="Appliquer la commande"/></div>';
+                            }
+                        }
 
-                            echo '</form></div>';
-                            echo '<div id="loading2" style="display:none;" ><img class="img" src="../images/reqSender-loader.gif" height="34" width="34" alt=""/>&nbsp;Envoi des requ&ecirc;tes en cours...</div>';
-                            
-                            echo '</td></tr></table>';
-                     //echo "<br><br>infos recues: ".$infosRecues." --- modele en cours: ".$noModele." --- AP choisis: ".htmlspecialchars(print_r($APChoisis,true));
-                                            
+                        echo '<tr><td align="left">';  
+                        echo '<div class="form-group" id="validation">'; 
+                        echo '<form id="appliquerCommande" class="form-inline" role="form" action="appliquerCommande.php" method="POST">';                                                                                
+
+                        echo $textValidation;
+
+                        echo '</form></div>';
+                        echo '<div id="loading2" style="display:none;" ><img class="img" src="../images/reqSender-loader.gif" height="34" width="34" alt=""/>&nbsp;Envoi des requ&ecirc;tes en cours...</div>';
+
+                        echo '</td></tr></table>';
+                        //echo "<br><br>infos recues: ".$infosRecues." --- modele en cours: ".$noModele." --- AP choisis: ".htmlspecialchars(print_r($APChoisis,true));                                            
     ?>      
                     </ol>
                  </td>

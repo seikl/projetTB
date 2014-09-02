@@ -48,16 +48,23 @@
                         
                         //Récupération des informations
                         if ($_POST) {                            
-                            $tabCommandeChoisie= unserialize(base64_decode($_POST['commandeChoisie']));
+                            $tabCommandesChoisies= unserialize(base64_decode($_POST['commandesChoisies']));
                             $tabListeAP = unserialize(base64_decode($_POST['listeAP']));
                             $nbTrames=$_POST['nbTrames'];
-                            $nomFichier='../fichiers/output.html';                            
+                            $nomFichier='../fichiers/output.html';     
                             
+                            
+                            //sélection des commandes qui seront réellement appliquées
+                            //foreach ($tabCommandesChoisies as $commande){
+                             //   if (in_array()){}
+                            //}
                             if (file_exists($nomFichier)){unlink ($nomFichier);}                            
-                            file_put_contents( $nomFichier, '<html><body>R&eacute;sultats des requ&ecirc;tes ('.date('d M Y @ H:i:s').')<br>'.
-                                            'Commande transmise: '.$tabCommandeChoisie["ligneCommande"].
-                                            ' (protocole '.$tabCommandeChoisie["protocole"].':'.$tabCommandeChoisie["portProtocole"].')<br>'.
-                                            '==========================================<br>');
+                            file_put_contents( $nomFichier, '<html><body>R&eacute;sultats des requ&ecirc;tes ('.date('d M Y @ H:i:s').')<br>');
+                            
+                            /*:
+                                            'Commande transmise: '.$tabCommandesChoisies["ligneCommande"].
+                                            ' (protocole '.$tabCommandesChoisies["protocole"].':'.$tabCommandesChoisies["portProtocole"].')<br>'.
+                                            '==========================================<br>');*/
                         }
                         else {echo " <strong>Probl&egrave;me &agrave; la r&eacute;ception de la commande.</strong>";}
                         
@@ -81,11 +88,11 @@
                             $i=0;                                                        
 
                             //Préparation et envoi de la requête à transmettre en fonction du protocole (TELNET, HTTP, HTTPS, SNMP ou AUTRE)
-                            switch (strtoupper($tabCommandeChoisie["protocole"])) {
+                            switch (strtoupper($tabCommandesChoisies[$AP["noModeleAP"]]["protocole"])) {
                                 case "TELNET":                                       
                                     $taille=1500;  
                                     //Ouverture d'un socket sur le port concerné
-                                    $fp = @fsockopen($AP["adresseIPv4"], $tabCommandeChoisie["portProtocole"], $errno, $errstr, $delaiTimeout);                                      
+                                    $fp = @fsockopen($AP["adresseIPv4"], $tabCommandesChoisies[$AP["noModeleAP"]]["portProtocole"], $errno, $errstr, $delaiTimeout);                                      
                                     sleep(1); 
                                     $erreur .= $errno.' - '.$errstr;
                                     if (!$fp) {     
@@ -93,7 +100,7 @@
                                     } 
                                     else{
                                         //Envoi de la requête
-                                        $reponse = requeteTELNET($AP["adresseIPv4"], $tabCommandeChoisie["ligneCommande"], $AP["username"], $AP["password"], $fp,$taille,$nbTrames);
+                                        $reponse = requeteTELNET($AP["adresseIPv4"], $tabCommandesChoisies[$AP["noModeleAP"]]["ligneCommande"], $AP["username"], $AP["password"], $fp,$taille,$nbTrames);
                                         fclose($fp);                                                    
                                     }
                                     //pour déterminer la partie de réponse qu'on récupère
@@ -106,7 +113,7 @@
                                     break;
 
                                 case "HTTP":
-                                    $reponse = requeteHTTP($AP["adresseIPv4"], $tabCommandeChoisie["ligneCommande"], $tabCommandeChoisie["portProtocole"] ,$AP["username"], $AP["password"]);
+                                    $reponse = requeteHTTP($AP["adresseIPv4"], $tabCommandesChoisies[$AP["noModeleAP"]]["ligneCommande"], $tabCommandesChoisies[$AP["noModeleAP"]]["portProtocole"] ,$AP["username"], $AP["password"]);
                                     if(preg_match("/Erreur/i", $reponse)){$erreur=$reponse; $reponse='';$erreurDetectee=false;}
                                     //pour traiter les erreurs HTTP recues
                                         if((preg_match("/40/i", substr($reponse,0,3))) || 
@@ -119,7 +126,7 @@
                                     break;                                        
 
                                 case "HTTPS":
-                                    $reponse = requeteHTTPS($AP["adresseIPv4"], $tabCommandeChoisie["ligneCommande"], $tabCommandeChoisie["portProtocole"] ,$AP["username"], $AP["password"]);
+                                    $reponse = requeteHTTPS($AP["adresseIPv4"], $tabCommandesChoisies[$AP["noModeleAP"]]["ligneCommande"], $tabCommandesChoisies[$AP["noModeleAP"]]["portProtocole"] ,$AP["username"], $AP["password"]);
                                         if(preg_match("/Erreur/i", $reponse)){$erreur=$reponse; $reponse='';$erreurDetectee=false;}
                                         //pour traiter les erreurs HTTP recues
                                         if((preg_match("/40/i", substr($reponse,0,3))) || 
@@ -134,7 +141,7 @@
                                 case "SNMP":
                                     try {      
                                         $timeout=1000000;
-                                        $requete = snmprealwalk($AP["adresseIPv4"], $AP["snmpCommunity"],$tabCommandeChoisie["ligneCommande"],$timeout);
+                                        $requete = snmprealwalk($AP["adresseIPv4"], $AP["snmpCommunity"],$tabCommandesChoisies[$AP["noModeleAP"]]["ligneCommande"],$timeout);
                                         $reponse = implode($requete);
                                     }
                                     catch(ErrorException $e)
@@ -151,7 +158,7 @@
                                     echo "requ&ecirc;te AUTRE";
                                     break;  
                                 default:
-                                    $requete=$tabCommandeChoisie["ligneCommande"];
+                                    $requete=$tabCommandesChoisies[$AP["noModeleAP"]]["ligneCommande"];
                                     break;
                             }//fin du switchCase                                                                                                                                         
 
@@ -181,7 +188,7 @@
                                                     
                         echo '</tbody></table>'; 
                         file_put_contents($nomFichier, '<input type="button" value="Imprimer..." onClick="window.print()"></body></html>', FILE_APPEND);
-                        //echo "<br>-------------------------------------------------<br> commande choisie: ";//.htmlspecialchars(print_r($tabCommandeChoisie, true));
+                        //echo "<br>-------------------------------------------------<br> commande choisie: ";//.htmlspecialchars(print_r($tabCommandesChoisies, true));
                         //echo "<br><br> listeAP: ".htmlspecialchars(print_r($tabListeAP, true));                         
                         //echo '<br><br>'.stripcslashes(ereg_replace("(\r\n|\n|\r)", "[CR][LF]", $requete));                                          
                        ?>                        
