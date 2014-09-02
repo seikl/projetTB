@@ -190,7 +190,7 @@
                                         $nomFabricant=(string)$ligneCLI->nomFabricant;
                                         $versionFirmware=(string)$ligneCLI->versionFirmware; 
 
-                                        $commandesChoisies[$noModeleAP]=array("noCLI"=>$noCLI,"nomModele"=>$nomModele,"nomFabricant"=>$nomFabricant,"versionFirmware"=>$versionFirmware,"ligneCommande"=>$ligneCommande,"protocole"=>$protocole, "portProtocole"=>$portProtocole);
+                                        $commandesChoisies[$noModeleAP]=array("noCLI"=>$noCLI,"noModeleAP"=>$noModeleAP, "nomModele"=>$nomModele,"nomFabricant"=>$nomFabricant,"versionFirmware"=>$versionFirmware,"ligneCommande"=>$ligneCommande,"protocole"=>$protocole, "portProtocole"=>$portProtocole);
                                     }
                                     $resutatsCLI->closeCursor();
                                }
@@ -291,7 +291,7 @@
                                 $textValidation.='<br><br><u>Lignes de commande correspondantes &agrave; cette description:</u><br>';
                                 $textValidation.='<table class="table table-striped"><tr><th>Mod&egrave;le: </th><th>Ligne de commande</th><th>protocole:NoPort</th></tr>';
                                 foreach ($commandesChoisies as $commande){ 
-                                    $textValidation.= '<tr><td valign="top">'.$commande["nomFabricant"].' '.$commande["nomModele"].' (Firmware v'.$versionFirmware.'</td>';
+                                    $textValidation.= '<tr><td valign="top">'.$commande["nomFabricant"].' '.$commande["nomModele"].' (Firmware v'.$commande["versionFirmware"].'</td>';
                                     $textValidation.= '<td>';
                                     $tabCommande= explode("\n", $commande["ligneCommande"]);      
                                     foreach($tabCommande as $ligneReq){$textValidation.='#'.$ligneReq.'<br>';}

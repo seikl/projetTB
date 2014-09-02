@@ -39,7 +39,7 @@
                      <ol>
                     <?php       
                     
-                        //pour autoriser le script à s'exécuter au-delà de 10 secondes
+                        //pour autoriser le script à s'exécuter pendant 10 min
                         set_time_limit(10);                    
                         date_default_timezone_set('Europe/Zurich');
                         include '../includes/envoiRequete.php'; 
@@ -49,22 +49,30 @@
                         //Récupération des informations
                         if ($_POST) {                            
                             $tabCommandesChoisies= unserialize(base64_decode($_POST['commandesChoisies']));
-                            $tabListeAP = unserialize(base64_decode($_POST['listeAP']));
+                            $tabListeAP = unserialize(base64_decode($_POST['listeAP']));                            
                             $nbTrames=$_POST['nbTrames'];
-                            $nomFichier='../fichiers/output.html';     
+                            $nomFichier='../fichiers/output.html';  
                             
+                            foreach ($tabListeAP as $modeleAP){$listeModeles[]=$modeleAP["noModeleAP"];}
                             
-                            //sélection des commandes qui seront réellement appliquées
-                            //foreach ($tabCommandesChoisies as $commande){
-                             //   if (in_array()){}
-                            //}
+                            //pour afichage uniquement des commandes qui ont été appliquées
+                            $affichageCommandes='<table cellspacing="2"><tr><th align="left">Mod&egrave;le: </th><th align="left">Ligne de commande</th><th align="left">protocole:port</th></tr>';
+                            foreach ($tabCommandesChoisies as $commande){                                 
+                                if (in_array($commande["noModeleAP"], $listeModeles)){
+                                    $affichageCommandes.= '<tr><td valign="top">'.$commande["noModeleAP"].' - ' .$commande["nomFabricant"].' '.$commande["nomModele"].' (Firmware v'.$commande["versionFirmware"].') </td>';
+                                    $affichageCommandes.= '<td>';
+                                    $tabCommande= explode("\n", $commande["ligneCommande"]);      
+                                    foreach($tabCommande as $ligneReq){$affichageCommandes.='#'.$ligneReq.'<br>';}
+                                    $affichageCommandes.= '</td><td>'.$commande["protocole"].':'.$commande["portProtocole"];
+                                    $affichageCommandes.= '</tr>';
+                                }
+                            }
+                            $affichageCommandes.='</table><br>';
+                            
                             if (file_exists($nomFichier)){unlink ($nomFichier);}                            
-                            file_put_contents( $nomFichier, '<html><body>R&eacute;sultats des requ&ecirc;tes ('.date('d M Y @ H:i:s').')<br>');
-                            
-                            /*:
-                                            'Commande transmise: '.$tabCommandesChoisies["ligneCommande"].
-                                            ' (protocole '.$tabCommandesChoisies["protocole"].':'.$tabCommandesChoisies["portProtocole"].')<br>'.
-                                            '==========================================<br>');*/
+                            file_put_contents($nomFichier, '<html><body>R&eacute;sultats des requ&ecirc;tes ('.date('d M Y @ H:i:s').')<br>'.
+                                            'Commandes transmises: <br>'.$affichageCommandes.                                            
+                                            '==========================================<br>');
                         }
                         else {echo " <strong>Probl&egrave;me &agrave; la r&eacute;ception de la commande.</strong>";}
                         
@@ -85,7 +93,7 @@
                             $reponse = '';
                             $erreur='';
                             $erreurDetectee=false;
-                            $i=0;                                                        
+                            $i=0;                                                               
 
                             //Préparation et envoi de la requête à transmettre en fonction du protocole (TELNET, HTTP, HTTPS, SNMP ou AUTRE)
                             switch (strtoupper($tabCommandesChoisies[$AP["noModeleAP"]]["protocole"])) {

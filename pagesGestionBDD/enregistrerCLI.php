@@ -71,8 +71,22 @@
                                     $i =0;
                                     $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
                                     
+                                    //Bloc pour vérifier si la commande saisie existe déjà pour le modèle choisi
+                                    $reqVerifCLI = $connexion->query('SELECT COUNT(noCLI) as nbCLIExistantes FROM '.$PARAM_nom_bd.'.lignesCommande '. 
+                                            'WHERE ligneCommande LIKE "'.$ligneCommande.'" AND protocole = "'.$protocole.'" AND portProtocole="'.$portProtocole.'" AND noModeleAP="'.$modeleAP["noModeleAP"].'";');
+                                    if ($reqVerifCLI!=false){  
+                                        $reqVerifCLI->setFetchMode(PDO::FETCH_OBJ);
+                                        while ($verifCommande = $reqVerifCLI->fetch()){$nbCLIExistantes=(string)$verifCommande->nbCLIExistantes;} 
+                                        if ($nbCLIExistantes>0){
+                                            echo "<p><strong> Cette commande existe d&eacute;j&agrave; pour ce mod&egrave;le <br>";
+                                            echo "Veuillez modifier le formulaire.</strong>!<br>"; 
+                                            $reqVerifCLI->closeCursor(); 
+                                            $reqEnregistrement=FALSE;                                                                                                
+                                        }
+                                    }                                                                                                            
+                                    
                                     //Bloc if pour vérifier si ajout ou sélection d'une commande
-                                    if ((isset($_POST['choixTypeCommande'])) && ($choixAjoutDescription == 'selection')){
+                                    if ((isset($_POST['choixTypeCommande'])) && ($choixAjoutDescription == 'selection') && $reqEnregistrement){
                                         $typeCommande=unserialize(base64_decode($_POST['choixTypeCommande'])); 
                                         $reqEnregistrement = $connexion->query("INSERT INTO lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) VALUES ('".$ligneCommande."','".$protocole."','".$portProtocole."','".$modeleAP["noModeleAP"]."','".$typeCommande["notypeCommande"]."');");
                                         $description=$typeCommande["description"];
@@ -81,8 +95,7 @@
                                     else if((isset($_POST['typeCommande'])) && ($choixAjoutDescription =='ajout')){
                                         $typeCommande=$_POST['typeCommande'];
                                         $description=$_POST['description'];
-                                        //vérification si une description similaire existe déjà
-                                        
+                                        //vérification si une description similaire existe déjà                                       
                                         $reqVerifDescription = $connexion->query('SELECT COUNT(notypeCommande) as nbDescriptionsExistantes FROM '.$PARAM_nom_bd.'.typeCommandes WHERE typeCommande LIKE "'.$typeCommande.'" AND description LIKE "'.$description.'";');
                                         if ($reqVerifDescription!=false){  
                                             $reqVerifDescription->setFetchMode(PDO::FETCH_OBJ);
@@ -107,7 +120,7 @@
                                         }
                                     }                         
                                     else {
-                                        echo "<strong>Erreur avec la description de la commande re&ccedil;ue. Veuillez corriger le formulaire.</strong><br>".$boutonRetour;                                                                     
+                                        echo "<strong>Erreur avec les informations de la commande re&ccedil;ue. Veuillez corriger le formulaire.</strong><br>";                                                                     
                                     }
                                     
                                     echo "<table class='table'><tr><th colspan='2'>Informations re&ccedil;ues:</th></tr>";
