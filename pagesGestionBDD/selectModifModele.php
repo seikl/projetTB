@@ -1,4 +1,17 @@
-<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
+<?php 
+/****************************************************************************************************
+ * page de sélection et de formulaire de modification d'un modèle de periphérique réseau. Une fois 
+ * la sélection effectuée la page s'appelle elle-même avec en paramètres l'identifiant du No de modèle
+ * de la BDD pour afficher le contenu dans des champs de texte éditables. les modifications sont 
+ * transmises à "modifierModele.php".
+ * 
+ * paramètre reçu après sélection d'un modèle:
+ * - noModele:  l'identifiant du modèle dans la BDD
+ *
+ * Modifié le: 27.08.2014
+ ***************************************************************************************************/
+$auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>AP Tool</title>

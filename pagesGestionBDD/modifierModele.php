@@ -1,4 +1,21 @@
-<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
+<?php 
+/****************************************************************************************************
+ * page qui effectue l'enregistrement des modificaitons d'un modèle de periphérique réseau. 
+ * Recoit les informations depuis "selectModifModele.php"
+ * 
+ * Reçoit en paramètre:
+ * - noModeleAP: l'identifiant du modèle dans la BDD
+ * - nomModele: nom du modèle
+ * - versionFirmware: version du firmmware du modèle
+ * - nomFabricant (peut être vide): le nom du fabricant
+ * - adrMACFabricant1: 1er champs de l'adresse MAC du fabricant
+ * - adrMACFabricant2: 2ème champs de l'adresse MAC du fabricant
+ * - adrMACFabricant3: 3eme champs de l'adresse MAC du fabricant
+ *
+ * Modifié le: 27.08.2014
+ ***************************************************************************************************/
+$auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>AP Tool</title>

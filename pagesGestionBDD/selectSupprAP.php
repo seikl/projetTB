@@ -1,4 +1,12 @@
-<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
+<?php 
+/****************************************************************************************************
+ * page de sélection d'un ou plusieurs periphériques réseaux à supprimer. Transmet les 
+ * sélections à "supprimerAP.php"
+ * 
+ *
+ * Modifié le: 31.08.2014
+ ***************************************************************************************************/
+$auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
 <html lang="en">
   <head>
     <title>AP Tool</title>

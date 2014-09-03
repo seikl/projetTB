@@ -1,7 +1,8 @@
 <?php
 /****************************************************************************************************
- * page de formulair de modification d'un ou plusieurs periphériques réseaux. Tansmet les informations saisies
- * à "enregistrerModifAP.php"
+ * page de formulaire de modification d'un ou plusieurs periphériques réseaux sélectionnés et reçus 
+ * en paramètre depuis "selectModifAP.php". Enuite transmet les informations saisies à 
+ * "enregistrerModifAP.php"
  * 
  * Reçoit en paramètre:
  * - un tableau contenant les informations sur les AP à afficher pour modification (noAP, nomAP, etc.)

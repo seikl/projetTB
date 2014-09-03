@@ -1,4 +1,12 @@
-<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
+<?php 
+/****************************************************************************************************
+ * page de sélection d'une ou plusieurs commandes à supprimer. Transmet les 
+ * sélections à "supprimerCLI.php"
+ *
+ * Modifié le: 01.09.2014
+ ***************************************************************************************************/
+$auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>AP Tool</title>

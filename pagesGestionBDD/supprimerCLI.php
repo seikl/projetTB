@@ -1,4 +1,18 @@
-<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
+<?php
+/****************************************************************************************************
+ * page qui effectuera la requête de suppression des commandes à supprimer.
+ * 
+ * Reçoit en paramètre:
+ * - un tableau contenant les informations sur les commandes à supprimer:
+ *  (noCLI, nomCLI, etc.)
+ * 
+ *  NB: Si un decription de commande n'existe plus dans aucune ligne de commande elle sera
+ * automatiquement supprimée.
+ * 
+ * Modifié le: 03.09.2014
+ ***************************************************************************************************/
+$auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>AP Tool</title>

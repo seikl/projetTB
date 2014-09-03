@@ -1,4 +1,14 @@
-<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
+<?php 
+/****************************************************************************************************
+ * page qui effectuera la requête de suppression des AP reçus en paramètre depuis "selectSupprAP.php"
+ * 
+ * Reçoit en paramètre:
+ * - un tableau contenant les informations sur les AP à supprimer (noAP, nomAP, etc.)
+ *
+ * Modifié le: 31.08.2014
+ ***************************************************************************************************/
+$auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>AP Tool</title>

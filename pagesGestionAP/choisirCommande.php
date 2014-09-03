@@ -1,7 +1,7 @@
 <?php 
 /****************************************************************************************************
  * page qui permet de choisir une commande et les périphériques auxquels l'appliquer.
- * TRansmet ensuite les informations à "appliquerCommande.php" pour le traitement
+ * Transmet ensuite les informations à "appliquerCommande.php" pour le traitement
  *
  *                                                                                                  *
  * Modifié le: 31.08.2014                                                                           *

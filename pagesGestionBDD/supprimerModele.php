@@ -1,4 +1,18 @@
-<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
+<?php 
+/****************************************************************************************************
+ * page qui effectuera la requête de suppression d'un modèle de périphérique réseau.
+ * 
+ * Reçoit en paramètre:
+ * - un tableau contenant les informations sur le modèle à supprimer:
+ *  (noModeleAP, nomFabricant, etc.)
+ * 
+ *  NB: Tous les périphériques réseaux (noAP) et lignes de commandes qui y sont rattachés (noCLI) sont
+ * automatiquement supprimés.
+ * 
+ * Modifié le: 28.08.2014
+ ***************************************************************************************************/
+$auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>AP Tool</title>

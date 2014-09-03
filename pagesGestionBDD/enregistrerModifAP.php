@@ -4,9 +4,9 @@
  * avec les informations reçues depuis "modfierAP.php"
  * 
  * Paramètres reçus dans un tableaux contenant:
- *  -noAP: le no d'identifiant de l'AP dans la BDD
- *  - nomAP: Le nom du périhpérique réseau
- * -  adresseIPv4: l'adresse IPv4 du périphérique
+ * - noAP: le no d'identifiant de l'AP dans la BDD
+ * - nomAP: Le nom du périhpérique réseau
+ * - adresseIPv4: l'adresse IPv4 du périphérique
  * - noModeleAP: Le no de modèle correspondant
  * - snmpCommunity: la communauté SNMP du périphérique à enregistrer ("public" si champs vide)
  * - username: le nom d'utilisateur (champs vide possible)
