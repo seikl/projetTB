@@ -1,4 +1,20 @@
-<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
+<?php 
+/****************************************************************************************************
+ * page d'enregistrement d'une ligne de commande avec les informations reçues depuis "ajoutCLI.php"
+ * 
+ * Paramètres reçus:
+ * - ligneCommande: la ligne de commande
+ * - protocole: le protocole
+ * - portProtocole: le no de port
+ * - modeleAP : le modèle pour lequel s'applqiue la ligne de commande
+ * - choixAjoutDescription: permet de déterminer s'il faut enregistrer une nouvelle description
+ * pour la commande ou s'il s'agit d'une description existante
+ *  - typeCommande: contient les informaitons sur la description de la commande
+ * 
+ * Modifié le: 30.08.2014                                                                           *
+ ***************************************************************************************************/
+$auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>AP Tool</title>

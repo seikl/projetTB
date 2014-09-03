@@ -1,4 +1,12 @@
-<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
+<?php
+/****************************************************************************************************
+ * page de formulair d'ajout d'un modèle de périhpérique réseau. tranmset les informations
+ * saisies à "enregistrerModele.php"
+ *                                                                                            *
+ * Modifié le: 26.08.2014                                                                           *
+ ***************************************************************************************************/
+$auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>AP Tool</title>

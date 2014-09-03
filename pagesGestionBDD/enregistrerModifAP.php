@@ -1,4 +1,21 @@
-<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
+<?php 
+/****************************************************************************************************
+ * page d'enregistrement des modifications effectuées sur un ou plusieurs periphériques réseaux 
+ * avec les informations reçues depuis "modfierAP.php"
+ * 
+ * Paramètres reçus dans un tableaux contenant:
+ *  -noAP: le no d'identifiant de l'AP dans la BDD
+ *  - nomAP: Le nom du périhpérique réseau
+ * -  adresseIPv4: l'adresse IPv4 du périphérique
+ * - noModeleAP: Le no de modèle correspondant
+ * - snmpCommunity: la communauté SNMP du périphérique à enregistrer ("public" si champs vide)
+ * - username: le nom d'utilisateur (champs vide possible)
+ * - password: le mot de passe du périphérique à enregistrer
+ *
+ * Modifié le: 01.09.2014
+ ***************************************************************************************************/
+$auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>AP Tool</title>

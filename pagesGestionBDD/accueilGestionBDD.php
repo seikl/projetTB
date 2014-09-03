@@ -1,4 +1,14 @@
-<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
+<?php 
+/****************************************************************************************************
+ * page d'acceuil de la partie de gesitondes enregistrements de la BDD. elle affiche le nombre 
+ * de périphériques, le nombre de modèle et le nombre de commandes enregistrés.
+ * chaque information est sélectionnable pour rediriger vers la page d'édition correspondante (par ex
+ * nombre de modolèes mènera à la page de modificaiton d'un modèle d'AP)
+ *                                                                                            *
+ * Modifié le: 2.08.2014                                                                           *
+ ***************************************************************************************************/
+$auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>AP Tool</title>

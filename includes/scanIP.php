@@ -2,7 +2,14 @@
 /****************************************************************************************************
  * script PHP contenant une fonction pour retourner une table ARP avec le nom d'hôte, l'adresse MAC
  * et l'adresse MAC d'une plage d'adresses IP donnée
- *                                                                                                  *
+ * 
+ * Reçoit en paramètres:
+ * - l'adresse IP de début (au format Entier long)
+ * - l'adresse IP de fin (au format Entier long)
+ *                                                            
+ * Retourne:
+ * - un tableau à 2 dimensions avec 3 indexes pour chaque ligne intitulés: "adresseIP","adresseMAC" et "hostname";
+ *                                       
  * Modifié le: 24.08.2014                                                                           *
  ***************************************************************************************************/
 

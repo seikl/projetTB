@@ -1,4 +1,12 @@
-<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
+<?php 
+/****************************************************************************************************
+ * page de formulaire d'ajout d'une ligne de commande, transmet les informations saisies à 
+ * "enregistrerCLI.php"
+ *                                                                                            *
+ * Modifié le: 30.08.2014                                                                           *
+ ***************************************************************************************************/
+$auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>AP Tool</title>

@@ -1,4 +1,20 @@
-<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
+<?php 
+/****************************************************************************************************
+ * page d'enregistrement d'un modèle de periphérique réseau dans la BDD avec les informations 
+ * reçues depuis "ajoutModele.php"
+ * 
+ * Paramètres reçus:
+ * nomModele: nom du modèle
+ * versionFirmware: version du firmmware du modèle
+ * nomFabricant (peut être vide): le nom du fabricant
+ * adrMACFabricant1: 1er champs de l'adresse MAC du fabricant
+ * adrMACFabricant2: 2ème champs de l'adresse MAC du fabricant
+ * adrMACFabricant3: 3eme champs de l'adresse MAC du fabricant
+ *                                                                                            
+ * Modifié le: 27.08.2014
+ ***************************************************************************************************/
+$auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>AP Tool</title>
@@ -13,8 +29,7 @@
   <body>
       <p align="right"><br><a href="?action=logOut">LOGOUT</a>&nbsp;&nbsp;&nbsp;</p>
       <br>
-    <div class="container-fluid">        
-
+    <div class="container-fluid">
         <table border="0" width="90%" align="center">
            <tbody>
               <tr>

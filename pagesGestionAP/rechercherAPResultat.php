@@ -14,7 +14,7 @@
  * 
  * Fait appel à "includes/scanIP.php" recevoir un tableau contenant la table ARP
  *                                                                                            *
- * Modifié le: 26.08.2014                                                                           *
+ * Modifié le: 31.08.2014                                                                           *
  ***************************************************************************************************/
 $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
 <!DOCTYPE html>

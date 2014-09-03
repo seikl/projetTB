@@ -1,4 +1,20 @@
-<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
+<?php 
+/****************************************************************************************************
+ * page d'enregistrement d'un ou plusieurs periphériques réseaux dans la BDD avec les informations 
+ * reçues depuis "ajoutAP.php"
+ * 
+ * Paramètres reçus:
+ *  - nomAP: Le nom du périhpérique réseau
+ * - IPgroupeA,B,C et D: les 4 champs composant l'adresse IPv4 du périphérique
+ * - noModeleAP: Le no de modèle correspondant
+ * - snmpCommunity: la communauté SNMP du périphérique à enregistrer ("public" si champs vide)
+ * - username: le nom d'utilisateur (champs vide possible)
+ * - password: le mot de passe du périphérique à enregistrer
+ *                                                                                            *
+ * Modifié le: 01.09.2014                                                                           *
+ ***************************************************************************************************/
+$auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>AP Tool</title>
@@ -53,7 +69,6 @@
                             $boutonRetour = '<button class="btn btn-primary" onclick="history.back()">Revenir sur le formulaire</button>';
                             $boutonReinit = '<button class="btn btn-default" onclick="window.location.href = \'ajoutAP.php\'">R&eacute;initialiser le formulaire</button>';
                             $boutonRetourSucces = '<button class="btn btn-success" onclick="window.location.href = \'../pagesGestionAP/accueilGestionAP.php\'">Afficher la liste des mod&egrave;les</button>';
-
                             
                             //Récupération des informations
                             if ($_POST) {  
@@ -76,8 +91,7 @@
                                 echo "</td></tr>";
                                 
                                 echo "<tr><td>-----------------------------------------------------------------------</td></tr></table>";
-                                
-                                    
+                                                                    
                                 //Vérification si le une IP n'est pas déjà existante dnas la BDD sinon enregistrement des infos
                                 try
                                 {                            
@@ -114,7 +128,6 @@
                                                 echo "<p>".$boutonRetourSucces."</p>";                                            
                                             }
                                 }
-
                                 catch(Exception $e)
                                 {
                                         echo '<tr><td>Erreur : '.$e->getMessage().'<br />';

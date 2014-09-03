@@ -1,4 +1,15 @@
-<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
+<?php
+/****************************************************************************************************
+ * page de formulair de modification d'un ou plusieurs periphériques réseaux. Tansmet les informations saisies
+ * à "enregistrerModifAP.php"
+ * 
+ * Reçoit en paramètre:
+ * - un tableau contenant les informations sur les AP à afficher pour modification (noAP, nomAP, etc.)
+ * - qtyAP: le nombre d'AP à modifier pour générer les nombres de champs nécessaires pour l'édition des AP.
+ *
+ * Modifié le: 01.09.2014
+ ***************************************************************************************************/
+$auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
 <html lang="en">
   <head>
     <title>AP Tool</title>

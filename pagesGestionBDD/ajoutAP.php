@@ -1,4 +1,25 @@
-<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
+<?php 
+/****************************************************************************************************
+ * page de formulair d'ajout d'un ou plusieurs periphériques réseaux. Tansmet les informations saisies
+ * à "enregistrerAP.php"
+ * 
+ * Peut aussi recevoir en paramètres:
+ *  un tableau contenant les informations des AP et la quntité d'AP
+ *  qu'il va falloir enregistrer depuis "rechercherAPresultat.php":
+ *  - nomAP: Le nom du périhpérique réseau
+ * - IPgroupeA,B,C et D: les 4 champs composant l'adresse IPv4 du périphérique
+ * * - noModeleAP: Le no de modèle correspondant
+ * - snmpCommunity: la communauté SNMP du périphérique à enregistrer ("public" si champs vide)
+ * - username: le nom d'utilisateur (champs vide possible)
+ * - password: le mot de passe du périphérique à enregistrer
+ * 
+ * -qtyAP: le nombre d'AP à modifier pour générer les nombres de champs nécessaires pour l'édition des AP.
+ * 
+ *                                                                                            *
+ * Modifié le: 01.09.2014                                                                           *
+ ***************************************************************************************************/
+$auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>AP Tool</title>
@@ -109,24 +130,23 @@
                         //enregistrement des modèles d'AP dans un tableau pour affichage dans une liste
                         try
                         {            
-                                $i=0;
-                                $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
+                            $i=0;
+                            $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
-                                $resultatsAP=$connexion->query("SELECT * FROM modeles ORDER BY nomFabricant,nomModele, versionFirmware;");                                 
-                                $resultatsAP->setFetchMode(PDO::FETCH_OBJ);                                 
-                                
-                                while( $ligne = $resultatsAP->fetch() ) // on récupère la liste des membres
-                                {     
-                                    $noModeleAP =(string)$ligne->noModeleAP;
-                                    $nomModele =(string)$ligne->nomModele;
-                                    $versionFirmware=(string)$ligne->versionFirmware;
-                                    $nomFabricant=(string)$ligne->nomFabricant;
-                                    $adrMACFabricant=(string)$ligne->adrMACFabricant; 
-                                    $tabListeModeles[$i]=array("noModeleAP" =>$noModeleAP, "nomModele"=>$nomModele, "versionFirmware"=>$versionFirmware,"nomFabricant"=>$nomFabricant, "adrMACFabricant"=>$adrMACFabricant);
-                                    $i++;
-                                }
-                            $resultatsAP->closeCursor(); // on ferme le curseur des résultats
-                                                
+                            $resultatsAP=$connexion->query("SELECT * FROM modeles ORDER BY nomFabricant,nomModele, versionFirmware;");                                 
+                            $resultatsAP->setFetchMode(PDO::FETCH_OBJ);                                 
+
+                            while( $ligne = $resultatsAP->fetch() ) // on récupère la liste des membres
+                            {     
+                                $noModeleAP =(string)$ligne->noModeleAP;
+                                $nomModele =(string)$ligne->nomModele;
+                                $versionFirmware=(string)$ligne->versionFirmware;
+                                $nomFabricant=(string)$ligne->nomFabricant;
+                                $adrMACFabricant=(string)$ligne->adrMACFabricant; 
+                                $tabListeModeles[$i]=array("noModeleAP" =>$noModeleAP, "nomModele"=>$nomModele, "versionFirmware"=>$versionFirmware,"nomFabricant"=>$nomFabricant, "adrMACFabricant"=>$adrMACFabricant);
+                                $i++;
+                            }
+                            $resultatsAP->closeCursor(); // on ferme le curseur des résultats                                                
                         }                                                
                         catch(Exception $e)
                         {
