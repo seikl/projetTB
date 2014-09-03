@@ -69,13 +69,20 @@
                                         
                                         $infosCLI=$CLI["noCLI"].' - '.$CLI["ligneCommande"].'( protocole:'.strtoupper($CLI["protocole"]).'['.$CLI["portProtocole"].'], <br>'.$CLI["typeCommande"].' - '.$CLI["description"].')';
 
-                                        //pour vérfieir si la description sera supprimée, car n'appartiendra plus à aucune commande
-                                       $resultatsDescription=$connexion->query("SELECT l.noCLI, l.ligneCommande, l.protocole, l.portProtocole, t.typeCommande, t.description "
-                                                   . "FROM typeCommandes t, lignesCommande l, modeles m "
-                                                   . "WHERE l.notypeCommande=t.notypeCommande AND l.noModeleAP=m.noModeleAP AND l.noModeleAP=".$noModele."; ORDER BY t.typeCommande,t.description;");                                                                  
+                                        //pour vérfieir si la description doit être supprimée, car n'appartiend plus à aucune commande
+                                       $resultatsDescription=$connexion->query("SELECT COUNT(notypeCommande) as nbtypecommande FROM apmanagerdb.lignesCommande l WHERE l.notypeCommande='".$CLI["notypeCommande"]."';");                                                                  
                                        $resultatsDescription->setFetchMode(PDO::FETCH_OBJ);                                        
-
-                                        
+                                        if ($resultatsDescription!=false){  
+                                            $resultatsDescription->setFetchMode(PDO::FETCH_OBJ);
+                                            while ($verifDescription = $resultatsDescription->fetch()){$nbtypeCommandesExistantes=(string)$verifDescription->nbtypecommande;} 
+                                            if ($nbtypeCommandesExistantes==0){
+                                               $reqSuppressionDescription=$connexion->query("DELETE FROM ".$PARAM_nom_bd.".typeCommandes WHERE notypeCommande='".$CLI["notypeCommande"]."';");
+                                               $infosCLI.= ' <strong>(NB: La description a &eacute;t&eacute; supprim&eacute;e)</strong> ';
+                                               $reqSuppressionDescription->closeCursor(); 
+                                               $resultatsDescription ->closeCursor();
+                                            }
+                                        }                                       
+                                       $resultatsDescription->closeCursor(); 
                                         if ((!$reqSuppressionCLI) ){ echo '<strong>>> Probl&egrave;me lors de la suppression de la commande: '.$infosCLI.'</strong>!<br><br>';}
                                         else{ 
                                             echo '>>Commande: '.$infosCLI.' supprim&eacute;e avec succ&egrave;s<br><br>';

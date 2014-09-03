@@ -133,12 +133,12 @@
                                $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
                                if ($noModele=='0'){
-                                   $resultatsListeCLI=$connexion->query("SELECT l.noCLI, l.ligneCommande, l.protocole, l.portProtocole, t.typeCommande, t.description "
+                                   $resultatsListeCLI=$connexion->query("SELECT l.noCLI, l.ligneCommande, l.protocole, l.portProtocole,t.notypeCommande, t.typeCommande, t.description "
                                            ."FROM typeCommandes t, lignesCommande l "
                                            ."WHERE l.notypeCommande=t.notypeCommande ORDER BY t.typeCommande,t.description;");
                                }
                                else{
-                                   $resultatsListeCLI=$connexion->query("SELECT l.noCLI, l.ligneCommande, l.protocole, l.portProtocole, t.typeCommande, t.description "
+                                   $resultatsListeCLI=$connexion->query("SELECT l.noCLI, l.ligneCommande, l.protocole, l.portProtocole, t.notypeCommande, t.typeCommande, t.description "
                                            . "FROM typeCommandes t, lignesCommande l, modeles m "
                                            . "WHERE l.notypeCommande=t.notypeCommande AND l.noModeleAP=m.noModeleAP AND l.noModeleAP=".$noModele."; ORDER BY t.typeCommande,t.description;");
                                }                                    
@@ -151,14 +151,15 @@
                                    $ligneCommande = (string)$ligne->ligneCommande;
                                    $protocole=(string)$ligne->protocole;
                                    $portProtocole=(string)$ligne->portProtocole;
+                                   $notypeCommande=(string)$ligne->notypeCommande;
                                    $typeCommande=(string)$ligne->typeCommande;
                                    $description=(string)$ligne->description;
                                    $ligneCommande = substr($ligneCommande,0,60);
                                    $description = substr($description,0,60);
 
                                    if (in_array($noCLI, $CLIChoisies)){
-                                       echo '<option value="'.$noCLI.'" selected>'.$noCLI.' - '.$ligneCommande.'( protocole:'.strtoupper($protocole).'['.$portProtocole.'], '.$typeCommande.' - '.$description.')&nbsp;&nbsp;&nbsp;</option>';
-                                       $listeCLIactuelles[$i]=array("noCLI" =>$noCLI, "ligneCommande"=>$ligneCommande, "protocole"=>$protocole,"portProtocole"=>$portProtocole, "typeCommande"=>$typeCommande, "description"=>$description);                                              
+                                       echo '<option value="'.$noCLI.'" selected>'.$noCLI.' - '.$ligneCommande.'( protocole:'.strtoupper($protocole).'['.$portProtocole.'], '.$typeCommande.' - '.$description.' )&nbsp;&nbsp;&nbsp;</option>';
+                                       $listeCLIactuelles[$i]=array("noCLI" =>$noCLI, "ligneCommande"=>$ligneCommande, "protocole"=>$protocole,"portProtocole"=>$portProtocole, "notypeCommande" =>$notypeCommande, "typeCommande"=>$typeCommande, "description"=>$description);                                       
                                        
                                        $i++;                                                                                                             
                                    }
@@ -170,45 +171,43 @@
                                        echo '<option value="'.$noCLI.'">'.$noCLI.' - '.$typeCommande.' - '.$resumeDescription.'('.$resumeCLI.' ['.strtoupper($protocole).':'.$portProtocole.'])&nbsp;&nbsp;&nbsp;</option>';
                                    }
                                }
-                               $resultatsListeCLI->closeCursor();                                       
-                               $resultatsDescription->closeCursor();                                                                          
+                               $resultatsListeCLI->closeCursor();                                                                                                                
+                            }
+                            catch(Exception $e)
+                            {
+                                    echo '</select></div></form></td></tr></table><li>Erreur lors du chargement</li></ol>';
+                                    echo 'Erreur : '.$e->getMessage().'<br />';
+                                    echo 'N° : '.$e->getCode();
+                            }                                                                                                                                                       
+                            echo '</select><br></td></tr></div></form>';                                                                                 
+
+                            $actionOnClick="$('#supprimerCLI').submit();";
+                            $actionReset="location='selectSupprCLI.php'";
+
+                            $textInfos= "&nbsp;";
+                            if (!$initialisation){                                
+                                $textInfos ='<br>';                                    
+                                //vérification des choix effectués
+                                if ($listeCLIactuelles==null){                                        
+                                    $textInfos .='<br><strong>Aucune commande s&eacute;lectionn&eacute;e.</strong>';
+                                }                            
+                                else {                                     
+                                $listeCLI=base64_encode(serialize($listeCLIactuelles));      
+                                $infoAvertissement = 'onsubmit="return confirm(\'Valider la suppression de ces commandes?\');"';
+                                $textInfos .='<input type="hidden" value="'.$listeCLI.'" name="listeCLI"/>';
+                                $textInfos .= '<table width="100%"><tr><td align="left"><input type="submit" class="btn btn-warning" value="Supprimer les commandes s&eacute;lectionn&eacute;s"/></td>';
+                                $textInfos .= '<td align="right"><input type="button" class="btn  btn-default" onclick="'.$actionReset.'" value="R&eacute;initialiser"/></td></tr></table>';
                                 }
+                            }
 
-                                catch(Exception $e)
-                                {
-                                        echo '</select></div></form></td></tr></table><li>Erreur lors du chargement</li></ol>';
-                                        echo 'Erreur : '.$e->getMessage().'<br />';
-                                        echo 'N° : '.$e->getCode();
-                                }                                                                                                                                                       
-                                echo '</select><br></td></tr></div></form>';                                                                                 
-                            
-                                $actionOnClick="$('#supprimerCLI').submit();";
-                                $actionReset="location='selectSupprCLI.php'";
+                            echo '<tr><td align="right">';  
+                            echo '<div class="form-group" id="validation">';                                
+                            echo '<form id="supprimerCLI" '.$infoAvertissement.' class="form-inline" role="form" action="supprimerCLI.php" method="POST">';                                                                                
 
-                                $textInfos= "&nbsp;";
-                                if (!$initialisation){                                
-                                    $textInfos ='<br>';                                    
-                                    //vérification des choix effectués
-                                    if ($listeCLIactuelles==null){                                        
-                                        $textInfos .='<br><strong>Aucune commande s&eacute;lectionn&eacute;e.</strong>';
-                                    }                            
-                                    else {                                     
-                                    $listeCLI=base64_encode(serialize($listeCLIactuelles));      
-                                    $infoAvertissement = 'onsubmit="return confirm(\'Valider la suppression de ces commandes?\');"';
-                                    $textInfos .='<input type="hidden" value="'.$listeCLI.'" name="listeCLI"/>';
-                                    $textInfos .= '<table width="100%"><tr><td align="left"><input type="submit" class="btn btn-warning" value="Supprimer les commandes s&eacute;lectionn&eacute;s"/></td>';
-                                    $textInfos .= '<td align="right"><input type="button" class="btn  btn-default" onclick="'.$actionReset.'" value="R&eacute;initialiser"/></td></tr></table>';
-                                    }
-                                }
+                            echo $textInfos;
 
-                                echo '<tr><td align="right">';  
-                                echo '<div class="form-group" id="validation">';                                
-                                echo '<form id="supprimerCLI" '.$infoAvertissement.' class="form-inline" role="form" action="supprimerCLI.php" method="POST">';                                                                                
-
-                                echo $textInfos;
-
-                                echo '</form></div>';
-                                echo '</td></tr></table>';
+                            echo '</form></div>';
+                            echo '</td></tr></table>';
                      //echo "<br><br>infos recues: ".$infosRecues." --- modele en cours: ".$noModele." --- AP choisis: ".htmlspecialchars(print_r($CLIChoisies,true));
 ?>     
                      </ol> 
