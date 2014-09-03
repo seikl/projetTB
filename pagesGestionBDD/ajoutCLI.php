@@ -55,9 +55,9 @@
                             $i=0;
                             $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
-                            $resultatsModeles=$connexion->query("SELECT * FROM modeles;");                                 
+                            $resultatsModeles=$connexion->query("SELECT * FROM modeles ORDER BY nomFabricant,nomModele, versionFirmware;");                                 
                             $resultatsModeles->setFetchMode(PDO::FETCH_OBJ);                                 
-                            $resultatsDescription=$connexion->query("SELECT * FROM typeCommandes;");                                 
+                            $resultatsDescription=$connexion->query("SELECT * FROM typeCommandes ORDER BY typeCommande,description;");                                 
                             $resultatsDescription->setFetchMode(PDO::FETCH_OBJ);    
 
                             while( $ligne = $resultatsModeles->fetch()){ // on récupère la liste des modeles    

@@ -61,7 +61,7 @@
                                 $infoModele=null;
                                 $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
-                                $resultatsAP=$connexion->query("SELECT * FROM modeles;");                                 
+                                $resultatsAP=$connexion->query("SELECT * FROM modeles ORDER BY nomFabricant,nomModele, versionFirmware;");                                 
                                 $resultatsAP->setFetchMode(PDO::FETCH_OBJ);                                 
                                 
                                 while( $ligne = $resultatsAP->fetch() ) // on récupère la liste des membres

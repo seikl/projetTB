@@ -57,7 +57,7 @@
                             //Récupération des informations
                             if ($_POST) {       
                                 $listeCLI = unserialize(base64_decode($_POST['listeCLI']));                                
-                                
+                                $descriptionASupprimer=null;
                                 //suppression des AP
                                 try
                                 {                            
@@ -69,6 +69,13 @@
                                         
                                         $infosCLI=$CLI["noCLI"].' - '.$CLI["ligneCommande"].'( protocole:'.strtoupper($CLI["protocole"]).'['.$CLI["portProtocole"].'], <br>'.$CLI["typeCommande"].' - '.$CLI["description"].')';
 
+                                        //pour vérfieir si la description sera supprimée, car n'appartiendra plus à aucune commande
+                                       $resultatsDescription=$connexion->query("SELECT l.noCLI, l.ligneCommande, l.protocole, l.portProtocole, t.typeCommande, t.description "
+                                                   . "FROM typeCommandes t, lignesCommande l, modeles m "
+                                                   . "WHERE l.notypeCommande=t.notypeCommande AND l.noModeleAP=m.noModeleAP AND l.noModeleAP=".$noModele."; ORDER BY t.typeCommande,t.description;");                                                                  
+                                       $resultatsDescription->setFetchMode(PDO::FETCH_OBJ);                                        
+
+                                        
                                         if ((!$reqSuppressionCLI) ){ echo '<strong>>> Probl&egrave;me lors de la suppression de la commande: '.$infosCLI.'</strong>!<br><br>';}
                                         else{ 
                                             echo '>>Commande: '.$infosCLI.' supprim&eacute;e avec succ&egrave;s<br><br>';

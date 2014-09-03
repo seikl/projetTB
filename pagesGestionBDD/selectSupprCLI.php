@@ -92,7 +92,7 @@
                                    $i =0;                                
                                    $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
-                                   $resultatsModelesAP=$connexion->query("SELECT * FROM modeles;");                                 
+                                   $resultatsModelesAP=$connexion->query("SELECT * FROM modeles ORDER BY nomFabricant,nomModele, versionFirmware;");                                 
                                    $resultatsModelesAP->setFetchMode(PDO::FETCH_OBJ);                                 
 
                                    while( $ligne = $resultatsModelesAP->fetch() ) // on récupère la liste des membres
@@ -129,15 +129,18 @@
                            {
                                $i =0;
                                $listeCLIactuelles=null;
+                               
                                $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
                                if ($noModele=='0'){
-                                   $resultatsListeCLI=$connexion->query("SELECT l.noCLI, l.ligneCommande, l.protocole, l.portProtocole, t.typeCommande, t.description FROM typeCommandes t, lignesCommande l WHERE l.notypeCommande=t.notypeCommande;");
+                                   $resultatsListeCLI=$connexion->query("SELECT l.noCLI, l.ligneCommande, l.protocole, l.portProtocole, t.typeCommande, t.description "
+                                           ."FROM typeCommandes t, lignesCommande l "
+                                           ."WHERE l.notypeCommande=t.notypeCommande ORDER BY t.typeCommande,t.description;");
                                }
                                else{
                                    $resultatsListeCLI=$connexion->query("SELECT l.noCLI, l.ligneCommande, l.protocole, l.portProtocole, t.typeCommande, t.description "
                                            . "FROM typeCommandes t, lignesCommande l, modeles m "
-                                           . "WHERE l.notypeCommande=t.notypeCommande AND l.noModeleAP=m.noModeleAP AND l.noModeleAP=".$noModele.";");
+                                           . "WHERE l.notypeCommande=t.notypeCommande AND l.noModeleAP=m.noModeleAP AND l.noModeleAP=".$noModele."; ORDER BY t.typeCommande,t.description;");
                                }                                    
 
                                $resultatsListeCLI->setFetchMode(PDO::FETCH_OBJ);                                 
@@ -155,14 +158,20 @@
 
                                    if (in_array($noCLI, $CLIChoisies)){
                                        echo '<option value="'.$noCLI.'" selected>'.$noCLI.' - '.$ligneCommande.'( protocole:'.strtoupper($protocole).'['.$portProtocole.'], '.$typeCommande.' - '.$description.')&nbsp;&nbsp;&nbsp;</option>';
-                                       $listeCLIactuelles[$i]=array("noCLI" =>$noCLI, "ligneCommande"=>$ligneCommande, "protocole"=>$protocole,"portProtocole"=>$portProtocole, "typeCommande"=>$typeCommande, "description"=>$description);       
-                                       $i++;
+                                       $listeCLIactuelles[$i]=array("noCLI" =>$noCLI, "ligneCommande"=>$ligneCommande, "protocole"=>$protocole,"portProtocole"=>$portProtocole, "typeCommande"=>$typeCommande, "description"=>$description);                                              
+                                       
+                                       $i++;                                                                                                             
                                    }
                                    else {
-                                       echo '<option value="'.$noCLI.'">'.$noCLI.' - '.$ligneCommande.'( protocole:'.strtoupper($protocole).'['.$portProtocole.'], '.$typeCommande.' - '.$description.')&nbsp;&nbsp;&nbsp;</option>';
+                                       if (strlen($description)>60){$resumeDescription=substr($description,0,30).' .. '.substr($description, (strlen($description)-30),strlen($description));}
+                                       else {$resumeDescription=substr($description,0,60);}
+                                        if (strlen($ligneCommande)>60){$resumeCLI=substr($ligneCommande,0,30).' .. '.substr($ligneCommande, (strlen($ligneCommande)-30),strlen($ligneCommande));}
+                                       else {$resumeCLI=substr($ligneCommande,0,60);} 
+                                       echo '<option value="'.$noCLI.'">'.$noCLI.' - '.$typeCommande.' - '.$resumeDescription.'('.$resumeCLI.' ['.strtoupper($protocole).':'.$portProtocole.'])&nbsp;&nbsp;&nbsp;</option>';
                                    }
                                }
-                               $resultatsListeCLI->closeCursor(); // on ferme le curseur des résultats                                                                            
+                               $resultatsListeCLI->closeCursor();                                       
+                               $resultatsDescription->closeCursor();                                                                          
                                 }
 
                                 catch(Exception $e)

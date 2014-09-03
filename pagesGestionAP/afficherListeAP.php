@@ -59,7 +59,7 @@
                                 $i =0;
                                 $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
-                                $resultatsAP=$connexion->query("SELECT * FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP;");                                 
+                                $resultatsAP=$connexion->query("SELECT * FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP ORDER BY a.nomAP, a.adresseIPv4;");                                 
                                 $resultatsAP->setFetchMode(PDO::FETCH_OBJ);                                 
                                 
                                 while( $ligne = $resultatsAP->fetch() ) // on récupère la liste des membres
@@ -89,7 +89,7 @@
                                         $resultatPing = "Not OK";
                                     }
                                     $infosAP=base64_encode(serialize($tabInfosAP));
-                                    echo '<td><a href="interrogerAP.php?infosAP='.$infosAP.'">'.$noAP.' - '.$nomAP.' ('.$ip.')</a></td>'; //TODO Créer lien pour inmterroger AP                                    
+                                    echo '<td><a href="interrogerAP.php?infosAP='.$infosAP.'">'.$noAP.' > '.$nomAP.' ('.$ip.')</a></td>'; //TODO Créer lien pour inmterroger AP                                    
                                     echo '<td>'.$nomFabricant.' '.$nomModele.' (firmware '.$versionFirmware.')</td>';
                                     echo '<td> '.$resultatPing.' </td>';
 
