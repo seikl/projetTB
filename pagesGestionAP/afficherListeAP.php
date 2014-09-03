@@ -2,9 +2,10 @@
 /****************************************************************************************************
  * page d'accueil de la section "gestion des AP" qui affiche toutes la liste des éléments réseaux
  * enregistrés avec indication s'ils ont pû être contactés (PING) ou non. Il est possible de 
- * sélectionner chacun d'entre-eux individuellement pour en obtenir plus d'informations
+ * sélectionner (lien vers "interrogerAP.php") chacun d'entre-eux individuellement pour en obtenir 
+ * plus d'informations.
  *                                                                                                  *
- * Modifié le: 31.08.2014                                                                           *
+ * Modifié le: 01.09.2014                                                                           *
  ***************************************************************************************************/
 
 $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 

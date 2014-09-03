@@ -1,4 +1,16 @@
-<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
+<?php 
+/****************************************************************************************************
+ * Affiches les informations SNMP de base et celles de la BDD  sur un périphérique sélectionné
+ * depuis "afficherListe.php"
+ * 
+ *  paramètre:
+ * - infosAP: Tableau contenant les informations sur un périphérique réseau (nom, adresse IPv4, 
+ * modèle, etc.)
+ *                                                                                                  *
+ * Modifié le: 31.08.2014                                                                           *
+ ***************************************************************************************************/
+$auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>AP Tool</title>

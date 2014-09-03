@@ -1,4 +1,12 @@
-<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
+<?php 
+/****************************************************************************************************
+ * Cette page offre la possiblité d'effectuer une recherche d'une adresse MAC  sur une plage IP en
+ * transmettant une IP, son masque et éventuellement l'adresse MAC d'un fabricant
+ *                                                                                                  *
+ * Modifié le: 26.08.2014                                                                           *
+ ***************************************************************************************************/
+$auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>AP Tool</title>

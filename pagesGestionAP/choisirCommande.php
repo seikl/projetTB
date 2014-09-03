@@ -1,4 +1,13 @@
-<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
+<?php 
+/****************************************************************************************************
+ * page qui permet de choisir une commande et les périphériques auxquels l'appliquer.
+ * TRansmet ensuite les informations à "appliquerCommande.php" pour le traitement
+ *
+ *                                                                                                  *
+ * Modifié le: 31.08.2014                                                                           *
+ ***************************************************************************************************/
+$auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>AP Tool</title>

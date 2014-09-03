@@ -1,4 +1,23 @@
-<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
+<?php 
+/****************************************************************************************************
+ * Cette affiche les résultats d'un scan effectué sur une plage d'adresses IPv4 reçue en paramètre 
+ * depuis "rechercherAP.php".
+ * 
+ *  * paramètre reçus de "rechercherAP.php":
+ * - groupeA: la 1ère partie de l'IP
+ * - groupeB: la 2ème partie de l'IP
+ * - groupeC: la 3ème partie de l'IP
+ * - groupeD: la 4ème partie de l'IP
+ * - masque: le masque 
+ * - vendorMAC: l'adresse MAC du fabricant
+ *       
+ * 
+ * Fait appel à "includes/scanIP.php" recevoir un tableau contenant la table ARP
+ *                                                                                            *
+ * Modifié le: 26.08.2014                                                                           *
+ ***************************************************************************************************/
+$auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
+<!DOCTYPE html>
 <html lang="en">
     <title>AP Tool</title>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">

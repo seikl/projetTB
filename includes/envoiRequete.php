@@ -1,7 +1,14 @@
 <?php
-
 /****************************************************************************************************
  * script PHP contenant toutes les fonctions nécessaires à l'envoi des différents types de requêtes
+ * 
+ *  * paramètres:
+ * - $adresseIP: L'adresse IP du périphérique réseau
+ * - $requete: la commande à transmettre
+ * - $noPort: le no de port TCP/UDP
+ * - $user: le nom d'utilisateur du périphérique
+ * - $mdp: le mot de passe du périphérique
+ * - ($nbTrames): Le nombre de trames que l'on souhaite récupérer dans la réponse
  *                                                                                                  *
  * Modifié le: 31.08.2014                                                                           *
  ***************************************************************************************************/
