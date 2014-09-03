@@ -142,12 +142,11 @@
 
                                if ($noModele=='0'){
                                    $resutatsTypeCommande=$connexion->query("SELECT tc.notypeCommande, tc.typeCommande, tc.description FROM modeles m, typeCommandes tc, lignesCommande lc
-                                                                   WHERE lc.notypeCommande = tc.notypeCommande AND lc.noModeleAP = m.noModeleAP GROUP BY tc.notypeCommande;");                                 
+                                                                   WHERE lc.notypeCommande = tc.notypeCommande AND lc.noModeleAP = m.noModeleAP;");                                 
                                }
                                else{
                                    $resutatsTypeCommande=$connexion->query("SELECT * FROM modeles m, typeCommandes tc, lignesCommande lc
-                                                                   WHERE lc.notypeCommande = tc.notypeCommande AND lc.noModeleAP = m.noModeleAP AND lc.noModeleAP =".$noModele."
-                                                                    GROUP BY tc.notypeCommande;");
+                                                                   WHERE lc.notypeCommande = tc.notypeCommande AND lc.noModeleAP = m.noModeleAP AND lc.noModeleAP =".$noModele.";");
                                }
 
                                $resutatsTypeCommande->setFetchMode(PDO::FETCH_OBJ);                                 

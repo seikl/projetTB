@@ -1,4 +1,22 @@
-<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
+<?php
+/****************************************************************************************************
+ * page qui reçoit en paramètre une liste d'AP auxquels il faut transmettre une commande, affiche 
+ * un résultat succint et enregistre les résultats plus complets dans un fichier HTML de sortie 
+ * (ouput.html)
+ * 
+ * paramètre reçus de "choisirCommande.php":
+ * - $tabCommandesChoisies: Le tableau contenant les commandes qui peuvent être envoyées
+ * - $tabListeAP: Le tableau contenant la liste des AP à contacter
+ * - $nbTrames: le nombre de "lignes" de la réponse du pérphéqieu réseau que l'on enregistre
+ * 
+ * Fait appel à "includes/envoiRequete.php" pour transmettre la requête correspondante à chaque
+ *  pérphérique réseau à contacter
+ *                                                                                                  *
+ * Modifié le: 31.08.2014                                                                           *
+ ***************************************************************************************************/
+
+$auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>AP Tool</title>

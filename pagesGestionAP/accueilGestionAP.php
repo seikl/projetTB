@@ -1,4 +1,12 @@
-<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
+<?php 
+/****************************************************************************************************
+ * page d'accueil de la section "gestion des AP" qui affiche la liste des modèles enregistrés et
+ * le nombre d'éléments réseaux qui y leurs sont liés
+ *                                                                                                  *
+ * Modifié le: 01.09.2014                                                                           *
+ ***************************************************************************************************/
+
+$auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
 <!DOCTYPE html>
 <html lang="en">
   <head>

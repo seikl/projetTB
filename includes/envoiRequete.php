@@ -1,5 +1,13 @@
 <?php
-    //pour éviter les boucles infinies si le serveur ne ferme pas la connexion
+
+/****************************************************************************************************
+ * script PHP contenant toutes les fonctions nécessaires à l'envoi des différents types de requêtes
+ *                                                                                                  *
+ * Modifié le: 31.08.2014                                                                           *
+ ***************************************************************************************************/
+
+
+    //pour éviter les boucles infinies si le serveur ne ferme pas la connexion (NON UTIILISE POUR LE MOMENT)
     //source: http://php.net/manual/fr/function.feof.php, consulté le 29.08.2014
     function safe_feof($fp, $start = NULL) {
      $start = microtime(true);

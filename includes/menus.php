@@ -1,4 +1,11 @@
 <?php
+/****************************************************************************************************
+ * simple script contenant les menus génériques des différentes sections (gestion des AP,
+ * gestion de la BDD et gestion du système)
+ *                                                                                                  *
+ * Modifié le: 31.08.2014                                                                           *
+ ***************************************************************************************************/
+
 $menuPagesGestionBDD='<td width="30%">                       
                       &nbsp;
                  </td>               

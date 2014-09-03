@@ -1,4 +1,14 @@
-<?php $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!DOCTYPE html>
+<?php
+/****************************************************************************************************
+ * page d'accueil de la section "gestion des AP" qui affiche toutes la liste des éléments réseaux
+ * enregistrés avec indication s'ils ont pû être contactés (PING) ou non. Il est possible de 
+ * sélectionner chacun d'entre-eux individuellement pour en obtenir plus d'informations
+ *                                                                                                  *
+ * Modifié le: 31.08.2014                                                                           *
+ ***************************************************************************************************/
+
+$auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>AP Tool</title>

@@ -1,4 +1,11 @@
 <?php
+/****************************************************************************************************
+ * script PHP contenant une fonction pour retourner une table ARP avec le nom d'hôte, l'adresse MAC
+ * et l'adresse MAC d'une plage d'adresses IP donnée
+ *                                                                                                  *
+ * Modifié le: 24.08.2014                                                                           *
+ ***************************************************************************************************/
+
     //pour autoriser le script à s'exécuter au-delà de 300 secondes
     set_time_limit(300);
     
@@ -14,7 +21,7 @@
 
         
       for($i=$adrDebutLong;$i<=$adrFinLong;$i++) {
-        //Mega threaded ( This will open 255 processes ;))
+        //Mega threaded (512 processus si masque < [/23], au delà on réduit à 16 processus simultanés))
         $ipAPinger=long2ip($i);
         $fp[$i] = popen($pingLinux.$ipAPinger, "r");       
         
@@ -25,11 +32,7 @@
             }
         }   
       }      
-      /*
-      for($i=$adrDebutLong;$i<=$adrFinLong;$i++) {
-        while( $fp[$i] && !feof($fp[$i]) ) { fgets($fp[$i]); }
-      } 
-      */
+
       //pour récupérer la liste de IP, des hôtes et des MAC des AP qui ont répondu
       $i=0;
       $tableARP = shell_exec($getArpLinux);       

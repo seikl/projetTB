@@ -1,11 +1,19 @@
 <?php
+/****************************************************************************************************
+ * script PHP contenant des fonctions à but utilitaire:
+ *  - Lever une exception en cas d'alerte
+ *  - calculer une adresse réseau depuis une ip et son masque
+ *  - calculer un broadcast IP depuis l'adresse du réseua et son maque
+ *                                                                                                  *
+ * Modifié le: 31.08.2014                                                                           *
+ ***************************************************************************************************/
+
     //pour lever une exception en cas de warning() (source: http://stackoverflow.com/questions/1241728/can-i-try-catch-a-warning, le 06.08.2014)
     function handleError($errno, $errstr, $errfile, $errline, array $errcontext)
     {
         if (0 === error_reporting()) {
             return false;
         }
-
         throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
     }
     set_error_handler('handleError');
@@ -23,7 +31,6 @@
     function cidr2broadcast($network, $cidr)
     {
         $broadcast = long2ip(ip2long($network) + pow(2, (32 - $cidr)) - 1);
-
       return $broadcast;
     }     
     //--------------------------------------------

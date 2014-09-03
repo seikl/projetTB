@@ -64,33 +64,44 @@
                                 $choixAjoutDescription = $_POST['choixAjoutDescription'];
                                 $reqAjoutDescription=null;
                                 $reqEnregistrement=true;
+
+                                $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
+                                
+                                //Bloc pour vérifier si la commande saisie existe déjà pour le modèle choisi avec vérification si description existe ou non
+                                if ($choixAjoutDescription == 'selection'){
+                                    $typeCommande=unserialize(base64_decode($_POST['choixTypeCommande']));
+                                    $notypeCommande=$typeCommande["notypeCommande"];
+                                    $description=$typeCommande["description"];
+                                    $typeCommande=$typeCommande["typeCommande"]; 
+                                    
+                                    $reqVerifCLI = $connexion->query('SELECT COUNT(noCLI) as nbCLIExistantes FROM '.$PARAM_nom_bd.'.lignesCommande '. 
+                                                    'WHERE (ligneCommande LIKE "'.$ligneCommande.'" AND protocole = "'.$protocole.'" AND portProtocole="'.$portProtocole.'" AND noModeleAP="'.$modeleAP["noModeleAP"].'")'.
+                                                    'OR (noModeleAP="'.$modeleAP["noModeleAP"].'" AND notypeCommande="'.$notypeCommande.'");');  
+                                }
+                                else {
+                                    $reqVerifCLI = $connexion->query('SELECT COUNT(noCLI) as nbCLIExistantes FROM '.$PARAM_nom_bd.'.lignesCommande '. 
+                                                        'WHERE (ligneCommande LIKE "'.$ligneCommande.'" AND protocole = "'.$protocole.'" AND portProtocole="'.$portProtocole.'" AND noModeleAP="'.$modeleAP["noModeleAP"].'");');                                                                                                                                                                                  
+                                }                                                                                    
+                                if ($reqVerifCLI!=false){  
+                                    $reqVerifCLI->setFetchMode(PDO::FETCH_OBJ);
+                                    while ($verifCommande = $reqVerifCLI->fetch()){$nbCLIExistantes=(string)$verifCommande->nbCLIExistantes;} 
+                                    if ($nbCLIExistantes>0){
+                                        echo "<p><strong> Cette commande existe d&eacute;j&agrave; pour ce mod&egrave;le <br>";
+                                        echo "Veuillez modifier le formulaire.</strong>!<br>"; 
+                                        $reqVerifCLI->closeCursor(); 
+                                        $reqEnregistrement=FALSE;                                                                                                
+                                    }
+                                }                                                                                                                 
                                 
                                 
+                                //requête d'enregistrement de la nouvelle commande
                                 try
                                 {                            
-                                    $i =0;
-                                    $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
-                                    
-                                    //Bloc pour vérifier si la commande saisie existe déjà pour le modèle choisi
-                                    $reqVerifCLI = $connexion->query('SELECT COUNT(noCLI) as nbCLIExistantes FROM '.$PARAM_nom_bd.'.lignesCommande '. 
-                                            'WHERE ligneCommande LIKE "'.$ligneCommande.'" AND protocole = "'.$protocole.'" AND portProtocole="'.$portProtocole.'" AND noModeleAP="'.$modeleAP["noModeleAP"].'";');
-                                    if ($reqVerifCLI!=false){  
-                                        $reqVerifCLI->setFetchMode(PDO::FETCH_OBJ);
-                                        while ($verifCommande = $reqVerifCLI->fetch()){$nbCLIExistantes=(string)$verifCommande->nbCLIExistantes;} 
-                                        if ($nbCLIExistantes>0){
-                                            echo "<p><strong> Cette commande existe d&eacute;j&agrave; pour ce mod&egrave;le <br>";
-                                            echo "Veuillez modifier le formulaire.</strong>!<br>"; 
-                                            $reqVerifCLI->closeCursor(); 
-                                            $reqEnregistrement=FALSE;                                                                                                
-                                        }
-                                    }                                                                                                            
+                                    $i =0;   
                                     
                                     //Bloc if pour vérifier si ajout ou sélection d'une commande
-                                    if ((isset($_POST['choixTypeCommande'])) && ($choixAjoutDescription == 'selection') && $reqEnregistrement){
-                                        $typeCommande=unserialize(base64_decode($_POST['choixTypeCommande'])); 
-                                        $reqEnregistrement = $connexion->query("INSERT INTO lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) VALUES ('".$ligneCommande."','".$protocole."','".$portProtocole."','".$modeleAP["noModeleAP"]."','".$typeCommande["notypeCommande"]."');");
-                                        $description=$typeCommande["description"];
-                                        $typeCommande=$typeCommande["typeCommande"];                                           
+                                    if ((isset($_POST['choixTypeCommande'])) && ($choixAjoutDescription == 'selection') && $reqEnregistrement){                                                                                 
+                                        $reqEnregistrement = $connexion->query("INSERT INTO lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) VALUES ('".$ligneCommande."','".$protocole."','".$portProtocole."','".$modeleAP["noModeleAP"]."','".$notypeCommande."');");                                          
                                     }
                                     else if((isset($_POST['typeCommande'])) && ($choixAjoutDescription =='ajout')){
                                         $typeCommande=$_POST['typeCommande'];
