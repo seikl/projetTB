@@ -217,15 +217,15 @@
                                $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
                                if (($noModele=='0') && ($noTypeCommandeChoisie=='0')){
-                                   $resultatsListeAP=$connexion->query("SELECT * FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP;");                                 
+                                   $resultatsListeAP=$connexion->query("SELECT * FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP ORDER BY a.nomAP, a.adresseIPv4;");                                 
                                }
                                else if (($noModele=='0') && ($noTypeCommandeChoisie!='0')){                                                                            
                                     $resultatsListeAP=$connexion->query("SELECT * FROM lignesCommande l1, accessPoints a, modeles m
                                                                 WHERE l1.ligneCommande IN (SELECT l2.ligneCommande from lignesCommande l2 where l2.notypeCommande=".$noTypeCommandeChoisie.")
-                                                                AND a.noModeleAP=l1.noModeleAP AND a.noModeleAP=m.noModeleAP;");                                                                      
+                                                                AND a.noModeleAP=l1.noModeleAP AND a.noModeleAP=m.noModeleAP ORDER BY a.nomAP, a.adresseIPv4;");                                                                      
                                }
                                else {
-                                    $resultatsListeAP=$connexion->query("SELECT * FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP AND a.noModeleAP =".$noModele.";");                                   
+                                    $resultatsListeAP=$connexion->query("SELECT * FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP AND a.noModeleAP =".$noModele." ORDER BY a.nomAP, a.adresseIPv4;");                                   
                                }
 
                                $resultatsListeAP->setFetchMode(PDO::FETCH_OBJ);                                 
