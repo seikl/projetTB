@@ -1,5 +1,8 @@
 <?php 
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * page d'accueil de la section "gestion des AP" qui affiche la liste des modèles enregistrés et
  * le nombre d'éléments réseaux qui y leurs sont liés
  *                                                                                                  *

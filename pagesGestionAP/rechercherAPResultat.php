@@ -1,5 +1,8 @@
 <?php 
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * Cette affiche les résultats d'un scan effectué sur une plage d'adresses IPv4 reçue en paramètre 
  * depuis "rechercherAP.php".
  * 

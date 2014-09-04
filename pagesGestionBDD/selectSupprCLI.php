@@ -1,5 +1,8 @@
 <?php 
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * page de sélection d'une ou plusieurs commandes à supprimer. Transmet les 
  * sélections à "supprimerCLI.php"
  *

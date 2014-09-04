@@ -1,5 +1,8 @@
 <?php
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * page de formulaire de modification d'un ou plusieurs periphériques réseaux sélectionnés et reçus 
  * en paramètre depuis "selectModifAP.php". Enuite transmet les informations saisies à 
  * "enregistrerModifAP.php"

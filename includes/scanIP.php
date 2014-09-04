@@ -1,5 +1,8 @@
 <?php
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * script PHP contenant une fonction pour retourner une table ARP avec le nom d'hôte, l'adresse MAC
  * et l'adresse MAC d'une plage d'adresses IP donnée
  * 

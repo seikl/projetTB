@@ -1,5 +1,8 @@
 <?php
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * page qui effectuera la requête de suppression des commandes à supprimer.
  * 
  * Reçoit en paramètre:

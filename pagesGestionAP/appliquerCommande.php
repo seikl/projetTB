@@ -1,5 +1,8 @@
 <?php
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * page qui reçoit en paramètre une liste d'AP auxquels il faut transmettre une commande, affiche 
  * un résultat succint et enregistre les résultats plus complets dans un fichier HTML de sortie 
  * (ouput.html)

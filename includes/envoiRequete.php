@@ -1,5 +1,8 @@
 <?php
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * script PHP contenant toutes les fonctions nécessaires à l'envoi des différents types de requêtes
  * 
  *  * paramètres:

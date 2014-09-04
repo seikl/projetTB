@@ -1,5 +1,8 @@
 <?php 
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * page d'enregistrement d'un ou plusieurs periphériques réseaux dans la BDD avec les informations 
  * reçues depuis "ajoutAP.php"
  * 

@@ -1,5 +1,8 @@
 <?php 
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * page qui effectue l'enregistrement des modificaitons d'un modèle de periphérique réseau. 
  * Recoit les informations depuis "selectModifModele.php"
  * 

@@ -1,5 +1,8 @@
 <?php 
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * page de sélection d'un ou plusieurs periphériques réseaux à modifier. Transmet les 
  * sélections à "modifAP.php"
  * 

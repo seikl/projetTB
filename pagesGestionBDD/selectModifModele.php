@@ -1,5 +1,8 @@
 <?php 
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * page de sélection et de formulaire de modification d'un modèle de periphérique réseau. Une fois 
  * la sélection effectuée la page s'appelle elle-même avec en paramètres l'identifiant du No de modèle
  * de la BDD pour afficher le contenu dans des champs de texte éditables. les modifications sont 

@@ -1,5 +1,8 @@
 <?php
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * fichier PHP pour récupérer toutes informations de login (interface web et BDD)                   *
  *                                                                                                  *
  * Modifié le: 01.09.2014                                                                           *

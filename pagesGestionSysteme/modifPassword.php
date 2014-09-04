@@ -1,5 +1,8 @@
 <?php 
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * page de saisie d'un nouveau mot de passe d'accès à l'outil. Une fois les saisies effectuées 
  * la page s'appelle elle-même avec en paramètres le contenu des différents champs à remplir, puis 
  * effectue la modification dans le fichier "includes/loginInfo.php" s'il n'y a pas d'erreur.

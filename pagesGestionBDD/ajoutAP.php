@@ -1,5 +1,8 @@
 <?php 
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * page de formulair d'ajout d'un ou plusieurs periphériques réseaux. Tansmet les informations saisies
  * à "enregistrerAP.php"
  * 

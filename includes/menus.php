@@ -1,5 +1,8 @@
 <?php
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * simple script contenant les menus génériques des différentes sections (gestion des AP,
  * gestion de la BDD et gestion du système)
  *                                                                                                  *

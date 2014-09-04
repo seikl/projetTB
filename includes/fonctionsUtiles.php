@@ -1,5 +1,8 @@
 <?php
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * script PHP contenant des fonctions à but utilitaire:
  *  - Lever une exception en cas d'alerte
  *  - calculer une adresse réseau depuis une ip et son masque

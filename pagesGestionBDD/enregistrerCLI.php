@@ -1,5 +1,8 @@
 <?php 
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * page d'enregistrement d'une ligne de commande avec les informations reçues depuis "ajoutCLI.php"
  * 
  * Paramètres reçus:

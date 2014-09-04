@@ -1,5 +1,8 @@
 <?php
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * page d'accueil de la section "gestion des AP" qui affiche toutes la liste des éléments réseaux
  * enregistrés avec indication s'ils ont pû être contactés (PING) ou non. Il est possible de 
  * sélectionner (lien vers "interrogerAP.php") chacun d'entre-eux individuellement pour en obtenir 

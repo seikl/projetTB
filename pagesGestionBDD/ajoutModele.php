@@ -1,5 +1,8 @@
 <?php
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * page de formulair d'ajout d'un modèle de périhpérique réseau. tranmset les informations
  * saisies à "enregistrerModele.php"
  *                                                                                            *

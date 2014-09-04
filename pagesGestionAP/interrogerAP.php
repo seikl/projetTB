@@ -1,5 +1,8 @@
 <?php 
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * Affiches les informations SNMP de base et celles de la BDD  sur un périphérique sélectionné
  * depuis "afficherListe.php"
  * 

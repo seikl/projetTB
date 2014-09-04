@@ -1,5 +1,8 @@
 <?php 
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * page de formulaire d'ajout d'une ligne de commande, transmet les informations saisies à 
  * "enregistrerCLI.php"
  *                                                                                            *

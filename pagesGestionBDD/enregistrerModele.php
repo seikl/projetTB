@@ -1,5 +1,8 @@
 <?php 
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * page d'enregistrement d'un modèle de periphérique réseau dans la BDD avec les informations 
  * reçues depuis "ajoutModele.php"
  * 

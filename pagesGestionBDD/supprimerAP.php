@@ -1,5 +1,8 @@
 <?php 
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * page qui effectuera la requête de suppression des AP reçus en paramètre depuis "selectSupprAP.php"
  * 
  * Reçoit en paramètre:

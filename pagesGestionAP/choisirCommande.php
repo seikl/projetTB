@@ -1,5 +1,8 @@
 <?php 
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * page qui permet de choisir une commande et les périphériques auxquels l'appliquer.
  * Transmet ensuite les informations à "appliquerCommande.php" pour le traitement
  *

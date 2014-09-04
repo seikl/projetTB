@@ -1,5 +1,8 @@
 <?php 
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * Cette page offre la possiblité d'effectuer une recherche d'une adresse MAC  sur une plage IP en
  * transmettant une IP, son masque et éventuellement l'adresse MAC d'un fabricant
  *                                                                                                  *

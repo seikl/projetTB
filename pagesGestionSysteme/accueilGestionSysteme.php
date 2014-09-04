@@ -1,5 +1,8 @@
 <?php 
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * page d'acceuil avec les liens menant au différentes option liées à la gestion de l'outil (par ex:
  * modification du mot de passe d'accès).
  * 

@@ -1,9 +1,12 @@
 <?php
-/********************************************************************************************************************
- * script pour l'authentificaton. Est inclus en début de chaque page PHP.                                                                                  *
- * code original récupéré sur http://php.net/manual/en/features.http-auth.php, consulté le 30.08.2014               *
- * Modifié le: 03.09.2014                                                                                           *
- *******************************************************************************************************************/
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
+ * script pour l'authentificaton. Est inclus en début de chaque page PHP.
+ * code original récupéré sur http://php.net/manual/en/features.http-auth.php, consulté le 30.08.2014
+ * Modifié le: 03.09.2014
+ ***************************************************************************************************/
 
 $ini_array = parse_ini_file("loginInfo.ini");
 

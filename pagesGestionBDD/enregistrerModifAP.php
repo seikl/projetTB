@@ -1,5 +1,8 @@
 <?php 
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * page d'enregistrement des modifications effectuées sur un ou plusieurs periphériques réseaux 
  * avec les informations reçues depuis "modfierAP.php"
  * 

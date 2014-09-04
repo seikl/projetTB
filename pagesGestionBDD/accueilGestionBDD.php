@@ -1,5 +1,8 @@
 <?php 
-/****************************************************************************************************
+/**************************************************************************************************** 
+ * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
+ * 
+ * Description:
  * page d'acceuil de la partie de gesitondes enregistrements de la BDD. elle affiche le nombre 
  * de périphériques, le nombre de modèle et le nombre de commandes enregistrés.
  * chaque information est sélectionnable pour rediriger vers la page d'édition correspondante (par ex
