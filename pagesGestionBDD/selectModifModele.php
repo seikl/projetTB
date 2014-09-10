@@ -93,7 +93,7 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                                           $resultatsModelesAP=$connexion->query("SELECT * FROM modeles ORDER BY nomFabricant,nomModele, versionFirmware;");                                 
                                           $resultatsModelesAP->setFetchMode(PDO::FETCH_OBJ);                                                                           
                                           
-                                          while( $ligne = $resultatsModelesAP->fetch() ) // on récupère la liste des membres
+                                          while( $ligne = $resultatsModelesAP->fetch() ) 
                                           {     
                                               $noModeleAP=(string)$ligne->noModeleAP;
                                               $nomModele=(string)$ligne->nomModele;
@@ -108,7 +108,7 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                                                   echo '<option value="'.$noModeleAP.'">'.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.'&nbsp;&nbsp;&nbsp;</option>';                                                    
                                               }
                                           }
-                                      $resultatsModelesAP->closeCursor(); // on ferme le curseur des résultats                                                                            
+                                      $resultatsModelesAP->closeCursor();                                                                            
                                   }
 
                                   catch(Exception $e)

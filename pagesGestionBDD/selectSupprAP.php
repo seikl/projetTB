@@ -106,7 +106,7 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!D
                                    $resultatsModelesAP=$connexion->query("SELECT * FROM modeles ORDER BY nomFabricant,nomModele, versionFirmware;");                                 
                                    $resultatsModelesAP->setFetchMode(PDO::FETCH_OBJ);                                 
 
-                                   while( $ligne = $resultatsModelesAP->fetch() ) // on récupère la liste des membres
+                                   while( $ligne = $resultatsModelesAP->fetch() ) 
                                    {     
                                        $noModeleAP=(string)$ligne->noModeleAP;
                                        $nomModele=(string)$ligne->nomModele;
@@ -120,7 +120,7 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!D
                                            echo '<option value="'.$noModeleAP.'">'.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.'&nbsp;&nbsp;&nbsp;</option>';  
                                        }
                                    }
-                               $resultatsModelesAP->closeCursor(); // on ferme le curseur des résultats                                                                            
+                               $resultatsModelesAP->closeCursor();                                                                            
                            }
 
                            catch(Exception $e)
@@ -152,7 +152,7 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!D
 
                                $resultatsListeAP->setFetchMode(PDO::FETCH_OBJ);                                 
 
-                               while($ligne = $resultatsListeAP->fetch() ) // on récupère la liste des membres
+                               while($ligne = $resultatsListeAP->fetch() ) 
                                {     
                                    $noAP=(string)$ligne->noAP;
                                    $nomAP=(string)$ligne->nomAP;
@@ -175,7 +175,7 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!D
                                        echo '<option value="'.$noAP.'">'.$noAP.' - '.$nomAP.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.', IP: '.$ip.')&nbsp;&nbsp;&nbsp;</option>';  
                                    }
                                }
-                               $resultatsListeAP->closeCursor(); // on ferme le curseur des résultats                                                                            
+                               $resultatsListeAP->closeCursor();                                                                            
                                 }
 
                                 catch(Exception $e)

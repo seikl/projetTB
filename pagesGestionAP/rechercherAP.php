@@ -75,7 +75,7 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                                 $resultatsAP=$connexion->query("SELECT * FROM modeles ORDER BY nomFabricant,nomModele, versionFirmware;");                                 
                                 $resultatsAP->setFetchMode(PDO::FETCH_OBJ);                                 
                                 
-                                while( $ligne = $resultatsAP->fetch() ) // on récupère la liste des membres
+                                while( $ligne = $resultatsAP->fetch() ) 
                                 {     
                                     $noModeleAP=(string)$ligne->noModeleAP;
                                     $nomModele=(string)$ligne->nomModele;

@@ -110,7 +110,7 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                                    $resultatsModelesAP=$connexion->query("SELECT * FROM modeles;");                                 
                                    $resultatsModelesAP->setFetchMode(PDO::FETCH_OBJ);                                 
 
-                                   while( $ligne = $resultatsModelesAP->fetch() ) // on récupère la liste des membres
+                                   while( $ligne = $resultatsModelesAP->fetch() ) 
                                    {     
                                        $noModeleAP=(string)$ligne->noModeleAP;
                                        $nomModele=(string)$ligne->nomModele;
@@ -124,7 +124,7 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                                            echo '<option value="'.$noModeleAP.'">'.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.'&nbsp;&nbsp;&nbsp;</option>';  
                                        }
                                    }
-                               $resultatsModelesAP->closeCursor(); // on ferme le curseur des résultats                                                                            
+                               $resultatsModelesAP->closeCursor();                                                                            
                            }
 
                            catch(Exception $e)
@@ -154,7 +154,7 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
 
                                if ($noModele=='0'){
                                    $resutatsTypeCommande=$connexion->query("SELECT tc.notypeCommande, tc.typeCommande, tc.description FROM modeles m, typeCommandes tc, lignesCommande lc
-                                                                   WHERE lc.notypeCommande = tc.notypeCommande AND lc.noModeleAP = m.noModeleAP;");                                 
+                                                                   WHERE lc.notypeCommande = tc.notypeCommande AND lc.noModeleAP = m.noModeleAP GROUP BY tc.typeCommande;");                                 
                                }
                                else{
                                    $resutatsTypeCommande=$connexion->query("SELECT * FROM modeles m, typeCommandes tc, lignesCommande lc
@@ -165,7 +165,7 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                                $commandeTrouvee=false;
                                
                                //pour afficher les types de commandes disponibles
-                               while( $ligne = $resutatsTypeCommande->fetch() ) // on récupère la liste des membres
+                               while( $ligne = $resutatsTypeCommande->fetch() ) 
                                {         
                                    $notypeCommande=(string)$ligne->notypeCommande;
                                    $typeCommande=(string)$ligne->typeCommande;
@@ -185,7 +185,7 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
 
                                }
                                
-                               $resutatsTypeCommande->closeCursor(); // on ferme le curseur des résultats    
+                               $resutatsTypeCommande->closeCursor();    
                                
                                if ($commandeTrouvee == true){
                                     //pour enregistrer chaque ligne de commande correspondant à cette descption et au modèle d'AP
@@ -263,7 +263,7 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                                        echo '<option value="'.$noAP.'">'.$noAP.' - '.$nomAP.' ('.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.', IP: '.$ip.')&nbsp;&nbsp;&nbsp;</option>';  
                                    }
                                }
-                               $resultatsListeAP->closeCursor(); // on ferme le curseur des résultats                                                                            
+                               $resultatsListeAP->closeCursor();                                                                            
                            }
 
                            catch(Exception $e)

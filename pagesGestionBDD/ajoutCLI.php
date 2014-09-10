@@ -84,7 +84,7 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                                 $tabListeDescriptions[$i]=array("notypeCommande"=>$noTypeCommande,"typeCommande" =>$typeCommande, "description"=>$description);
                                 $i++;
                             }
-                            $resultatsModeles->closeCursor(); // on ferme le curseur des résultats                            
+                            $resultatsModeles->closeCursor();                            
 
                         }                                                
                         catch(Exception $e)

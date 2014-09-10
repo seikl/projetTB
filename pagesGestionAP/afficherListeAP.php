@@ -76,7 +76,7 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                                 $resultatsAP=$connexion->query("SELECT * FROM accessPoints a, modeles m WHERE a.noModeleAP=m.noModeleAP ORDER BY a.nomAP, a.adresseIPv4;");                                 
                                 $resultatsAP->setFetchMode(PDO::FETCH_OBJ);                                 
                                 
-                                while( $ligne = $resultatsAP->fetch() ) // on récupère la liste des membres
+                                while( $ligne = $resultatsAP->fetch() ) 
                                 {         
                                     $resultatPing = "inconnu";    
                                     $statut=0;                                    

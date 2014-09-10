@@ -84,7 +84,7 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!D
                                 $resultatsAP=$connexion->query("SELECT * FROM modeles;");                                 
                                 $resultatsAP->setFetchMode(PDO::FETCH_OBJ); // on dit qu'on veut que le résultat soit récupérable sous forme d'objet                                
                                 
-                                while( $ligne = $resultatsAP->fetch() ) // on récupère la liste des membres
+                                while( $ligne = $resultatsAP->fetch() ) 
                                 {     
                                     $noModeleAP =(string)$ligne->noModeleAP;
                                     $nomModele =(string)$ligne->nomModele;
