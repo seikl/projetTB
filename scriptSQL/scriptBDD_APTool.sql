@@ -1,5 +1,5 @@
 /* 
- * Script de suppression/création automatique de la BDD pour APmanageer
+ * Script de suppression/création automatique de la BDD pour APTool
  */
 
 drop user 'apmanager'@'localhost';
@@ -63,9 +63,9 @@ insert into modeles (nomModele,versionFirmware,nomFabricant,adrMACFabricant) val
 insert into modeles (nomModele,versionFirmware,nomFabricant,adrMACFabricant) values('SS-439','4.1.0','Qnap','00:08:9b');
 insert into modeles (nomModele,versionFirmware,nomFabricant,adrMACFabricant) values('HL-6050D/DN serie','1.03','Brother','00:80:77');
 insert into modeles (nomModele,versionFirmware,nomFabricant,adrMACFabricant) values('Localhost','CentOS 6','VMware','00:50:56');
-insert into accessPoints (nomAP,adresseIPv4,password,noModeleAP) values('APADSSOL01','172.16.1.29','repuis',1);
-insert into accessPoints (nomAP,adresseIPv4,password,snmpCommunity,noModeleAP) values('APADSSOL02','172.16.1.30','repuis','repuis',1);
-insert into accessPoints (nomAP,adresseIPv4,password,snmpCommunity,noModeleAP) values('testAPMaison','10.0.0.62','public','public',1);
+insert into accessPoints (nomAP,adresseIPv4,password,noModeleAP) values('APADSSOL01','172.16.1.29','c-est-un-secret',1);
+insert into accessPoints (nomAP,adresseIPv4,password,snmpCommunity,noModeleAP) values('APADSSOL02','172.16.1.30','c-est-un-secret','repuis',1);
+insert into accessPoints (nomAP,adresseIPv4,password,snmpCommunity,noModeleAP) values('testAPMaison','10.0.0.62','c-est-un-secret','public',1);
 insert into accessPoints (nomAP,adresseIPv4,noModeleAP) values('NASMaison','10.0.0.60',2);
 insert into accessPoints (nomAP,adresseIPv4,noModeleAP) values('LNB-0123','172.16.6.63',3);
 insert into accessPoints (nomAP,adresseIPv4,noModeleAP) values('LNB-0068','172.16.6.40',3);
@@ -86,7 +86,6 @@ insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,no
 insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('GET / HTTP/1.1','http',80,3,2);
 insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('GET /printer/maininfo.html HTTP/1.1','http',80,3,3);
 INSERT INTO apmanagerdb.lignescommande (ligneCommande, protocole, portProtocole, noModeleAP, notypeCommande) VALUES ('POST /cfg/system.html HTTP/1.1
-Host: 10.0.0.62
 
 EmWeb_ns%3Asnmp%3A233=testAPMaison&EmWeb_ns%3Asnmp%3A234=test&EmWeb_ns%3Asnmp%3A235=Contact%20Name&EmWeb_ns%3Asnmp%3A236.0*s=aptool%40maison.com&EmWeb_ns%3Asnmp%3A237=Contact%20Phone%20Number', 'HTTPS', 443, 1, 6);
 
