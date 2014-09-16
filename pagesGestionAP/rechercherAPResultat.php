@@ -111,14 +111,16 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                             echo '<caption>Nombre d\'AP trouv&eacutes: '.$nombreAPTrouves.'</caption>';  
                             //création d'un tableau pour afficher si AP trouvés ou non                                                          
                             if ($nombreAPTrouves==0){
-                                echo '<thead><tr><th>Aucun AP correspondant &agrave; ce mod&egrave;le n\'a &eacute;t&eacute; trouv&eacute'; 
+                                echo '<thead><tr><th>Aucun AP correspondant &agrave; ce fabricant n\'a &eacute;t&eacute; trouv&eacute'; 
                                 echo '('.$vendorMAC.')</th></tr></thead>';                                 
                             }
                             else{
                                 echo '<form id="ajoutAPRecherche" name="ajoutAPRecherche" class="form-inline" role="form" action="../pagesGestionBDD/ajoutAP.php" method="POST">';
                                 echo '<div class="form-group">';                                   
-                                echo '<thead><tr><th>';
-                                echo 'Informations sur l\'AP';
+                                echo '<thead><tr><th colspan="2">';
+                                echo 'NB: Les AP ci-dessous correspondent &agrave; une adresse MAC de frabricant. <br> Il peut donc y avoir plusieurs mod&egrave;les différents';
+                                echo '</th></tr><tr><th>';
+                                echo 'Liste des AP trouv&eacute;s';
                                 echo '</th><th>';
                                 echo 'Enregistrer? ( tous: <input type="checkbox" onClick="selectAll(this)"/> )';
                                 echo '</th></tr></thead>';

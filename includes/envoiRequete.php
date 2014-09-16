@@ -30,8 +30,9 @@
         $out="";
         $boolReqPOST=false;
        
+	//création d'un tableau avec chaque ligne de la commande enregistrée dans une cellule
         $tabRequete= explode("\n", $requete);
-        //vérifications du contenu pour déterminer la requête
+        //vérification du contenu du 1er indice pour déterminer le type de requête (POST OU GET)
         if(preg_match("/POST/i", $tabRequete[0])){$boolReqPOST=true;}
         $ligne=$tabRequete[0];$url= strstr($ligne,'/');$url='http://'.$adresseIP.strstr($url,' HTTP',true);        
         //pour les données
