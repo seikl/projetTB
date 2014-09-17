@@ -191,7 +191,8 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                                     break;
                             }//fin du switchCase                                                                                                                                         
 
-                            $extraitReponse = substr($reponse,$debutExtraitRep,$finExtraitRep);                              
+                            $extraitReponse = substr($reponse,$debutExtraitRep,$finExtraitRep);    
+                             
                             $infosAP=$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].', mod&egrave;le: '.
                                     $tabCommandesChoisies[$AP["noModeleAP"]]["nomFabricant"].' '.$tabCommandesChoisies[$AP["noModeleAP"]]["nomModele"].' '.$tabCommandesChoisies[$AP["noModeleAP"]]["versionFirmware"].')';
                             $infosProtocole=' ( '.$tabCommandesChoisies[$AP["noModeleAP"]]["protocole"].':'.$tabCommandesChoisies[$AP["noModeleAP"]]["portProtocole"].')';  
@@ -203,15 +204,17 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
 
                             }
                             else if ($erreur != '' && $erreurDetectee){
+                                $extraitErreur = substr($erreur,$debutExtraitRep,$finExtraitRep);
                                 echo '<tr class="warning"><td>'.$infosAP;                                
-                                echo '</td><td>'.$erreur;                                       
+                                echo '</td><td>'.$extraitErreur;                                       
                                 echo '</td><td><strong>OK</strong>'.$infosProtocole.'</td></tr>'; 
                                 file_put_contents($nomFichier, '<p><u><b>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</b></u><br>'.$erreur.'</p>', FILE_APPEND);                                
                             }                                
                             else {
+                                $extraitErreur = substr($erreur,$debutExtraitRep,$finExtraitRep);
                                 echo '<tr class="danger"><td>'.$infosAP;
                                 $erreur .= '<br>( pas de r&eacute;ponse re&ccedil;ue)';
-                                echo '</td><td>'.$erreur;                                       
+                                echo '</td><td>'.$extraitErreur;                                       
                                 echo '</td><td><strong>Not OK</strong>'.$infosProtocole.'</td></tr>'; 
                                 file_put_contents($nomFichier, '<p><u><b>'.$AP["noAP"].'-'.$AP["nomAP"].' (IP: '.$AP["adresseIPv4"].')</b></u><br>'.$erreur.'</p>', FILE_APPEND);
                             }                                                                                       
