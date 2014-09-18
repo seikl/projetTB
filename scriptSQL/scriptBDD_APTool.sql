@@ -35,6 +35,13 @@ CREATE TABLE IF NOT EXISTS accessPoints(
      PRIMARY KEY (noAP)
 );
 
+CREATE TABLE IF NOT EXISTS  typeCommandes (
+        notypeCommande INT NOT NULL AUTO_INCREMENT,
+        typeCommande VARCHAR(100) NOT NULL,
+        description VARCHAR(255),
+     PRIMARY KEY (notypeCommande)
+);
+
 CREATE TABLE IF NOT EXISTS  lignesCommande (
         noCLI INT NOT NULL AUTO_INCREMENT,
         ligneCommande TEXT NOT NULL,
@@ -45,13 +52,6 @@ CREATE TABLE IF NOT EXISTS  lignesCommande (
      PRIMARY KEY (noCli,noModeleAP)
 );
 
-CREATE TABLE IF NOT EXISTS  typeCommandes (
-        notypeCommande INT NOT NULL AUTO_INCREMENT,
-        typeCommande VARCHAR(100) NOT NULL,
-        description VARCHAR(255),
-     PRIMARY KEY (notypeCommande)
-);
-
 ALTER TABLE lignesCommande ADD FOREIGN KEY (noModeleAP)
 REFERENCES modeles(noModeleAP);
 ALTER TABLE lignesCommande ADD FOREIGN KEY (notypeCommande)
@@ -59,33 +59,7 @@ REFERENCES typeCommandes (notypeCommande);
 
 
 /*Insertion de données pour les tests*/
-insert into modeles (nomModele,versionFirmware,nomFabricant,adrMACFabricant) values('AP-6','2.4.11','Avaya','00:20:a6');
-insert into modeles (nomModele,versionFirmware,nomFabricant,adrMACFabricant) values('SS-439','4.1.0','Qnap','00:08:9b');
-insert into modeles (nomModele,versionFirmware,nomFabricant,adrMACFabricant) values('HL-6050D/DN serie','1.03','Brother','00:80:77');
 insert into modeles (nomModele,versionFirmware,nomFabricant,adrMACFabricant) values('Localhost','CentOS 6','VMware','00:50:56');
-insert into accessPoints (nomAP,adresseIPv4,password,noModeleAP) values('APADSSOL01','172.16.1.29','c-est-un-secret',1);
-insert into accessPoints (nomAP,adresseIPv4,password,snmpCommunity,noModeleAP) values('APADSSOL02','172.16.1.30','c-est-un-secret','repuis',1);
-insert into accessPoints (nomAP,adresseIPv4,password,snmpCommunity,noModeleAP) values('testAPMaison','10.0.0.62','c-est-un-secret','public',1);
-insert into accessPoints (nomAP,adresseIPv4,noModeleAP) values('NASMaison','10.0.0.60',2);
-insert into accessPoints (nomAP,adresseIPv4,noModeleAP) values('LNB-0123','172.16.6.63',3);
-insert into accessPoints (nomAP,adresseIPv4,noModeleAP) values('LNB-0068','172.16.6.40',3);
-insert into accessPoints (nomAP,adresseIPv4,noModeleAP) values('LNB-0069 ','172.16.6.44',3);
-insert into accessPoints (nomAP,adresseIPv4,noModeleAP) values('LNB-0138','192.168.18.41',3);
-insert into accessPoints (nomAP,adresseIPv4,password,snmpCommunity,noModeleAP) values('APTOOL','127.0.0.1','aptool','public',4);
-insert into typeCommandes (typeCommande,description) values('Afficher infos système','Sert à afficher les informations systèmes via une commande TELNET');
-insert into typeCommandes (typeCommande,description) values('Afficher la page d\'accueil','Envoi d\'une requête GET / en HTTP');
-insert into typeCommandes (typeCommande,description) values('Afficher la page d\'informations','Envoi d\'une requête GET / en HTTP pour obtenir la page d\'informations d\'un AP');
-insert into typeCommandes (typeCommande,description) values('Afficher le nombre d\'impressions','Afficher le nombre d\'impressions via un OID SNMP');
-insert into typeCommandes (typeCommande,description) values('Parcourir toutes les OID SNMP','Effectue un snmpwalk à la racine');
-INSERT INTO apmanagerdb.typecommandes (typeCommande, description) VALUES ('modife les informations de contact', 'spécifie aptool@maison.com comme info de contact dans la config système');
-insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('show system\r\nquit\r\n','telnet',23,1,1);
-insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('uname -a\r\nquit\r\n','telnet',23,2,1);
-insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('.1.3.6.1.2.1.43.10.2.1.4','snmp',161,3,4);
-insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('.1.3.6.1.2.1','snmp',161,4,5);
-insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('GET / HTTP/1.1','http',80,1,2);
-insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('GET / HTTP/1.1','http',80,3,2);
-insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('GET /printer/maininfo.html HTTP/1.1','http',80,3,3);
-INSERT INTO apmanagerdb.lignescommande (ligneCommande, protocole, portProtocole, noModeleAP, notypeCommande) VALUES ('POST /cfg/system.html HTTP/1.1
-
-EmWeb_ns%3Asnmp%3A233=testAPMaison&EmWeb_ns%3Asnmp%3A234=test&EmWeb_ns%3Asnmp%3A235=Contact%20Name&EmWeb_ns%3Asnmp%3A236.0*s=aptool%40maison.com&EmWeb_ns%3Asnmp%3A237=Contact%20Phone%20Number', 'HTTPS', 443, 1, 6);
-
+insert into accessPoints (nomAP,adresseIPv4,password,snmpCommunity,noModeleAP) values('APTOOL','127.0.0.1','admin','public',1);
+insert into typeCommandes (typeCommande,description) values('Récupérer la page d\"accueil','Effectue un GET / sur le périphérique désigné');
+insert into lignesCommande (ligneCommande,protocole, portProtocole,noModeleAP,notypeCommande) values('GET / HTTP/1.1','https',443,1,1);
