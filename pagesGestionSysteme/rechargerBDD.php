@@ -3,10 +3,9 @@
  * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
  * 
  * Description:
- * page d'acceuil avec les liens menant au différentes option liées à la gestion de l'outil (par ex:
- * modification du mot de passe d'accès).
+* page de recharge des données de la BDD (pour l'instant ne va chercher qu'un fichier commun)
  * 
- * Modifié le: 03.08.2014
+ * Modifié le: 19.09.2014
  ***************************************************************************************************/
 $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
 <!DOCTYPE html>
@@ -36,8 +35,8 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                         </ul>
                         <p><b>Gestion de la BDD</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
-                           <li><a href="#.php">Sauvegarder la BDD</a></li>    
-                           <li><a href="#.php">Recharger la BDD</a></li>  
+                           <li><a href="#">Sauvegarder la BDD</a></li>    
+                           <li  class="active"><a href="#">Recharger la BDD</a></li>  
                         </ul> 
                  </td> 
                  
@@ -48,10 +47,12 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                      <ol>
 
                         <?php                                          
-                      
-                            echo '<input type="button" class="btn btn-primary" onclick="window.location=\'modifPassword.php\'" value="Modifer le mot de passe"/><br><br>';
-                            echo '<input type="button" class="btn btn-primary" onclick="window.location=\'sauvegarderBDD.php\'" value="Sauvegarder la base de donn&eacute;es"/><br><br>';
-                            echo '<input type="button" class="btn btn-primary" onclick="window.location=\'rechargerBDD.php\'" value="Recharger la base de donn&eacute;es"/><br><br>';
+                            include '../includes/connexionBDD.php'; 
+                            $nomFichier='../fichiers/backup_apmanagerdb.sql'; 
+                            $requete='mysql -u '.$PARAM_utilisateur.' -p'.$PARAM_mot_passe.' -h '.$PARAM_hote.' apmanagerdb < '.$nomFichier;                    
+                            
+                            shell_exec($requete);
+                            echo 'Base de donn&eacute;es recharg&eacute;e.<br><br>';                            
                                    
                          ?>      
                     </ol>

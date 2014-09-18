@@ -32,12 +32,12 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!D
                  <td width="30%" class="leftmenu">
                      <p><b>Gestion de l'acc&egrave;s</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
-                            <li><a href="modifPassword.php">Modifier le mot de passe</a></li>                  
+                            <li class="active"><a href="modifPassword.php">Modifier le mot de passe</a></li>                  
                         </ul>
                         <p><b>Gestion de la BDD</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
-                           <li><a href="#">Sauvegarder la BDD</a></li>    
-                           <li><a href="#">Recharger la BDD</a></li>  
+                           <li><a href="sauvegarderBDD.php">Sauvegarder la BDD</a></li>    
+                           <li><a href="rechargerBDD.php">Recharger la BDD</a></li>  
                         </ul> 
                  </td> 
                  
