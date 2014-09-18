@@ -166,7 +166,7 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                             <table border="0" class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Nom de l'AP <bR>(d&eacute;faut: "AP-xx")</th>
+                                    <th>Nom de l'AP <bR>(d&eacute;faut: "AP-xx") </th>
                                     <th>Mod&egrave;le de l'AP<strong class="obligatoire">&nbsp;*</strong></th>
                                     <th>Adresse IPv4<strong class="obligatoire">&nbsp;*</strong></th>
                                     <th>SNMP <br>(d&eacute;faut: "public")</th>
@@ -225,19 +225,26 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                                     echo '</tr>';
                                 }
                                 
-                                echo '<td align="left">Nombre d\'AP &agrave; enregistrer: '.($qtyAP).'<input type="hidden" value="'.$qtyAP.'" name="qtyAP"/></td>';                                
+                                echo '<td align="left">Nombre d\'AP &agrave; enregistrer: '.($qtyAP).'<input type="hidden" value="'.$qtyAP.'" name="qtyAP"/></td>';                                  
                                 ?>
-                                <td colspan="5" align="right"><?php if($qtyAP>0){echo '<input type="submit" class="btn btn-primary" name="submit" id="submit" value="Enregistrer"/></td>';}?>
+                                <td colspan="5" align="right">
+                                    <?php if($qtyAP>0){echo '<input type="submit" class="btn btn-primary" name="submit" id="submit" value="Enregistrer"/></td>';}?>                                    
                             </tbody>
                             </table>                                    
                          </div>                             
                         </form>
                         <div>
-                           <table align="center" width="80%"><tr><td align="left" width="40%">&nbsp;                                    
+                         
+                            
+                           <table align="center" width="100%">
+                            <tr><td align="left" width="50%">&nbsp;                                    
                            <?php
                                 if ($qtyAP>0){                                       
-                                    echo '<input type="button" class="btn btn-default" name="repliquerAP" id="repliquerAP" onclick="repliquerAP('.$qtyAP.')" value="Copier"/>&nbsp;R&eacute;pliquer la 1&egrave;re ligne';
-                                    echo '</td><td align="right" width="40%">';
+                                    //echo '<input type="button" class="btn btn-default" name="repliquerAP" id="repliquerAP" onclick="repliquerAP('.$qtyAP.')" value="Tout r&eacute;pliquer"/> &nbsp;&nbsp;';
+                                    echo '<input type="button" class="btn btn-default" name="repliquerNomAP" id="repliquerNomAP" onclick="repliquerNomAP('.$qtyAP.')" value="R&eacute;pliquer les noms"/>&nbsp;&nbsp;';
+                                    echo '<input type="button" class="btn btn-default" name="repliquerIP" id="repliquerIP" onclick="repliquerIP('.$qtyAP.')" value="R&eacute;pliquer les IP /24"/>&nbsp;&nbsp;';
+                                    echo '<input type="button" class="btn btn-default" name="repliquerCredentials" id="repliquerCredentials" onclick="repliquerCredentials('.$qtyAP.')" value="R&eacute;pliquer les credentials"/>&nbsp;&nbsp;';
+                                    echo '</td><td align="right" width="20%">';
                                     echo '<form id="diminueQty" name="diminueQty" class="form-inline" role="form" action="ajoutAP.php" method="POST">';
                                     echo 'Retirer une ligne&nbsp;<input type="hidden" value="'.($qtyAP-1).'" name="qtyAP"/>';
                                     //pour mémoriser les saisies déjà effectuées
@@ -254,10 +261,10 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                                     }                                    
                                     echo '<input type="submit" class="btn btn-warning" name="retirerForm" onMouseOver="backupAP(this.form,'.$qtyAP.')" id="retirerForm" value="-"/></form>';
                                 }
-                                else {echo '</td><td align="right" width="40%">&nbsp;';}
+                                else {echo '</td><td align="right" width="20%">&nbsp;';}
                                     
                             ?>  
-                            </td><td align="left" >                                
+                            </td><td align="left" width="20%">                                
                                     <?php 
                                     echo '<form id="ajoutQty" name="ajoutQty" class="form-inline" role="form" action="ajoutAP.php" method="POST">';                                    
                                     echo '<input type="hidden" value="'.($qtyAP+1).'" name="qtyAP"/>';
@@ -277,9 +284,7 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                                     ?>
                                     
                                 </form>
-                            </td></tr></table>
-                           
-                           
+                            </td></tr></table>                                                      
                        </div>
                     </ol>
                  </td>
@@ -325,7 +330,41 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
             document.getElementById(formName).elements['username'+i].value=document.getElementById(formName).elements['username0'].value;
             document.getElementById(formName).elements['password'+i].value=document.getElementById(formName).elements['password0'].value;
         }
+     }     
+     
+     function repliquerNomAP(qtyAP)
+     {         
+        var formName = 'ajoutAP';
+         
+        for(i=1;i<=qtyAP;i++){                
+            document.getElementById(formName).elements['nomAP'+i].value=document.getElementById(formName).elements['nomAP0'].value+'-'+i;
+         }
      }      
+     
+     function repliquerIP(qtyAP)
+     {         
+        var formName = 'ajoutAP';
+        var incrementIP =document.getElementById(formName).elements['IPgroupeD0'].value;
+        
+        for(i=1;i<=qtyAP;i++){                
+            document.getElementById(formName).elements['IPgroupeA'+i].value=document.getElementById(formName).elements['IPgroupeA0'].value;
+            document.getElementById(formName).elements['IPgroupeB'+i].value=document.getElementById(formName).elements['IPgroupeB0'].value;
+            document.getElementById(formName).elements['IPgroupeC'+i].value=document.getElementById(formName).elements['IPgroupeC0'].value;
+            incrementIP++;
+            document.getElementById(formName).elements['IPgroupeD'+i].value=incrementIP;
+        }
+     } 
+     
+     function repliquerCredentials(qtyAP)
+     {         
+        var formName = 'ajoutAP';
+         
+        for(i=1;i<=qtyAP;i++){                
+            document.getElementById(formName).elements['snmpCommunity'+i].value=document.getElementById(formName).elements['snmpCommunity0'].value;
+            document.getElementById(formName).elements['username'+i].value=document.getElementById(formName).elements['username0'].value;
+            document.getElementById(formName).elements['password'+i].value=document.getElementById(formName).elements['password0'].value;
+        }
+     }       
     <!-- Pour la validation des champs du formulaire -->
   <?php
         echo'
