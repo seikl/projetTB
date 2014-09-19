@@ -35,8 +35,8 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                         </ul>
                         <p><b>Gestion de la BDD</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
-                           <li><a href="#">Sauvegarder la BDD</a></li>    
-                           <li  class="active"><a href="#">Recharger la BDD</a></li>  
+                           <li><a href="sauvegarderBDD.php">Sauvegarder la BDD</a></li>    
+                           <li  class="active"><a href="rechargerBDD.php">Recharger la BDD</a></li>  
                         </ul> 
                  </td> 
                  
@@ -46,13 +46,39 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                     </ol>  
                      <ol>
 
-                        <?php                                          
+                        <?php     
+                        
                             include '../includes/connexionBDD.php'; 
                             $nomFichier='../fichiers/backup_apmanagerdb.sql'; 
-                            $requete='mysql -u '.$PARAM_utilisateur.' -p'.$PARAM_mot_passe.' -h '.$PARAM_hote.' apmanagerdb < '.$nomFichier;                    
+                            $requeteRestore='mysql -u '.$PARAM_utilisateur.' -p'.$PARAM_mot_passe.' -h '.$PARAM_hote.' '.$PARAM_nom_bd.' < '.$nomFichier;                    
+                            $requeteInfos='ls -oh ../fichiers/*.sql'; 
+                            $initialisation=true;
                             
-                            shell_exec($requete);
-                            echo 'Base de donn&eacute;es recharg&eacute;e.<br><br>';                            
+                            //pour vérifier si validation de restauration de la BDD
+                            if (isset($_POST['validationRecharge'])){
+                                $initialisation=false; 
+                            }
+                          
+                            if ($initialisation){                                                                
+                                echo ' 
+                                <form id="rechargerBDD" name="rechargerBDD" class="form-inline" role="form" action="rechargerBDD.php" method="POST">
+                                    <div class="form-group">     
+                                        <label for="validationRecharge">Etes-vous s&ucirc;r de vouloir recharger la base de donn&eacute;es?</label><br>
+                                        <u>Information sur le fichier de sauvegarde existant:</u><br>';
+                                $infosFichier= shell_exec($requeteInfos);
+                                echo '<div class="well well-sm">'.$infosFichier.'</div>
+                                        <input type="hidden" class="form-control" name="validationRecharge" id="validationRecharge" value="true"><br><bR>
+                                        <input type="submit" id="restoreBDD" class="btn" value="Recharger la base de donn&eacute;s"/>
+                                    </div>
+                                </form>';                            
+                            }                                                                                              
+                           else {
+                                shell_exec($requeteRestore);
+                                echo '<strong>Base de donn&eacute;es recharg&eacute;e.</strong><br><br>';   
+                                
+                                $infosFichier= shell_exec($requeteInfos);
+                                echo '<u>Informations sur le fichier de sauvegarde:</u> <br><br><div class="well well-sm">'.$infosFichier.'</div><br><br>'; 
+                           }                                                        
                                    
                          ?>      
                     </ol>

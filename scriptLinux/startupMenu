@@ -40,7 +40,8 @@ start() {
 										break;
 								    ;;
 								"Réinitialiser la base de données")
-								    echo "En construction..."
+                                                                    $(mysql -u root -papmanager apmanagerdb < /var/www/html/scriptSQL/scriptBDD_APTool.sql)
+								    echo "Base de données réinitialisée"
 								    ;;
 								"Quitter ce menu")
 								    break

@@ -35,8 +35,8 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                         </ul>
                         <p><b>Gestion de la BDD</b></p>
                         <ul class="nav nav-pills nav-stacked">                       
-                           <li class="active"><a href="#">Sauvegarder la BDD</a></li>    
-                           <li><a href="#">Recharger la BDD</a></li>  
+                           <li class="active"><a href="sauvegarderBDD.php">Sauvegarder la BDD</a></li>    
+                           <li><a href="rechargerBDD.php">Recharger la BDD</a></li>  
                         </ul> 
                  </td> 
                  
@@ -46,11 +46,42 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                     </ol>  
                      <ol>
 
-                        <?php                                          
-                      
-                            echo 'Base de donn&eacute;es sauvegard&eacute;e.<br><br>';
+                          <?php     
+                        
+                            include '../includes/connexionBDD.php'; 
+                            $nomFichier='../fichiers/backup_apmanagerdb.sql'; 
+                            $requeteBackup='mysqldump -u '.$PARAM_utilisateur.' -p'.$PARAM_mot_passe.' '.$PARAM_nom_bd.' > '.$nomFichier;                    
+                            $requeteInfos='ls -oh ../fichiers/*.sql'; 
+                            $initialisation=true;
+                            
+                            //pour vérifier si validation de restauration de la BDD
+                            if (isset($_POST['validationSauvegarde'])){
+                                $initialisation=false; 
+                            }
+                          
+                            if ($initialisation){                                   
+                                echo ' 
+                                <form id="sauvegarderBDD" name="sauvegarderBDD" class="form-inline" role="form" action="sauvegarderBDD.php" method="POST">
+                                    <div class="form-group">     
+                                        <label for="validationSauvegarde">Etes-vous s&ucirc;r de vouloir sauvegarder la base de donn&eacute;es?</label><br>
+                                        <u>Information sur le fichier de sauvegarde existant:</u><br>';
+                                        $infosFichier= shell_exec($requeteInfos);
+                                echo '<div class="well well-sm">'.$infosFichier.'</div>
+                                        <input type="hidden" class="form-control" name="validationSauvegarde" id="validationSauvegarde" value="true"><br><bR>
+                                        <input type="submit" id="backupBDD" class="btn btn-warning" value="Sauvegarder la base de donn&eacute;s"/>
+                                    </div>
+                                </form>';                            
+                            }                                                                                              
+                           else {
+                                if (file_exists($nomFichier)){unlink ($nomFichier);} 
+                                shell_exec($requeteBackup);
+                                echo '<strong>Base de donn&eacute;es sauvegard&eacute;e.</strong><br><br>';   
+                                
+                                $infosFichier= shell_exec($requeteInfos);
+                                echo '<u>Informations sur le fichier de sauvegarde:</u> <br><br><div class="well well-sm">'.$infosFichier.'</div><br><br>'; 
+                           }                                                        
                                    
-                         ?>      
+                         ?>
                     </ol>
                  </td>
               </tr>
