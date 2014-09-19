@@ -3,7 +3,7 @@
  * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
  * 
  * Description:
- * page de sauvgerde dans la BDD (pour l'instant n'enregistre que dans un fichier commun)
+ * page d'accueil. Bienvenue!
  * 
  * Modifié le: 19.09.2014
  ***************************************************************************************************/
