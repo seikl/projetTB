@@ -1,0 +1,82 @@
+#!/bin/bash
+#
+# startupMenu    Accueil pour APTOOL
+#
+# chkconfig: 345 99 60
+# description: Accueil pour APTOOL
+# processname: startupMenu
+
+
+start() {
+
+				AdresseIP=$(ifconfig eth1)
+				clear;
+				echo "*******************************************************************************"
+        echo "Bienvenue sur APTOOL ($(date))"
+				echo ""
+				echo "L'interface web est accessible à l'adresse: https://$(ifconfig eth1 | grep "inet addr:" | awk '{print $2}' | sed s/"addr:"/""/g)"
+				echo "(mot de passe par défaut:admin)"
+				echo "*******************************************************************************"
+				echo "";
+
+				PS3='Veuillez choisir une option: '
+				options=(
+				"Réinitialiser le mot de passe de l'interface web" 
+				"Redémarrer le serveur" 
+				"Réinitialiser la base de données" 
+				"Quitter ce menu")
+				select opt in "${options[@]}"
+				do
+						case $opt in
+								"Réinitialiser le mot de passe de l'interface web")
+										$(rm -f /var/www/html/includes/loginInfo.ini)
+										$(cp /var/www/html/includes/loginInfo_original.ini /var/www/html/includes/loginInfo.ini)
+										$(chown apache:apache /var/www/html/includes/loginInfo.ini)
+										$(chmod 750 /var/www/html/includes/loginInfo.ini)
+								    echo "Mot de passe réinitialisé ('admin')"
+								    ;;
+								"Redémarrer le serveur")
+								    $(reboot now)
+										break;
+								    ;;
+								"Réinitialiser la base de données")
+                                                                    $(mysql -u root -papmanager apmanagerdb < /var/www/html/scriptSQL/scriptBDD_APTool.sql)
+								    echo "Base de données réinitialisée"
+								    ;;
+								"Quitter ce menu")
+								    break
+								    ;;
+								*) echo invalid option;;
+						esac
+				done
+
+}
+
+stop() {
+        echo "fin du script d'accueil ";
+				exit;
+}
+
+status() {
+        echo "script d'accueil en cours d'execution";
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status)
+        status
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    *)
+        echo "Usage: $prog {start|stop}"
+        exit 1
+        ;;
+esac
