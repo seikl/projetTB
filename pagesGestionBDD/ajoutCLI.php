@@ -107,11 +107,11 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                                 <tr><td align="left" colspan="2"><p>
                                     <strong class="obligatoire">*&nbsp;</strong><label for='protocole'>Choix du protocole et saisie du No de port</label><br>
                                     <select class="form-control" id="protocole" name="protocole" onclick="setNoPort()" > 
-                                        <option value="">Choix du protocole &nbsp;&nbsp;&nbsp;</option>';
-                                        <option value="TELNET">TELNET&nbsp;&nbsp;&nbsp;</option>';
-                                        <option value="HTTP">HTTP&nbsp;&nbsp;&nbsp;</option>';
-                                        <option value="HTTPS">HTTPS&nbsp;&nbsp;&nbsp;</option>';
-                                        <option value="SNMP">SNMP&nbsp;&nbsp;&nbsp;</option>';                                        
+                                        <option value="">Choix du protocole &nbsp;&nbsp;&nbsp;</option>
+                                        <option value="TELNET">TELNET&nbsp;&nbsp;&nbsp;</option>
+                                        <option value="HTTP">HTTP&nbsp;&nbsp;&nbsp;</option>
+                                        <option value="HTTPS">HTTPS&nbsp;&nbsp;&nbsp;</option>
+                                        <option value="SNMP">SNMP&nbsp;&nbsp;&nbsp;</option>                                        
                                     </select><strong>:</strong>                                                                    
                                     <input type="text" class="form-control" name="portProtocole" id="portProtocole" size="3" maxlength="5" placeholder="23">  
                                         </p>
@@ -130,7 +130,7 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                                 ?>  
                                 </td></tr>  
                                 <tr><td colspan="2">                         
-                                <strong class="obligatoire">*&nbsp;</strong><label for='choixAjoutDescription'>Choix ou ajout d'une description pour la commande</label><br>  
+                                <strong class="obligatoire">*&nbsp;</strong><label for='choixAjoutDescription'>Choix d'une description pour la commande</label><br>  
                                 <input type="radio" name="choixAjoutDescription" id="choixDescription" value="selection" class="form-control" checked/>    
                                 <?php
                                     echo '<select class="form-control skip" id="choixTypeCommande" name="choixTypeCommande" onChange="document.getElementById(\'choixDescription\').checked=true;">';
@@ -144,7 +144,7 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                                 ?>  
                                 </td></tr>
                                 <tr><td colspan="2">       
-                                    <strong class="obligatoire">*&nbsp;</strong><label for='typeCommande'>OU  saisie d'un nouvel intitul&eacute; de commande</label><br> 
+                                    <strong class="obligatoire">*&nbsp;</strong><label for='typeCommande'>OU  saisie d'une nouvelle description de commande</label><br> 
                                 </td></tr>
                                 <tr><td>
                                     <input type="radio" name="choixAjoutDescription" id="ajoutDescription" value="ajout" class="form-control"/>

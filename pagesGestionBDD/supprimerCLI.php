@@ -68,7 +68,7 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                         <?php
                             include '../includes/connexionBDD.php';
                             $boutonRetour = '<button class="btn btn-primary" onclick="history.back()">Revenir sur le formulaire</button>';
-                            $boutonReinit = '<button class="btn btn-default" onclick="window.location.href = \'selectSupprCLI.php\'">Revenir &agrave; la s&eacute;lection des AP</button>';
+                            $boutonReinit = '<button class="btn btn-default" onclick="window.location.href = \'selectSupprCLI.php\'">Revenir &agrave; la s&eacute;lection des commandes</button>';
                             $boutonRetourSucces = '<button class="btn btn-success" onclick="window.location.href = \'../pagesGestionAP/choisirCommande.php\'">Appliquer une commande</button>';
                            
                             //Récupération des informations

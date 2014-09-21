@@ -3,9 +3,9 @@
  * Auteur: Sébastien Kleber (sebastien.kleber@heig-vd.ch) 
  * 
  * Description:
- * page en construction...
+ * page de sélection d'une commande à modifier
  *
- * Modifié le: 31.08.2014
+ * Modifié le: 20.09.2014
  ***************************************************************************************************/
 $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> 
 <!DOCTYPE html>
@@ -54,22 +54,171 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                  <td class="informations">                     
                      <ol class="breadcrumb">
                         <li><a href="accueilGestionBDD.php">Accueil gestion de la BDD</a></li> 
-                        <li>Modifier une lgine de commande</li>
+                        <li>S&eacute;lection d'une commande &agrave; modifier</li>
                     </ol>
                      <ol>
-                         
-                     
+                        <table width="auto">
+                        <tr><td width="auto">                          
+                        <form id="selectSupprCLI" class="form-inline" role="form" action="selectModifCLI.php" method="POST">
+                            <div class="form-group">                                                           
+                            <label for="name">Veuillez s&eacute;lectionner les commandes &agrave; modfiier:</label><br>
+                            <select class="form-control" id="noModele" name="noModele" onChange="this.form.submit()">                         
                             <?php                                          
-                               //connexion a la BDD et récupération de la liste des modèles
-                               //include '../includes/connexionBDD.php';                    
-                               include '../includes/fonctionsUtiles.php';      
+                           //connexion a la BDD et récupération de la liste des modèles
+                           include '../includes/connexionBDD.php';                    
+                           include '../includes/fonctionsUtiles.php';                          
+
+                           $infosRecues ='Le n&eacute;ant';
+                           $initialisation=true;
+                           $infoAvertissement="";
+
+                           //pour vérifier si valeurs déjà existantes dans le formulaire
+                           if ($_POST) {                            
+                               $infosRecues= htmlspecialchars(print_r($_POST, true));                           
+                           }
+                           if (!isset($_POST['noModele'])){                            
+                               $noModele='0';
+                               echo "<option value='0' selected>Tous les mod&egrave;les...&nbsp;&nbsp;&nbsp;</option>";
+                           }
+                           else {
+                               $noModele = $_POST['noModele'];                            
+                               echo "<option value='0'>Tous les mod&egrave;les...&nbsp;&nbsp;&nbsp;</option>";                               
+                           }
+
+                           //pour récupérer la lsite des AP déjà sélectionnés
+                           if (!isset($_POST['CLIAchoisir'])){                                                        
+                               $CLIChoisies[0]=('0');
+                               $initialisation=true;
+                           }
+                           else {
+                               $CLIChoisies=$_POST['CLIAchoisir'];  
+                               $initialisation=FALSE;
+                           }                                                                                                                 
+
+                           //Récupération de la liste des modèles
+                           try
+                           {                            
+                                   $i =0;                                
+                                   $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
+
+                                   $resultatsModelesAP=$connexion->query("SELECT * FROM modeles ORDER BY nomFabricant,nomModele, versionFirmware;");                                 
+                                   $resultatsModelesAP->setFetchMode(PDO::FETCH_OBJ);                                 
+
+                                   while( $ligne = $resultatsModelesAP->fetch() ) 
+                                   {     
+                                       $noModeleAP=(string)$ligne->noModeleAP;
+                                       $nomModele=(string)$ligne->nomModele;
+                                       $versionFirmware=(string)$ligne->versionFirmware;
+                                       $nomFabricant=(string)$ligne->nomFabricant;
+                                       $adrMACFabricant=(string)$ligne->adrMACFabricant; 
+                                       if ($noModeleAP==$noModele){
+                                           echo '<option value="'.$noModeleAP.'" selected>'.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.'&nbsp;&nbsp;&nbsp;</option>';
+                                       }
+                                       else {
+                                           echo '<option value="'.$noModeleAP.'">'.$nomFabricant.' '.$nomModele.' v.'.$versionFirmware.'&nbsp;&nbsp;&nbsp;</option>';  
+                                       }
+                                   }
+                               $resultatsModelesAP->closeCursor();                                                                           
+                           }
+                           catch(Exception $e)
+                           {
+                                   echo '</select></div></form></td></tr></table><li>Erreur lors du chargement</li></ol>';
+                                   echo 'Erreur : '.$e->getMessage().'<br />';
+                                   echo 'N° : '.$e->getCode();
+                           }                        
+
+                           echo '</select><br><br></td></tr>';                                      
+                           echo '<tr><td width="auto">';
+                           echo '<label for="name">Choix de la commande &agrave; modifier:</label><br>
+                               <select size="10" class="form-control" name="CLIAchoisir[]" onClick="this.form.submit();">';                    
+
+                           //Pour afifcher la liste des AP à sélectionner
+                           try
+                           {
+                               $i =0;
+                               $listeCLIactuelles=null;
                                
-                                $boutonRetour = '<button class="btn btn-primary" onclick="history.back()">Retour</button>';
-                               echo "<strong>En construction...</strong><br><br>";
-                               echo $boutonRetour;
-                               
-                               
-                            ?>    
+                               $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
+
+                               if ($noModele=='0'){
+                                   $resultatsListeCLI=$connexion->query("SELECT l.noCLI, l.ligneCommande, l.noModeleAP, l.protocole, l.portProtocole,t.notypeCommande, t.typeCommande, t.description "
+                                           ."FROM typeCommandes t, lignesCommande l "
+                                           ."WHERE l.notypeCommande=t.notypeCommande ORDER BY t.typeCommande,t.description;");
+                               }
+                               else{
+                                   $resultatsListeCLI=$connexion->query("SELECT l.noCLI, l.ligneCommande, l.noModeleAP, l.protocole, l.portProtocole, t.notypeCommande, t.typeCommande, t.description "
+                                           . "FROM typeCommandes t, lignesCommande l, modeles m "
+                                           . "WHERE l.notypeCommande=t.notypeCommande AND l.noModeleAP=m.noModeleAP AND l.noModeleAP=".$noModele."; ORDER BY t.typeCommande,t.description;");
+                               }                                    
+
+                               $resultatsListeCLI->setFetchMode(PDO::FETCH_OBJ);                                 
+
+                               while($ligne = $resultatsListeCLI->fetch() )
+                               {     
+                                   $noCLI=(string)$ligne->noCLI;
+                                   $ligneCommande = (string)$ligne->ligneCommande;
+                                   $noModeleAP = (string)$ligne->ligneCommande;
+                                   $protocole=(string)$ligne->protocole;
+                                   $portProtocole=(string)$ligne->portProtocole;
+                                   $notypeCommande=(string)$ligne->notypeCommande;
+                                   $typeCommande=(string)$ligne->typeCommande;
+                                   $description=(string)$ligne->description;
+                                   $ligneCommande = substr($ligneCommande,0,60);
+                                   $description = substr($description,0,60);
+
+                                   if (in_array($noCLI, $CLIChoisies)){
+                                       echo '<option value="'.$noCLI.'" selected>'.$noCLI.' - '.$ligneCommande.'( protocole:'.strtoupper($protocole).'['.$portProtocole.'], '.$typeCommande.' - '.$description.' )&nbsp;&nbsp;&nbsp;</option>';
+                                       $listeCLIactuelles[$i]=array("noCLI" =>$noCLI, "ligneCommande"=>$ligneCommande, "noModeleAP"=>$noModeleAP, "protocole"=>$protocole,"portProtocole"=>$portProtocole, "notypeCommande" =>$notypeCommande, "typeCommande"=>$typeCommande, "description"=>$description);                                       
+                                       
+                                       $i++;                                                                                                             
+                                   }
+                                   else {
+                                       if (strlen($description)>60){$resumeDescription=substr($description,0,30).' .. '.substr($description, (strlen($description)-30),strlen($description));}
+                                       else {$resumeDescription=substr($description,0,60);}
+                                        if (strlen($ligneCommande)>60){$resumeCLI=substr($ligneCommande,0,30).' .. '.substr($ligneCommande, (strlen($ligneCommande)-30),strlen($ligneCommande));}
+                                       else {$resumeCLI=substr($ligneCommande,0,60);} 
+                                       echo '<option value="'.$noCLI.'">'.$noCLI.' - '.$typeCommande.' - '.$resumeDescription.'('.$resumeCLI.' ['.strtoupper($protocole).':'.$portProtocole.'])&nbsp;&nbsp;&nbsp;</option>';
+                                   }
+                               }
+                               $resultatsListeCLI->closeCursor();                                                                                                                
+                            }
+                            catch(Exception $e)
+                            {
+                                    echo '</select></div></form></td></tr></table><li>Erreur lors du chargement</li></ol>';
+                                    echo 'Erreur : '.$e->getMessage().'<br />';
+                                    echo 'N° : '.$e->getCode();
+                            }                                                                                                                                                       
+                            echo '</select><br></td></tr></div></form>';                                                                                 
+
+                            $actionOnClick="$('#modifierCLI').submit();";
+                            $actionReset="location='selectModifCLI.php'";
+
+                            $textInfos= "&nbsp;";
+                            if (!$initialisation){                                
+                                $textInfos ='<br>';                                    
+                                //vérification des choix effectués
+                                if ($listeCLIactuelles==null){                                        
+                                    $textInfos .='<br><strong>Aucune commande s&eacute;lectionn&eacute;e.</strong>';
+                                }                            
+                                else {                                     
+                                $listeCLI=base64_encode(serialize($listeCLIactuelles));      
+                                
+                                $textInfos .='<input type="hidden" value="'.$listeCLI.'" name="listeCLI"/>';
+                                $textInfos .= '<table width="100%"><tr><td align="left"><input type="submit" class="btn btn-primary" value="Modifier la commande s&eacute;lectionn&eacute;"/></td>';
+                                $textInfos .= '<td align="right"><input type="button" class="btn  btn-default" onclick="'.$actionReset.'" value="R&eacute;initialiser"/></td></tr></table>';
+                                }
+                            }
+
+                            echo '<tr><td align="right">';  
+                            echo '<div class="form-group" id="validation">';                                
+                            echo '<form id="modifierCLI"class="form-inline" role="form" action="modifierCLI.php" method="POST">';                                                                                
+
+                            echo $textInfos;
+
+                            echo '</form></div>';
+                            echo '</td></tr></table>';
+                     //echo "<br><br>infos recues: ".$infosRecues." --- modele en cours: ".$noModele." --- AP choisis: ".htmlspecialchars(print_r($CLIChoisies,true));
+?>     
                      </ol> 
                  </td>
               </tr>
@@ -82,42 +231,6 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
 
 
     <!-- Bootstrap core JavaScrip ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    
-    <script type="text/javascript">
-        $(function()
-        {
-            $("#modifModele").validate(
-              {                
-                rules: 
-                {            
-                  nomModele: 
-                  {
-                    required: true                   
-                  },
-                  versionFirmware: 
-                  {
-                    required: true
-                  },
-                  adrMACFabricant1: 
-                  {
-                    required: true
-                  },  
-                  adrMACFabricant2: 
-                  {
-                    required: true
-                  }, 
-                  adrMACFabricant3: 
-                  {
-                    required: true
-                  }                   
-                },
-                errorElement: "divRight",
-                errorPlacement: function(error, element) {
-                    error.insertAfter(element);                    
-                }                
-              });
-        });
-    </script>      
+    <!-- Placed at the end of the document so the pages load faster -->     
   </body>
 </html>
