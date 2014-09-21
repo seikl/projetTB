@@ -140,16 +140,11 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                                
                                $connexion = new PDO('mysql:host='.$PARAM_hote.';port='.$PARAM_port.';dbname='.$PARAM_nom_bd, $PARAM_utilisateur, $PARAM_mot_passe);
 
-                               if ($noModele=='0'){
-                                   $resultatsListeCLI=$connexion->query("SELECT l.noCLI, l.ligneCommande, l.noModeleAP, l.protocole, l.portProtocole,t.notypeCommande, t.typeCommande, t.description "
-                                           ."FROM typeCommandes t, lignesCommande l "
-                                           ."WHERE l.notypeCommande=t.notypeCommande ORDER BY t.typeCommande,t.description;");
-                               }
-                               else{
-                                   $resultatsListeCLI=$connexion->query("SELECT l.noCLI, l.ligneCommande, l.noModeleAP, l.protocole, l.portProtocole, t.notypeCommande, t.typeCommande, t.description "
-                                           . "FROM typeCommandes t, lignesCommande l, modeles m "
-                                           . "WHERE l.notypeCommande=t.notypeCommande AND l.noModeleAP=m.noModeleAP AND l.noModeleAP=".$noModele."; ORDER BY t.typeCommande,t.description;");
-                               }                                    
+
+                                $resultatsListeCLI=$connexion->query("SELECT l.noCLI, l.ligneCommande, l.noModeleAP, l.protocole, l.portProtocole, t.notypeCommande, t.typeCommande, t.description "
+                                        . "FROM typeCommandes t, lignesCommande l, modeles m "
+                                        . "WHERE l.notypeCommande=t.notypeCommande AND l.noModeleAP=m.noModeleAP AND l.noModeleAP=".$noModele."; ORDER BY t.typeCommande,t.description;");
+
 
                                $resultatsListeCLI->setFetchMode(PDO::FETCH_OBJ);                                 
 
@@ -168,7 +163,7 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
 
                                    if (in_array($noCLI, $CLIChoisies)){
                                        echo '<option value="'.$noCLI.'" selected>'.$noCLI.' - '.$ligneCommande.'( protocole:'.strtoupper($protocole).'['.$portProtocole.'], '.$typeCommande.' - '.$description.' )&nbsp;&nbsp;&nbsp;</option>';
-                                       $listeCLIactuelles[$i]=array("noCLI" =>$noCLI, "ligneCommande"=>$ligneCommande, "noModeleAP"=>$noModeleAP, "protocole"=>$protocole,"portProtocole"=>$portProtocole, "notypeCommande" =>$notypeCommande, "typeCommande"=>$typeCommande, "description"=>$description);                                       
+                                       $listeCLIactuelles[$i]=array("noCLI" =>$noCLI, "ligneCommande"=>$ligneCommande, "noModele"=>$noModele, "protocole"=>$protocole,"portProtocole"=>$portProtocole, "notypeCommande" =>$notypeCommande, "typeCommande"=>$typeCommande, "description"=>$description);                                       
                                        
                                        $i++;                                                                                                             
                                    }

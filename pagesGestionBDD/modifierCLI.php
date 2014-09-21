@@ -79,7 +79,7 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                                  $infosCLI=$CLI["noCLI"].' - '.$CLI["ligneCommande"].'( protocole:'.strtoupper($CLI["protocole"]).'['.$CLI["portProtocole"].'], <br>'.$CLI["typeCommande"].' - '.$CLI["description"].')';
                                  $noCli=$CLI["noCLI"];
                                  $ligneCommande=$CLI["ligneCommande"];
-                                 $noModeleAP=$CLI["noModeleAP"];
+                                 $noModeleAPRecu=$CLI["noModele"];
                                  $portProtocole=strtoupper($CLI["portProtocole"]); 
                                  $protocole=strtoupper($CLI["protocole"]);
                                  $notypeCommande=$CLI["notypeCommande"];       
@@ -147,7 +147,7 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                                              foreach ($tabListeModeles as $modele){
                                                  $tabModele=array("noModeleAP"=>$modele["noModeleAP"],"nomFabricant"=>$modele["nomFabricant"],"nomModele"=>$modele["nomModele"],"versionFirmware"=>$modele["versionFirmware"]);
                                                  $tabModele= base64_encode(serialize($tabModele));
-                                                 if ($modele["noModeleAP"]==$noModeleAP){
+                                                 if ($modele["noModeleAP"]==$noModeleAPRecu){
                                                      echo '<option value="'.$tabModele.'" selected>'.$modele["nomFabricant"].' '.$modele["nomModele"].' v.'.$modele["versionFirmware"].'&nbsp;&nbsp;&nbsp;</option>';
                                                  }
                                                  else {
