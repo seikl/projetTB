@@ -176,7 +176,14 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!D
                             </table>                                    
                          </div>                             
                         </form>
-                       <?php if ($qtyAP>1){ echo '<input type="button" class="btn btn-default" name="repliquerAP" id="repliquerAP" onclick="repliquerAP('.$qtyAP.')" value="Copier"/>&nbsp;R&eacute;pliquer la 1&egrave;re ligne';} ?>
+                       <?php 
+                            if ($qtyAP>1){ 
+                                //echo '<input type="button" class="btn btn-default" name="repliquerAP" id="repliquerAP" onclick="repliquerAP('.$qtyAP.')" value="Copier"/>&nbsp;R&eacute;pliquer la 1&egrave;re ligne';
+                                echo '<input type="button" class="btn btn-default" name="repliquerNomAP" id="repliquerNomAP" onclick="repliquerNomAP('.$qtyAP.')" value="R&eacute;pliquer les noms"/>&nbsp;&nbsp;';
+                                echo '<input type="button" class="btn btn-default" name="repliquerIP" id="repliquerIP" onclick="repliquerIP('.$qtyAP.')" value="R&eacute;pliquer les IP /24"/>&nbsp;&nbsp;';
+                                echo '<input type="button" class="btn btn-default" name="repliquerCredentials" id="repliquerCredentials" onclick="repliquerCredentials('.$qtyAP.')" value="R&eacute;pliquer les credentials"/>&nbsp;&nbsp;';                           
+                            } 
+                       ?>
                     </ol>
                  </td>
               </tr>
@@ -206,6 +213,39 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?> <!D
             document.getElementById(formName).elements['password'+i].value=document.getElementById(formName).elements['password0'].value;
         }
      }      
+     function repliquerNomAP(qtyAP)
+     {         
+        var formName = 'modifierAP';
+         
+        for(i=1;i<=qtyAP;i++){                
+            document.getElementById(formName).elements['nomAP'+i].value=document.getElementById(formName).elements['nomAP0'].value+'-'+i;
+         }
+     }      
+     
+     function repliquerIP(qtyAP)
+     {         
+        var formName = 'modifierAP';
+        var incrementIP =document.getElementById(formName).elements['IPgroupeD0'].value;
+        
+        for(i=1;i<=qtyAP;i++){                
+            document.getElementById(formName).elements['IPgroupeA'+i].value=document.getElementById(formName).elements['IPgroupeA0'].value;
+            document.getElementById(formName).elements['IPgroupeB'+i].value=document.getElementById(formName).elements['IPgroupeB0'].value;
+            document.getElementById(formName).elements['IPgroupeC'+i].value=document.getElementById(formName).elements['IPgroupeC0'].value;
+            incrementIP++;
+            document.getElementById(formName).elements['IPgroupeD'+i].value=incrementIP;
+        }
+     } 
+     
+     function repliquerCredentials(qtyAP)
+     {         
+        var formName = 'modifierAP';
+         
+        for(i=1;i<=qtyAP;i++){                
+            document.getElementById(formName).elements['snmpCommunity'+i].value=document.getElementById(formName).elements['snmpCommunity0'].value;
+            document.getElementById(formName).elements['username'+i].value=document.getElementById(formName).elements['username0'].value;
+            document.getElementById(formName).elements['password'+i].value=document.getElementById(formName).elements['password0'].value;
+        }
+     }       
     <!-- Pour la validation des champs du formulaire -->
   <?php
         echo'
