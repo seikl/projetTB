@@ -158,7 +158,7 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                                    $notypeCommande=(string)$ligne->notypeCommande;
                                    $typeCommande=(string)$ligne->typeCommande;
                                    $description=(string)$ligne->description;
-                                   $ligneCommande = substr($ligneCommande,0,60);
+                                   //$ligneCommande = substr($ligneCommande,0,60);
                                    $description = substr($description,0,60);
 
                                    if (in_array($noCLI, $CLIChoisies)){
@@ -170,8 +170,8 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                                    else {
                                        if (strlen($description)>60){$resumeDescription=substr($description,0,30).' .. '.substr($description, (strlen($description)-30),strlen($description));}
                                        else {$resumeDescription=substr($description,0,60);}
-                                        if (strlen($ligneCommande)>60){$resumeCLI=substr($ligneCommande,0,30).' .. '.substr($ligneCommande, (strlen($ligneCommande)-30),strlen($ligneCommande));}
-                                       else {$resumeCLI=substr($ligneCommande,0,60);} 
+                                        if (strlen($ligneCommande)>60){$resumeCLI=$ligneCommande; substr($resumeCLI,0,30).' .. '.substr($resumeCLI, (strlen($resumeCLI)-30),strlen($resumeCLI));}
+                                       else {$resumeCLI=$ligneCommande;$resumeCLI=substr($resumeCLI,0,60);} 
                                        echo '<option value="'.$noCLI.'">'.$noCLI.' - '.$typeCommande.' - '.$resumeDescription.'('.$resumeCLI.' ['.strtoupper($protocole).':'.$portProtocole.'])&nbsp;&nbsp;&nbsp;</option>';
                                    }
                                }
