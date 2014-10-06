@@ -94,9 +94,9 @@
             while (!feof($socket)) {
                     $out .= fgets($socket,$taille);                                                                                    
                     fwrite($socket, "\r\n");
-                }
-                $nbTrames--;
-                if ($nbTrames==0){break;} 
+                    $nbTrames--;
+                    if ($nbTrames==0){break;} 
+                }                                
         } 
         fwrite($socket, "quit\r\n");
         return $out;
