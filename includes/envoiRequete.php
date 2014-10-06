@@ -14,8 +14,7 @@
  * - ($nbTrames): Le nombre de trames que l'on souhaite récupérer dans la réponse
  *                                                                                                  *
  * Modifié le: 31.08.2014                                                                           *
- ***************************************************************************************************/
-
+ ***************************************************************************************************/  
 
     //pour éviter les boucles infinies si le serveur ne ferme pas la connexion (NON UTIILISE POUR LE MOMENT)
     //source: http://php.net/manual/fr/function.feof.php, consulté le 29.08.2014
@@ -79,18 +78,29 @@
     //*************pour envoyer une requête TELNET (utilise les sockets)
     function requeteTELNET($adresseIP, $requete, $user, $mdp, $socket,$taille,$nbTrames)
     {                
-        $out="";         
+        $out="";        
+        $erreurLevee=false;
         if ($user!=""){fwrite($socket, $user."\r\n");$out .= fgets($socket,$taille);}                                        
         if ($mdp!=""){fwrite($socket, $mdp."\r\n");$out .= fgets($socket,$taille);}                        
     
         fwrite($socket, $requete);
         while (!feof($socket)) {
-            $out .= fgets($socket,$taille);                                                                                    
-            fwrite($socket, "\r\n");
+            //pour sortir de la boucle si connexion interrompue (par exemple après reboot )
+            if(10060==socket_last_error() || 11==socket_last_error())
+            {
+                $out = date("D M d, Y g:i A"). " socket_read() failed: reason: " . socket_strerror(socket_last_error()) . "<br>";
+                $erreurLevee=true;
+                break;
+            }
+            else {
+                $erreurLevee=false;
+                $out .= fgets($socket,$taille);                                                                                    
+                fwrite($socket, "\r\n");
+            }
             $nbTrames--;
             if ($nbTrames==0){break;} 
         } 
-        fwrite($socket, "quit\r\n");
+        if (!$erreurLevee) {fwrite($socket, "quit\r\n");}
         return $out;
     }
     //--------------------------------------------    

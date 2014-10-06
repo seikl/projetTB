@@ -60,12 +60,13 @@ $auth_realm = 'AP Tool'; require_once '../includes/authentification.php'; ?>
                      <ol>
                     <?php       
                     
-                        //pour autoriser le script à s'exécuter pendant 10 min
-                        set_time_limit(10);                    
+                        //pour autoriser le script à s'exécuter pendant 10 secs
+                         $delaiTimeout = 2;
+                        set_time_limit($delaiTimeout);                    
                         date_default_timezone_set('Europe/Zurich');
                         include '../includes/envoiRequete.php'; 
                         include '../includes/fonctionsUtiles.php';
-                        $delaiTimeout = 5;
+                        
                         
                         //Récupération des informations
                         if ($_POST) {                            
