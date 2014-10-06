@@ -83,24 +83,22 @@
         if ($user!=""){fwrite($socket, $user."\r\n");$out .= fgets($socket,$taille);}                                        
         if ($mdp!=""){fwrite($socket, $mdp."\r\n");$out .= fgets($socket,$taille);}                        
     
-        fwrite($socket, $requete);
-        while (!feof($socket)) {
-            //pour sortir de la boucle si connexion interrompue (par exemple après reboot )
-            if(10060==socket_last_error() || 11==socket_last_error())
-            {
-                $out = date("D M d, Y g:i A"). " socket_read() failed: reason: " . socket_strerror(socket_last_error()) . "<br>";
-                $erreurLevee=true;
-                break;
-            }
-            else {
-                $erreurLevee=false;
-                $out .= fgets($socket,$taille);                                                                                    
-                fwrite($socket, "\r\n");
-            }
-            $nbTrames--;
-            if ($nbTrames==0){break;} 
+        fwrite($socket, $requete."\r\n");
+        //pour éviter la boucle si requête d'interruption (par exemple après reboot )
+        if (preg_match("/reboot/i", $requete) ||
+            preg_match("/restart/i", $requete)||
+            preg_match("/reset/i", $requete)){            
+                $out="Requête d'interruption transmise.";
+        }
+        else {
+            while (!feof($socket)) {
+                    $out .= fgets($socket,$taille);                                                                                    
+                    fwrite($socket, "\r\n");
+                }
+                $nbTrames--;
+                if ($nbTrames==0){break;} 
         } 
-        if (!$erreurLevee) {fwrite($socket, "quit\r\n");}
+        fwrite($socket, "quit\r\n");
         return $out;
     }
     //--------------------------------------------    
